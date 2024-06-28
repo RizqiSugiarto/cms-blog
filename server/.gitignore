@@ -1,0 +1,39 @@
+# Node.js related files
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# TypeScript specific
+/dist/
+*.tsbuildinfo
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Environment variables
+.env
+
+# Docker Compose files
+docker-compose.yml
+docker-compose.yaml
+
+# Logs
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jest test runner
+coverage/
+
+# Dependency directories
+.pnpm/
+
+# Yarn Integrity file
+.yarn-integrity
+
+# npm package-lock files
+package-lock.json
