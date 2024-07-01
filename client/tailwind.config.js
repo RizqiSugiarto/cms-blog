@@ -2,7 +2,30 @@
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                purpleCustom: '#7164AF',
+                grayCustom: '#D8DADC',
+                grayButton: '#E3E4E8',
+                yellowDashboard: '#FFCA34',
+                purpleDashboard: '#503E9D',
+                blueDashboard: '#00A4DF',
+                blueButton: '#40A2E3',
+                redButton: '#FF0000',
+                graySecond: '#D9D9D9',
+                greenButton: '#0D9276',
+                gold: '#FFD700',
+                silver: '#C0C0C0',
+                bronze: '#CD7F32'
+            },
+            boxShadow: {
+                sideBar: '0 8px 9px rgba(0, 0, 0, 0.25)'
+            },
+            fontFamily: {
+                Poppins: ['Poppins', 'sans-serif'],
+                Jost: ['Jost', 'sans-serif']
+            }
+        }
     },
-    plugins: [],
-}
+    plugins: []
+};
