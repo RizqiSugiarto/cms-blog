@@ -7,7 +7,7 @@ const MyBlogPage: React.FC = () => {
         <section>
             <div className="card bg-base-100 rounded-box">
                 <div className="card-title flex flex-col md:flex-row justify-between items-center p-4">
-                    <h2 className="section-title my-4">Draft Blogs</h2>
+                    <h2 className="section-title my-4">My Blogs</h2>
                     <div className="join xs:join-vertical md:join-horizontal">
                         <div>
                             <div>
@@ -35,7 +35,6 @@ const MyBlogPage: React.FC = () => {
                                         <Link className="btn btn-primary btn-xs" to={`/blog`} >View</Link>
                                     </Table.td>
                                     <Table.td className="flex gap-1">
-                                        <button className="btn btn-success btn-xs">Post!!</button>
                                         <button className="btn btn-info btn-xs">Update</button>
                                         <button className="btn btn-error btn-xs">Delete</button>
                                     </Table.td>

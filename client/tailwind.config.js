@@ -7,6 +7,7 @@ export default {
                 purpleCustom: '#7164AF',
                 grayCustom: '#D8DADC',
                 grayButton: '#E3E4E8',
+                puprleBackground: '#D4D0E7',
                 yellowDashboard: '#FFCA34',
                 purpleDashboard: '#503E9D',
                 blueDashboard: '#00A4DF',
@@ -27,5 +28,14 @@ export default {
             }
         }
     },
-    plugins: []
+    plugins: [require("daisyui")],
+    daisyui: {
+        themes: [
+          {
+            light: {
+              primary: '#7164AF',
+            },
+          },
+        ],
+      },
 };

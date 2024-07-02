@@ -34,7 +34,7 @@ const EmailInput: React.FC<EmailInputProps> = ({
             <input
                 type="email"
                 placeholder={placeholder}
-                className={`w-[323px] h-[60px] border-solid border-[2px] ${
+                className={`w-[323px] h-[60px] md:w-[353px] border-solid border-[2px] ${
                     error ? 'border-red-500' : 'border-grayCustom'
                 } rounded-[10px] p-[16px] focus:border-purpleCustom`}
                 value={value}

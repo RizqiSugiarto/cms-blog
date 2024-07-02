@@ -32,7 +32,7 @@ const SideBar: React.FC = () => {
     const isActive = (item: string) => activeItem === item;
 
     return (
-        <div className="w-[150px] h-full shadow-sideBar fixed top-0 left-0 z-20 bg-white sidebar flex justify-center">
+        <div className="w-[190px] h-full shadow-sideBar fixed top-0 left-0 z-20 bg-white sidebar flex justify-center">
             <div className="w-[120px] h-full">
                 <button
                     className="mt-[90px] w-full h-[35px] bg-grayButton rounded-[8px] text-purpleCustom text-[13px]"

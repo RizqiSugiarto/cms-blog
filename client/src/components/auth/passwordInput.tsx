@@ -36,7 +36,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
             <input
                 type={showPassword ? 'text' : 'password'}
                 placeholder={placeholder}
-                className="w-[323px] h-[60px] border-solid border-[2px] border-l-grayCustom rounded-[10px] p-[16px] pr-[46px]"
+                className="w-[323px] h-[60px] md:w-[353px] border-solid border-[2px] border-l-grayCustom rounded-[10px] p-[16px] pr-[46px]"
                 value={value}
                 onChange={handleChange}
             />

@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import Header from './header';
+import Header from '../header/headerDashboard';
 import SideBar from './sideBar';
 
 interface SkeletonBodyComponentProps {
