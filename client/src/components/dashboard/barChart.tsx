@@ -35,11 +35,6 @@ const BarChart: React.FC = () => {
             data: labels.map(() => { return Math.random() * 1000 + 500 }),
             backgroundColor: 'rgba(146, 151, 196, 1)',
           },
-          // {
-          //   label: 'Users',
-          //   data: labels.map(() => { return Math.random() * 1000 + 500 }),
-          //   backgroundColor: 'rgba(53, 162, 235, 1)',
-          // },
         ],
       } as ChartData<'bar'>;
 
