@@ -1,0 +1,53 @@
+INSERT INTO blog (id, title, imageUrl, tag, content, isDraft, createdAt, userId) VALUES
+('1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', 'Blog Title 1', 'https://example.com/blog1.jpg', 'tech', 'Content of blog 1', true, '2024-01-01', '1e17f6da-8f64-4b0c-b49c-b3d27db54d0e'),
+('2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', 'Blog Title 2', 'https://example.com/blog2.jpg', 'health', 'Content of blog 2', true, '2024-01-02', 'a918b740-1c99-4e91-8c7c-722e5ea0b8d4'),
+('3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', 'Blog Title 3', 'https://example.com/blog3.jpg', 'business', 'Content of blog 3', true, '2024-01-03', 'c3d6b2c8-3b6e-4a93-bce8-7a9387c0c8db'),
+('4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', 'Blog Title 4', 'https://example.com/blog4.jpg', 'finance', 'Content of blog 4', true, '2024-01-04', '3a5e2f1a-4c8d-4b6d-bd8b-1e3a5d7c0c7f'),
+('5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', 'Blog Title 5', 'https://example.com/blog5.jpg', 'sport', 'Content of blog 5', true, '2024-01-05', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de'),
+('6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', 'Blog Title 6', 'https://example.com/blog6.jpg', 'tech', 'Content of blog 6', false, '2024-01-06', '2e3a5d7c-4b6d-4a93-bd8b-7a9387c0c8dc'),
+('7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', 'Blog Title 7', 'https://example.com/blog7.jpg', 'health', 'Content of blog 7', false, '2024-01-07', '5c7d8b9e-3a5e-4b6d-8c7c-1e3a5d7c0c7e'),
+('8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', 'Blog Title 8', 'https://example.com/blog8.jpg', 'business', 'Content of blog 8', false, '2024-01-08', '4a9c8b7e-5f6b-4a93-bd8b-3a9287c0c8dd'),
+('9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x', 'Blog Title 9', 'https://example.com/blog9.jpg', 'finance', 'Content of blog 9', false, '2024-01-09', '7a6c5d4e-3a5e-4b6d-8c7c-2e3a5d7c0c7e'),
+('0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', 'Blog Title 10', 'https://example.com/blog10.jpg', 'sport', 'Content of blog 10', false, '2024-01-10', '8b9e7c6d-5f6b-4a93-bd8b-3a9287c0c8df');
+
+
+
+INSERT INTO liked (id, blogId, userId, createdAt) VALUES
+('1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', '1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', '1e17f6da-8f64-4b0c-b49c-b3d27db54d0e', '2024-01-01 00:00:00'),
+('1e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', '5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de', '2024-02-15 00:00:00'),
+('1j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', '0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', '8b9e7c6d-5f6b-4a93-bd8b-3a9287c0c8df', '2024-03-16 00:00:00'),
+('2a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', '1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', '1e17f6da-8f64-4b0c-b49c-b3d27db54d0e', '2024-02-01 00:00:00'),
+('2f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', '6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', '2e3a5d7c-4b6d-4a93-bd8b-7a9387c0c8dc', '2024-04-01 00:00:00'),
+('2j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', '0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', '8b9e7c6d-5f6b-4a93-bd8b-3a9287c0c8df', '2024-07-21 00:00:00'),
+('3b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', '2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', 'a918b740-1c99-4e91-8c7c-722e5ea0b8d4', '2024-02-01 00:00:00'),
+('3f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', '6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', '2e3a5d7c-4b6d-4a93-bd8b-7a9387c0c8dc', '2024-07-11 00:00:00'),
+('4b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', '2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', 'a918b740-1c99-4e91-8c7c-722e5ea0b8d4', '2024-03-16 00:00:00'),
+('4g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', '7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', '5c7d8b9e-3a5e-4b6d-8c7c-1e3a5d7c0c7e', '2024-07-01 00:00:00'),
+('5c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', 'c3d6b2c8-3b6e-4a93-bce8-7a9387c0c8db', '2024-03-01 00:00:00'),
+('5g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', '7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', '5c7d8b9e-3a5e-4b6d-8c7c-1e3a5d7c0c7e', '2024-05-16 00:00:00'),
+('6c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', 'c3d6b2c8-3b6e-4a93-bce8-7a9387c0c8db', '2024-04-01 00:00:00'),
+('6h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', '8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', '4a9c8b7e-5f6b-4a93-bd8b-3a9287c0c8dd', '2024-04-13 00:00:00'),
+('7d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', '3a5e2f1a-4c8d-4b6d-bd8b-1e3a5d7c0c7f', '2024-04-01 00:00:00'),
+('7h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', '8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', '4a9c8b7e-5f6b-4a93-bd8b-3a9287c0c8dd', '2024-02-01 00:00:00'),
+('8d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', '3a5e2f1a-4c8d-4b6d-bd8b-1e3a5d7c0c7f', '2024-05-01 00:00:00'),
+('8i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x', '9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x', '7a6c5d4e-3a5e-4b6d-8c7c-2e3a5d7c0c7e', '2024-04-21 00:00:00'),
+('9e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', '5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de', '2024-05-01 00:00:00'),
+('9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x', '9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x', '7a6c5d4e-3a5e-4b6d-8c7c-2e3a5d7c0c7e', '2024-03-16 00:00:00');
+
+
+INSERT INTO blog (id, title, imageUrl, tag, content, isDraft, createdAt, userId) VALUES
+('5e6f7g8h-9i0j-1k2l-3m4n-5o6p7a2r4s0t', 'Blog Title 6', 'https://example.com/blog5.jpg', 'sport', 'Content of blog 5', false, '2024-01-05 00:00:00', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de'),
+('5e6f7g8h-9i0j-1k2l-3m4n-1o9p7a2r4s0t', 'Blog Title 7', 'https://example.com/blog5.jpg', 'sport', 'Content of blog 5', true, '2024-01-05 00:00:00', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de'),
+('5e6f7g8h-9i0j-1k2l-3m4n-3y6p1a2r4s0t', 'Blog Title 8', 'https://example.com/blog5.jpg', 'sport', 'Content of blog 5', true, '2024-01-05 00:00:00', '1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de');
+
+
+INSERT INTO view (id ,blogId, createdAt) VALUES
+('1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o1a', '0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y', '2024-01-01 00:00:00'),
+('2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p1a', '1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p', '2024-02-15 00:00:00'),
+('3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q1a', '2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q', '2024-03-16 00:00:00'),
+('4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r1a', '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r', '2024-02-01 00:00:00'),
+('5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s1a', '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s', '2024-04-01 00:00:00'),
+('6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1a', '5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t', '2024-07-21 00:00:00'),
+('7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u1a', '6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u', '2024-02-01 00:00:00'),
+('8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v1a', '7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v', '2024-07-11 00:00:00'),
+('9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w1a', '8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w', '2024-03-16 00:00:00');

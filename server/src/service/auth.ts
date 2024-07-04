@@ -9,9 +9,12 @@ export class AuthService {
     async registerUser(registerData: RegisterDto): Promise<User> {
         const hashedPassword = await hashPassword(registerData.password)
         const user = this.userRepository.create({
-            username: registerData.username,
+            name: registerData.username,
             email: registerData.email,
             password: hashedPassword,
+            ImageUrl: 'https://picsum.photos/200',
+            role: registerData.role,
+            createdAt: new Date(),
         })
         return this.userRepository.save(user)
     }

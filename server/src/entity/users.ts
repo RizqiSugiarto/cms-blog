@@ -1,23 +1,41 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
-import { Article } from './artichels';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    OneToMany,
+    Index,
+} from 'typeorm'
+import { Blog } from './blog'
+import { Liked } from './liked'
 
 @Entity()
+@Index(['email'], { unique: true })
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-  @Column({ length: 255 })
-  username: string;
+    @Column({ type: 'varchar', length: 255 })
+    name: string
 
-  @Column({ length: 255 })
-  email: string;
+    @Column({ type: 'varchar', length: 255 })
+    email: string
 
-  @Column({ length: 255 })
-  password: string;
+    @Column({ type: 'varchar', length: 255 })
+    password: string
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @Column({ type: 'varchar', length: 255 })
+    ImageUrl: string
 
-  @OneToMany(() => Article, article => article.user)
-  articles: Article[];
+    @Column({ type: 'varchar', length: 255 })
+    role: string
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @OneToMany(() => Blog, (blog) => blog.user)
+    blog: Blog[]
+
+    @OneToMany(() => Liked, (liked) => liked.user)
+    liked: Liked[]
 }

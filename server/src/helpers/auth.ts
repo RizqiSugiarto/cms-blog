@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-const JWT_SECRET = process.env.JWT_SECRET 
+const JWT_SECRET = process.env.JWT_SECRET
 const JWT_EXPIRATION = process.env.JWT_EXPIRATION
 
 export const generateToken = (userId: string): string => {
@@ -12,6 +12,23 @@ export const verifyToken = (token: string): { userId: string } | null => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET!)
         return decoded as { userId: string }
+    } catch (error) {
+        return null
+    }
+}
+
+type decodedToken = {
+    userId: string
+    role: string
+    iat: number
+    exp: number
+}
+
+export const isAdminToken = async (token: string): Promise<boolean | null> => {
+    try {
+        const decode = jwt.decode(token) as decodedToken
+
+        return decode.role == 'admin'
     } catch (error) {
         return null
     }

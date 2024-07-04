@@ -2,7 +2,8 @@ export class RegisterDto {
     username: string
     email: string
     password: string
-    UrlImage: string
+    urlImage: string
+    role: string
 }
 
 export class LoginDto {
