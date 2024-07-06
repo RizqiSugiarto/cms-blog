@@ -1,20 +1,25 @@
 import { useState } from 'react';
-import {UpdateBlogRequest} from '@/types'
+import { UpdateBlogRequest } from '@/types';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseUpdateBlogProps {
     loading: boolean;
     errMessage: string;
-    updateBlog: (blogId: string, blogRequest: UpdateBlogRequest) => Promise<any>;
+    updateBlog: (
+        blogId: string,
+        blogRequest: UpdateBlogRequest
+    ) => Promise<any>;
 }
-
 
 const useUpdateBlog = (): UseUpdateBlogProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
 
-    const updateBlog = async (blogId: string, blogRequest: UpdateBlogRequest): Promise<any> => {
+    const updateBlog = async (
+        blogId: string,
+        blogRequest: UpdateBlogRequest
+    ): Promise<any> => {
         setLoading(true);
         setErrMessage('');
 
@@ -22,9 +27,9 @@ const useUpdateBlog = (): UseUpdateBlogProps => {
             const response = await fetch(`${BaseUrl}/blogs/${blogId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(blogRequest),
+                body: JSON.stringify(blogRequest)
             });
 
             if (!response.ok) {

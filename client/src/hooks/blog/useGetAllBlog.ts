@@ -5,14 +5,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseGetAllBlogsByUserIdProps {
     loading: boolean;
     errMessage: string;
-    blogs: any; 
+    blogs: any;
     getAllBlogsByUserId: (userId: string) => Promise<void>;
 }
 
 const useGetAllBlogsByUserId = (): UseGetAllBlogsByUserIdProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [blogs, setBlogs] = useState<any>(null); 
+    const [blogs, setBlogs] = useState<any>(null);
 
     const getAllBlogsByUserId = async (userId: string): Promise<void> => {
         setLoading(true);

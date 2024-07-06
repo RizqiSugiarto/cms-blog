@@ -5,14 +5,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseGetBlogByIdProps {
     loading: boolean;
     errMessage: string;
-    blog: any; 
+    blog: any;
     getBlogById: (blogId: string) => Promise<void>;
 }
 
 const useGetBlogById = (): UseGetBlogByIdProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [blog, setBlog] = useState<any>(null); 
+    const [blog, setBlog] = useState<any>(null);
 
     const getBlogById = async (blogId: string): Promise<void> => {
         setLoading(true);

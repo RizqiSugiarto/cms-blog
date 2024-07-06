@@ -1,16 +1,16 @@
 export type RegisterRequest = {
-    name: string
-    email: string
-    password: string
-    role: string
-}
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+};
 
 export type LoginRequest = {
-    email: string
-    password: string
-}
+    email: string;
+    password: string;
+};
 
-export type CreateblogRequest =  {
+export type CreateblogRequest = {
     title: string;
     text: string;
     tag: string;

@@ -3,7 +3,7 @@ import {
     useContext,
     useState,
     ReactNode,
-    useEffect,
+    useEffect
 } from 'react';
 import Cookies from 'js-cookie';
 
@@ -17,14 +17,14 @@ type AuthContextType = {
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-    undefined,
+    undefined
 );
 
 export const useAuthContext = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (!context) {
         throw new Error(
-            'useAuthContext must be used within an AuthContextProvider',
+            'useAuthContext must be used within an AuthContextProvider'
         );
     }
     return context;
@@ -48,7 +48,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     const contextValue: AuthContextType = {
         authUser,
-        setAuthUser: handleSetAuthUser,
+        setAuthUser: handleSetAuthUser
     };
 
     return (

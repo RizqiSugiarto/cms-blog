@@ -5,14 +5,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseGetMostViewedBlogByUserIdProps {
     loading: boolean;
     errMessage: string;
-    mostViewedBlog: any; 
+    mostViewedBlog: any;
     getMostViewedBlogByUserId: (userId: string) => Promise<void>;
 }
 
 const useGetMostViewedBlogByUserId = (): UseGetMostViewedBlogByUserIdProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [mostViewedBlog, setMostViewedBlog] = useState<any>(null); 
+    const [mostViewedBlog, setMostViewedBlog] = useState<any>(null);
 
     const getMostViewedBlogByUserId = async (userId: string): Promise<void> => {
         setLoading(true);

@@ -28,14 +28,14 @@ export default {
             }
         }
     },
-    plugins: [require("daisyui")],
+    plugins: [require('daisyui')],
     daisyui: {
         themes: [
-          {
-            light: {
-              primary: '#7164AF',
-            },
-          },
-        ],
-      },
+            {
+                light: {
+                    primary: '#7164AF'
+                }
+            }
+        ]
+    }
 };

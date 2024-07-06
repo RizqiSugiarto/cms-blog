@@ -5,7 +5,7 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseGetAllBlogsDraftByUserIdProps {
     loading: boolean;
     errMessage: string;
-    drafts: any; 
+    drafts: any;
     getAllBlogsDraftByUserId: (userId: string) => Promise<void>;
 }
 
@@ -28,7 +28,9 @@ const useGetAllBlogsDraftByUserId = (): UseGetAllBlogsDraftByUserIdProps => {
             const data = await response.json();
             setDrafts(data);
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch draft blogs by user ID');
+            setErrMessage(
+                error.message || 'Failed to fetch draft blogs by user ID'
+            );
             console.error('Error fetching draft blogs by user ID:', error);
         } finally {
             setLoading(false);

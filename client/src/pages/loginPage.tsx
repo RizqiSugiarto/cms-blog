@@ -2,24 +2,32 @@ import React, { useState } from 'react';
 import InputFrom from '@/components/auth/inputForm';
 import useLogin from '@/hooks/auth/useLogin';
 import { LoginRequest } from '@/types';
+import ShowPasswordIcon from '@/assets/icon/display.png';
+import HidePasswordIcon from '@/assets/icon/hide.png';
+
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] =  useState<boolean>(false)
 
-    const {errMessage, loading, login} = useLogin()
+    const { errMessage, loading, login } = useLogin();
 
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    //handle
+    const handletogglePasswordVisibilityChange = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         const loginData: LoginRequest = {
             email,
             password
-        }
+        };
 
-        await login(loginData)
-    }
-
+        await login(loginData);
+    };
 
     return (
         <div className="flex justify-center items-center w-screen h-screen">
@@ -29,27 +37,31 @@ const LoginPage: React.FC = () => {
                         <h1 className="font-Poppins font-bold text-[40px] text-purpleCustom">
                             Sign In
                         </h1>
+                        <div className='md:relative md:top-8 relative top-20'>
                         {errMessage && (
-                                <div className='text-red-500'>
-                                    {errMessage}
-                                </div>
-                            )}
+                            <div className="text-red-500">{errMessage}</div>
+                        )}
+                        </div>
                         <div className="mt-[90px] md:mt-[45px]">
                             <form onSubmit={handleSubmit}>
                             <InputFrom
-                                    placeholder="Password"
-                                    value={password}
-                                    typeInput='password'
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                                <InputFrom
                                     placeholder="Email address"
                                     value={email}
-                                    typeInput='email'
+                                    typeInput="email"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
+                                <InputFrom
+                                    placeholder="Password"
+                                    value={password}
+                                    typeInput={showPassword ? 'text' : 'password'}
+                                    icon={showPassword ? ShowPasswordIcon : HidePasswordIcon}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    togglePasswordVisibility={handletogglePasswordVisibilityChange}
+                                />
                                 <button className="block bg-purpleCustom w-[289px] md:w-[353px] h-[54px] mt-[94px] ml-auto mr-auto rounded-[10px] text-[16px] font-semibold text-white">
-                                    {loading? 'Loading' : 'Login'}
+                                    {loading ? 'Loading' : 'Login'}
                                 </button>
                             </form>
                             <p className="text-[14px] text-center mt-[83px] pl-[30px] pr-[30px]">

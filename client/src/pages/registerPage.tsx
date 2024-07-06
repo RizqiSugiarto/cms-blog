@@ -10,12 +10,13 @@ const RegisterPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const [nameError, setNameError] = useState<string>('');
     const [emailError, setEmailError] = useState<string>('');
     const [passwordError, setPasswordError] = useState<string>('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState<string>('');
+    const [confirmPasswordError, setConfirmPasswordError] =
+        useState<string>('');
 
     const { loading, errMessage, register } = useRegister();
 
@@ -87,14 +88,15 @@ const RegisterPage: React.FC = () => {
         setPassword(newValue);
 
         if (!validatePassword(newValue)) {
-            setPasswordError('Password must be at least 8 characters and include uppercase, lowercase, number, and special character');
+            setPasswordError(
+                'Password must be at least 8 characters and include uppercase, lowercase, number, and special character'
+            );
         } else {
             setPasswordError('');
         }
-
     };
 
-    const handleConfirmPasswordChange =  (e: ChangeEvent<HTMLInputElement>) => {
+    const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setConfirmPassword(newValue);
 
@@ -120,14 +122,17 @@ const RegisterPage: React.FC = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        
         if (password !== confirmPassword) {
             setConfirmPasswordError('Passwords do not match');
             return;
         }
 
-        
-        if (!nameError && !emailError && !passwordError && !confirmPasswordError) {
+        if (
+            !nameError &&
+            !emailError &&
+            !passwordError &&
+            !confirmPasswordError
+        ) {
             await register(req);
         }
     };
@@ -142,45 +147,63 @@ const RegisterPage: React.FC = () => {
                         </h1>
                         <div className="mt-[50px] md:mt-[45px]">
                             {errMessage && (
-                                <div className='text-red-500'>
-                                    {errMessage}
-                                </div>
+                                <div className="text-red-500">{errMessage}</div>
                             )}
                             <form onSubmit={handleSubmit}>
                                 <InputFrom
                                     placeholder="Name"
                                     value={name}
-                                    typeInput='text'
+                                    typeInput="text"
                                     onChange={handleNameChange}
                                     error={nameError}
                                 />
                                 <InputFrom
                                     placeholder="Email address"
                                     value={email}
-                                    typeInput='email'
+                                    typeInput="email"
                                     onChange={handleEmailChange}
                                     error={emailError}
                                 />
                                 <InputFrom
                                     placeholder="Password"
                                     value={password}
-                                    icon={showPassword ? ShowPasswordIcon : HidePasswordIcon}
-                                    typeInput={showPassword ? 'text' : 'password'}
-                                    togglePasswordVisibility={togglePasswordVisibilityChange}                        
+                                    icon={
+                                        showPassword
+                                            ? ShowPasswordIcon
+                                            : HidePasswordIcon
+                                    }
+                                    typeInput={
+                                        showPassword ? 'text' : 'password'
+                                    }
+                                    togglePasswordVisibility={
+                                        togglePasswordVisibilityChange
+                                    }
                                     onChange={handlePasswordChange}
                                     error={passwordError}
                                 />
                                 <InputFrom
                                     placeholder="Confirm Password"
                                     value={confirmPassword}
-                                    icon={showPassword ? ShowPasswordIcon : HidePasswordIcon}
-                                    typeInput={showPassword ? 'text' : 'password'}                        
+                                    icon={
+                                        showPassword
+                                            ? ShowPasswordIcon
+                                            : HidePasswordIcon
+                                    }
+                                    typeInput={
+                                        showPassword ? 'text' : 'password'
+                                    }
                                     onChange={handleConfirmPasswordChange}
-                                    togglePasswordVisibility={togglePasswordVisibilityChange} 
+                                    togglePasswordVisibility={
+                                        togglePasswordVisibilityChange
+                                    }
                                     error={confirmPasswordError}
                                 />
-                                <button type='submit' disabled={loading} className="block bg-purpleCustom w-[289px] md:w-[353px] h-[54px] mt-[94px] md:mt-[50px] ml-auto mr-auto rounded-[10px] text-[16px] font-semibold text-white">
-                                    {loading ? 'Loading': 'Create Account'}
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="block bg-purpleCustom w-[289px] md:w-[353px] h-[54px] mt-[94px] md:mt-[50px] ml-auto mr-auto rounded-[10px] text-[16px] font-semibold text-white"
+                                >
+                                    {loading ? 'Loading' : 'Create Account'}
                                 </button>
                             </form>
                         </div>

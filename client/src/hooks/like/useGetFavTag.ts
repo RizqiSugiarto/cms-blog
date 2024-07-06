@@ -5,14 +5,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseMostFavTagProps {
     loading: boolean;
     errMessage: string;
-    mostFavTags: any; 
+    mostFavTags: any;
     getMostFavTag: () => Promise<void>;
 }
 
 const useMostFavTag = (): UseMostFavTagProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [mostFavTags, setMostFavTags] = useState<any>(null); 
+    const [mostFavTags, setMostFavTags] = useState<any>(null);
 
     const getMostFavTag = async (): Promise<void> => {
         setLoading(true);

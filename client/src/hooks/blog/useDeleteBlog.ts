@@ -18,7 +18,7 @@ const useDeleteBlog = (): UseDeleteBlogProps => {
 
         try {
             const response = await fetch(`${BaseUrl}/blogs/${blogId}`, {
-                method: 'DELETE',
+                method: 'DELETE'
             });
 
             if (!response.ok) {

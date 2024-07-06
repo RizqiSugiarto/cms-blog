@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
 type CardType = {
-    title?: string
-    className?: string
-    children: React.ReactNode
-}
+    title?: string;
+    className?: string;
+    children: React.ReactNode;
+};
 
-const Card: React.FC<CardType> = ({title, className, children}) => {
+const Card: React.FC<CardType> = ({ title, className, children }) => {
     return (
         <div className={`card bg-base-100 w-full ${className}`}>
             <div className="card-body p-4">
@@ -14,7 +14,7 @@ const Card: React.FC<CardType> = ({title, className, children}) => {
                 {children}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Card
+export default Card;

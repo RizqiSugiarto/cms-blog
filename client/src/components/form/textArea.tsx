@@ -1,25 +1,41 @@
-import React from "react";
+import React from 'react';
 
 type textareaProps = {
-    label?: string,
+    label?: string;
     setData: React.Dispatch<React.SetStateAction<string>>;
     placeholder: string;
     className?: string;
     min: number;
     max: number;
     required?: boolean;
-  }
+};
 
-const TextArea: React.FC<textareaProps> = ({label, setData, placeholder, className, min, max, required}) => {
-    return(
-        <div className={className + " form-control"}>
-        {label && 
-        <label className="label">
-            <span className="label-text">{label}</span>
-        </label>}
-        <textarea required={required}  placeholder={placeholder || label} onChange={e => setData(e.target.value)} className="textarea text-sm md:textarea-md textarea-bordered h-24" minLength={min} maxLength={max}></textarea>
-    </div>
-    )
-}
+const TextArea: React.FC<textareaProps> = ({
+    label,
+    setData,
+    placeholder,
+    className,
+    min,
+    max,
+    required
+}) => {
+    return (
+        <div className={className + ' form-control'}>
+            {label && (
+                <label className="label">
+                    <span className="label-text">{label}</span>
+                </label>
+            )}
+            <textarea
+                required={required}
+                placeholder={placeholder || label}
+                onChange={(e) => setData(e.target.value)}
+                className="textarea text-sm md:textarea-md textarea-bordered h-24"
+                minLength={min}
+                maxLength={max}
+            ></textarea>
+        </div>
+    );
+};
 
-export default TextArea
+export default TextArea;

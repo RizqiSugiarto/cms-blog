@@ -1,5 +1,5 @@
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+import React from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 type InputType = {
     label?: string;
@@ -9,18 +9,35 @@ type InputType = {
     className?: string;
     classInput?: string;
     auth?: boolean;
-    required?: boolean
-}
+    required?: boolean;
+};
 
-const Input: React.FC<InputType> = ({label, type, setData, placeholder, className, auth, classInput, required}) => {
-    return(
-        <div className={"form-control " + className}>
-        {label && <label className="label">
-            <span className="label-text">{label}</span>
-        </label>}
-        <input required={required} type={type || "text"} placeholder={placeholder || label} onChange={e => setData(e.target.value)} className={`input ${!auth && 'input-sm md:input-md'} input-bordered w-full ${classInput}`} />
-    </div>
-    )
-}
+const Input: React.FC<InputType> = ({
+    label,
+    type,
+    setData,
+    placeholder,
+    className,
+    auth,
+    classInput,
+    required
+}) => {
+    return (
+        <div className={'form-control ' + className}>
+            {label && (
+                <label className="label">
+                    <span className="label-text">{label}</span>
+                </label>
+            )}
+            <input
+                required={required}
+                type={type || 'text'}
+                placeholder={placeholder || label}
+                onChange={(e) => setData(e.target.value)}
+                className={`input ${!auth && 'input-sm md:input-md'} input-bordered w-full ${classInput}`}
+            />
+        </div>
+    );
+};
 
-export default Input
+export default Input;

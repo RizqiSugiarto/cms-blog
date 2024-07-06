@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {CreateblogRequest} from '@/types'
+import { CreateblogRequest } from '@/types';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -8,7 +8,6 @@ interface UseCreateBlogProps {
     errMessage: string;
     createBlog: (blogRequest: CreateblogRequest) => Promise<any>;
 }
-
 
 const useCreateBlog = (): UseCreateBlogProps => {
     const [loading, setLoading] = useState(false);
@@ -22,9 +21,9 @@ const useCreateBlog = (): UseCreateBlogProps => {
             const response = await fetch(`${BaseUrl}/`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(blogRequest),
+                body: JSON.stringify(blogRequest)
             });
 
             if (!response.ok) {

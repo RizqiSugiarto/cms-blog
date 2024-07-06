@@ -20,8 +20,8 @@ const useCreateView = (): UseCreateViewProps => {
             const response = await fetch(`${BaseUrl}/view/${blogId}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                },
+                    'Content-Type': 'application/json'
+                }
             });
 
             if (!response.ok) {

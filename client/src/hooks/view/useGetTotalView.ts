@@ -5,16 +5,18 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseTotalViewPerMonthProps {
     loading: boolean;
     errMessage: string;
-    totalViews: any; 
+    totalViews: any;
     getTotalViewPerMonthByUserId: (userId: string) => Promise<void>;
 }
 
 const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [totalViews, setTotalViews] = useState<any>(null); 
+    const [totalViews, setTotalViews] = useState<any>(null);
 
-    const getTotalViewPerMonthByUserId = async (userId: string): Promise<void> => {
+    const getTotalViewPerMonthByUserId = async (
+        userId: string
+    ): Promise<void> => {
         setLoading(true);
         setErrMessage('');
 
@@ -28,7 +30,9 @@ const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
             const data = await response.json();
             setTotalViews(data);
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch total views per month');
+            setErrMessage(
+                error.message || 'Failed to fetch total views per month'
+            );
             console.error('Error fetching total views per month:', error);
         } finally {
             setLoading(false);

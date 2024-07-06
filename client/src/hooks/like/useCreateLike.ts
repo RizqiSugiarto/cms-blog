@@ -25,9 +25,9 @@ const useCreateLiked = (): UseCreateLikedProps => {
             const response = await fetch(`${BaseUrl}/like`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(likedData),
+                body: JSON.stringify(likedData)
             });
 
             if (!response.ok) {
