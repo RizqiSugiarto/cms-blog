@@ -11,7 +11,27 @@ export class BlogController {
 
     async createBlog(req: Request, res: Response): Promise<void> {
         try {
-            const blogData: BlogDto = req.body
+            const { title, content, isDraft, tag, userId } = req.body
+            const image = req.file;
+            const imagePath = image?.path
+
+            const isDraftBoolean = isDraft === 'true';
+
+            if(!imagePath) {
+                throw new Error('Error when upload image')
+            }
+
+            const blogData: BlogDto = {
+                title: title,
+                content: content,
+                userId: userId,
+                imageUrl: imagePath,
+                isDraft: isDraftBoolean,
+                tag: tag
+            }
+
+            console.log(blogData, "JADI GINI")
+
             const message = await this.blogService.createBlog(blogData)
             res.status(201).json({ message })
         } catch (error) {

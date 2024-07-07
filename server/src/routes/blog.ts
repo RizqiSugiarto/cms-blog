@@ -2,12 +2,13 @@ import { Router } from 'express'
 import { BlogService } from '@/service/blog'
 import { BlogController } from '@/controller/blog'
 // import  from '@/middleware/protectedRoute';
+import { upload } from '@/middleware/uploadImage'
 
 const router = Router()
 const blogService = new BlogService()
 const blogController = new BlogController(blogService)
 
-router.post('/', (req, res) => blogController.createBlog(req, res))
+router.post('/', upload.single('imageUpload'),(req, res) => blogController.createBlog(req, res))
 router.get('/similar', (req, res) =>
     blogController.getBlogBySimilarName(req, res),
 )

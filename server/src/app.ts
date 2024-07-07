@@ -6,6 +6,7 @@ import viewRoutes from '@/routes/view'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import errorHandler from './middleware/errorHandler'
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ const app = express()
 app.use(cors({ credentials: true, origin: true }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(errorHandler)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/like', likeRoutes)
