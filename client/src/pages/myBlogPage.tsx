@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
+import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
 
 const MyBlogPage: React.FC = () => {
+    const { loading, blogs, getAllBlogsByUserId, errMessage } = useGetAllBlogsByUserId();
+
+    useEffect(() => {
+        getAllBlogsByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de');
+    }, [    ]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (errMessage) {
+        return <div>Error: {errMessage}</div>;
+    }6
+
     return (
         <section>
             <div className="card bg-base-100 rounded-box">
@@ -28,43 +43,39 @@ const MyBlogPage: React.FC = () => {
                     <Table
                         titles={[
                             'Title',
-                            'Categories',
+                            'Tag',
                             'Total view',
                             'Show',
                             'Options'
                         ]}
                     >
-                        {[2, 54, 8, 3, 4, 5, 7, 78, 9, 996, 974, 4435, 543].map(
-                            (e) => (
-                                <Table.tr className="border-grayCustom" key={e}>
-                                    <Table.td>
-                                        Lorem ipsum dolor sit amet
-                                    </Table.td>
-                                    <Table.td>
-                                        <span className="badge badge-sm border-grayCustom">
-                                            Sport
-                                        </span>
-                                    </Table.td>
-                                    <Table.td>205,454</Table.td>
-                                    <Table.td>
-                                        <Link
-                                            className="btn btn-primary btn-xs"
-                                            to={`/blog`}
-                                        >
-                                            View
-                                        </Link>
-                                    </Table.td>
-                                    <Table.td className="flex gap-1">
-                                        <button className="btn btn-info btn-xs">
-                                            Update
-                                        </button>
-                                        <button className="btn btn-error btn-xs">
-                                            Delete
-                                        </button>
-                                    </Table.td>
-                                </Table.tr>
-                            )
-                        )}
+                        {blogs && blogs.data.map((blog: any) => (
+                            <Table.tr className="border-grayCustom" key={blog.id}>
+                                <Table.td>{blog.title}</Table.td>
+                                <Table.td>
+                                    <span className="badge badge-sm border-grayCustom">
+                                        {blog.tag}
+                                    </span>
+                                </Table.td>
+                                <Table.td>{blog.view.length}</Table.td>
+                                <Table.td>
+                                    <Link
+                                        className="btn btn-primary btn-xs"
+                                        to={`/blog/${blog.id}`}
+                                    >
+                                        View
+                                    </Link>
+                                </Table.td>
+                                <Table.td className="flex gap-1">
+                                    <button className="btn btn-info btn-xs">
+                                        Update
+                                    </button>
+                                    <button className="btn btn-error btn-xs">
+                                        Delete
+                                    </button>
+                                </Table.td>
+                            </Table.tr>
+                        ))}
                     </Table>
                 </div>
             </div>

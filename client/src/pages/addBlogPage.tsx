@@ -2,20 +2,31 @@ import React, { useRef, useState } from 'react';
 import Input from '@/components/form/input';
 import FileInput from '@/components/form/fileInput';
 import MarkdownEditor from '@uiw/react-markdown-editor';
+import useCreateBlog from '@/hooks/blog/useCreateBlog';
+import {CreateblogRequest} from '@/types'
 
 const AddBlogPage: React.FC = () => {
     const [text, setText] = useState<string>('');
     const [title, setTitle] = useState<string>('');
-    const [tag, setTag] = useState<string>('sport'); // Default tag set to 'sport'
+    const [tag, setTag] = useState<string>('sport'); 
     const [file, setFile] = useState<File>();
-    const [imagePreview, setImagePreview] = useState<
-        string | ArrayBuffer | null
-    >(null);
+    const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
     const inputFileRef = useRef<HTMLInputElement>(null);
+    
+    const {loading, createBlog, errMessage}  = useCreateBlog()
+
+    const req: CreateblogRequest = {
+        title: title,
+        content: text,
+        tag: tag,
+        userId: '16745064-6d56-47bd-ad0c-3fa56eb3106b',
+        isDraft: false
+    }
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (title && tag && text && file) {
+            createBlog(req, file)
         }
     };
 
@@ -25,6 +36,11 @@ const AddBlogPage: React.FC = () => {
 
     return (
         <div className="min-h-screen max-w-5xl mx-auto space-y-5">
+            <div className='md:relative md:top-8 relative top-20'>
+                        {errMessage && (
+                            <div className="text-red-500">{errMessage}</div>
+                        )}
+                        </div>
             <div className="flex flex-col md:flex-row gap-5">
                 <div
                     onClick={handleFileInputClick}
@@ -59,7 +75,7 @@ const AddBlogPage: React.FC = () => {
                             className="w-full"
                             placeholder="Blog title"
                         />
-                        <div className="w-full">
+                        <div className="w-28">
                             <label className="block text-sm font-medium text-gray-700">
                                 Tag
                             </label>
@@ -81,9 +97,10 @@ const AddBlogPage: React.FC = () => {
                             setFile={setFile}
                             setImagePreview={setImagePreview}
                             className="hidden"
+                            name='imageUpload'
                         />
                         <button type="submit" className="btn btn-primary">
-                            Publish
+                            {loading ? 'Loading' : 'Publish'}
                         </button>
                     </form>
                 </div>

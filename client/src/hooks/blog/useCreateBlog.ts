@@ -6,24 +6,28 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseCreateBlogProps {
     loading: boolean;
     errMessage: string;
-    createBlog: (blogRequest: CreateblogRequest) => Promise<any>;
+    createBlog: (blogRequest: CreateblogRequest, file: File) => Promise<any>;
 }
 
 const useCreateBlog = (): UseCreateBlogProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
 
-    const createBlog = async (blogRequest: CreateblogRequest): Promise<any> => {
+    const createBlog = async (blogRequest: CreateblogRequest, file: File): Promise<any> => {
         setLoading(true);
         setErrMessage('');
 
         try {
-            const response = await fetch(`${BaseUrl}/`, {
+            const formData = new FormData();
+            formData.append('title', blogRequest.title);
+            formData.append('content', blogRequest.content);
+            formData.append('isDraft', blogRequest.isDraft.toString());
+            formData.append('tag', JSON.stringify(blogRequest.tag));
+            formData.append('imageUpload', file);
+
+            const response = await fetch(`${BaseUrl}/blogs`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(blogRequest)
+                body: formData
             });
 
             if (!response.ok) {

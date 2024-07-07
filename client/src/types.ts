@@ -12,8 +12,11 @@ export type LoginRequest = {
 
 export type CreateblogRequest = {
     title: string;
-    text: string;
+    content: string;
     tag: string;
+    userId: string
+    image?: File
+    isDraft: boolean
 };
 
 export type UpdateBlogRequest = {
