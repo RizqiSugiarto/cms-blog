@@ -32,10 +32,11 @@ export class AuthController {
             const response = await this.authService.loginUser(loginData)
 
             res.cookie('jwt', response, {
-                maxAge: 15 * 24 * 60 * 60 * 1000,
-                httpOnly: false,
+                maxAge: 15 * 24 * 60 * 60 * 1000,  
+                httpOnly: false,                  
                 secure: process.env.NODE_ENV !== 'development',
-            })
+                path: '/',                       
+            });
             res.status(200).json({ message: 'login succesfuly', token: response })
         } catch (error: any) {
             if (error.message === 'Email not found' || error.message === 'Wrong password') {
@@ -51,8 +52,13 @@ export class AuthController {
     async logout(req: Request, res: Response): Promise<void> {
         try {
             console.log('LOGUT KENA KOK')
-            res.cookie('jwt', '', { maxAge: 0 })
+            res.clearCookie('jwt', {
+                httpOnly: false,           
+                secure: process.env.NODE_ENV !== 'development',
+                path: '/',                
+            });
             res.status(200).json({ message: 'Logged out successfully' })
+            res.end()
         } catch (error) {
             res.status(500).json({ error: 'logout failed' })
         }

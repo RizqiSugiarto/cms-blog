@@ -227,7 +227,10 @@ export class BlogService {
                     user: { id: userId },
                     isDraft: true,
                 },
+                relations: ['liked', 'view']
             })
+
+            console.log(blogs, "GINI")
 
             const blogsResponse: blogBaseResponse[] = blogs.map((blog) => ({
                 id: blog.id,
