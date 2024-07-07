@@ -3,20 +3,20 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseGetMostViewedBlogByUserIdProps {
-    loading: boolean;
-    errMessage: string;
+    ViewdLoading: boolean;
+    ViewdErrMessage: string;
     mostViewedBlog: any;
     getMostViewedBlogByUserId: (userId: string) => Promise<void>;
 }
 
 const useGetMostViewedBlogByUserId = (): UseGetMostViewedBlogByUserIdProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
+    const [ViewdLoading, setViewdLoading] = useState(false);
+    const [ViewdErrMessage, setViewdErrMessage] = useState<string>('');
     const [mostViewedBlog, setMostViewedBlog] = useState<any>(null);
 
     const getMostViewedBlogByUserId = async (userId: string): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setViewdLoading(true);
+        setMostViewedBlog('');
 
         try {
             const response = await fetch(`${BaseUrl}/blogs/view/${userId}`);
@@ -28,14 +28,14 @@ const useGetMostViewedBlogByUserId = (): UseGetMostViewedBlogByUserIdProps => {
             const data = await response.json();
             setMostViewedBlog(data);
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch most viewed blog');
+            setViewdErrMessage(error.message || 'Failed to fetch most viewed blog');
             console.error('Error fetching most viewed blog:', error);
         } finally {
-            setLoading(false);
+            setViewdLoading(false);
         }
     };
 
-    return { loading, errMessage, mostViewedBlog, getMostViewedBlogByUserId };
+    return { ViewdLoading, ViewdErrMessage, mostViewedBlog, getMostViewedBlogByUserId };
 };
 
 export default useGetMostViewedBlogByUserId;

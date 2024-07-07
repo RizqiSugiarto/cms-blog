@@ -3,22 +3,22 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseTotalViewPerMonthProps {
-    loading: boolean;
-    errMessage: string;
-    totalViews: any;
+    TotalViewLoading: boolean;
+    TotalViewErrMessage: string;
+    TotalViewPerMonth: any;
     getTotalViewPerMonthByUserId: (userId: string) => Promise<void>;
 }
 
 const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
-    const [totalViews, setTotalViews] = useState<any>(null);
+    const [TotalViewLoading,    setLoadingTotalView] = useState(false);
+    const [TotalViewErrMessage, setErrMessageTotalView] = useState<string>('');
+    const [TotalViewPerMonth, setTotalViewPerMonth] = useState<any>(null);
 
     const getTotalViewPerMonthByUserId = async (
         userId: string
     ): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setLoadingTotalView(true);
+        setErrMessageTotalView('');
 
         try {
             const response = await fetch(`${BaseUrl}/view/${userId}`);
@@ -28,18 +28,18 @@ const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
             }
 
             const data = await response.json();
-            setTotalViews(data);
+            setTotalViewPerMonth(data);
         } catch (error: any) {
-            setErrMessage(
+            setErrMessageTotalView(
                 error.message || 'Failed to fetch total views per month'
             );
             console.error('Error fetching total views per month:', error);
         } finally {
-            setLoading(false);
+            setLoadingTotalView(false);
         }
     };
 
-    return { loading, errMessage, totalViews, getTotalViewPerMonthByUserId };
+    return { TotalViewLoading, TotalViewErrMessage, TotalViewPerMonth, getTotalViewPerMonthByUserId };
 };
 
 export default useTotalViewPerMonth;

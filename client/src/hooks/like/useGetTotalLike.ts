@@ -3,22 +3,22 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseTotalLikePerMonthProps {
-    loading: boolean;
-    errMessage: string;
-    totalLikes: any;
+    TotalLikeLoading: boolean;
+    TotalLikeErrMessage: string;
+    TotalLikePerMonth: any;
     getTotalLikePerMonthByUserId: (userId: string) => Promise<void>;
 }
 
 const useTotalLikePerMonth = (): UseTotalLikePerMonthProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
-    const [totalLikes, setTotalLikes] = useState<any>(null);
+    const [TotalLikeLoading,    setLikeLoading] = useState(false);
+    const [TotalLikeErrMessage, setLikeErrMessage] = useState<string>('');
+    const [TotalLikePerMonth,   setTotalLikePerMonth] = useState<any>(null);
 
     const getTotalLikePerMonthByUserId = async (
         userId: string
     ): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setLikeLoading(true);
+        setLikeErrMessage('');
 
         try {
             const response = await fetch(`${BaseUrl}/like/${userId}`);
@@ -28,18 +28,18 @@ const useTotalLikePerMonth = (): UseTotalLikePerMonthProps => {
             }
 
             const data = await response.json();
-            setTotalLikes(data);
+            setTotalLikePerMonth(data);
         } catch (error: any) {
-            setErrMessage(
+            setLikeErrMessage(
                 error.message || 'Failed to fetch total likes per month'
             );
             console.error('Error fetching total likes per month:', error);
         } finally {
-            setLoading(false);
+            setLikeLoading(false);
         }
     };
 
-    return { loading, errMessage, totalLikes, getTotalLikePerMonthByUserId };
+    return { TotalLikeLoading, TotalLikeErrMessage, TotalLikePerMonth, getTotalLikePerMonthByUserId };
 };
 
 export default useTotalLikePerMonth;

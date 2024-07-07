@@ -3,20 +3,20 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseMostFavTagProps {
-    loading: boolean;
-    errMessage: string;
-    mostFavTags: any;
+    FavTagLoading: boolean;
+    FavTagErrMessage: string;
+    FavTag: any;
     getMostFavTag: () => Promise<void>;
 }
 
 const useMostFavTag = (): UseMostFavTagProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
-    const [mostFavTags, setMostFavTags] = useState<any>(null);
+    const [FavTagLoading,     setLoadingFavTag] = useState(false);
+    const [FavTagErrMessage,  setErrMessageFavTag] = useState<string>('');
+    const [FavTag, setFavTags] = useState<any>(null);
 
     const getMostFavTag = async (): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setLoadingFavTag(true);
+        setErrMessageFavTag('');
 
         try {
             const response = await fetch(`${BaseUrl}/like/tag`);
@@ -26,16 +26,16 @@ const useMostFavTag = (): UseMostFavTagProps => {
             }
 
             const data = await response.json();
-            setMostFavTags(data);
+            setFavTags(data);
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch most liked tags');
+            setErrMessageFavTag(error.message || 'Failed to fetch most liked tags');
             console.error('Error fetching most liked tags:', error);
         } finally {
-            setLoading(false);
+            setLoadingFavTag(false);
         }
     };
 
-    return { loading, errMessage, mostFavTags, getMostFavTag };
+    return { FavTagLoading, FavTagErrMessage, FavTag, getMostFavTag };
 };
 
 export default useMostFavTag;

@@ -46,8 +46,8 @@ export class LikedController {
 
     async getMostFavoriteTag(req: Request, res: Response): Promise<void> {
         try {
-            await this.likedService.getMostFavTag()
-            res.status(200).json({ Message: 'cobaun' })
+            const resp = await this.likedService.getMostFavTag()
+            res.status(200).json(resp)
         } catch (error) {
             res.status(500).json({ error: error })
         }

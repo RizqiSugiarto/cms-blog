@@ -22,7 +22,13 @@ ChartJS.register(
     Legend
 );
 
-const BarChart: React.FC = () => {
+type BarChartProps = {
+    title: string
+    labels: string[]
+    dataChart: number[]
+}
+
+const BarChart: React.FC<BarChartProps> = ({title, labels, dataChart}) => {
     const options = {
         responsive: true,
         plugins: {
@@ -32,23 +38,23 @@ const BarChart: React.FC = () => {
         }
     } as ChartOptions<'bar'>;
 
-    const labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July'
-    ];
+    // const labels = [
+    //     'January',
+    //     'February',
+    //     'March',
+    //     'April',
+    //     'May',
+    //     'June',
+    //     'July'
+    // ];
 
     const data = {
         labels,
         datasets: [
             {
-                label: 'Articles',
-                data: labels.map(() => {
-                    return Math.random() * 1000 + 500;
+                label: title,
+                data: labels.map((_c, i) => {
+                    return dataChart[i];
                 }),
                 backgroundColor: 'rgba(146, 151, 196, 1)'
             }
