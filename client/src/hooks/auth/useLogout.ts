@@ -18,18 +18,19 @@ const useLogout = (): UseLogoutProps => {
 
         try {
             const response = await fetch(`${BaseUrl}/auth/logout`, {
+                credentials: 'include',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             if (!response.ok) {
-                throw new Error('Login Failed');
+                throw new Error('logout Failed');
             }
             return response.json();
         } catch (error: any) {
             seterrMessage(error.message);
-            console.error('Login Failed');
+            console.error('logout Failed');
         } finally {
             setLoading(false);
         }

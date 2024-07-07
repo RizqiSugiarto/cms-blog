@@ -6,12 +6,37 @@ const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 import AddBlogPage from '@/pages/addBlogPage';
 import DraftPage from '@/pages/draftPage';
 import MyBlogPage from '@/pages/myBlogPage';
+import useLogout from '@/hooks/auth/useLogout';
 
 const DashboardLayout: React.FC = () => {
+
+    const {loading, logout, errMessage} = useLogout()
+
     const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
             ? 'text-lg btn btn-primary justify-start w-full'
             : 'text-lg btn btn-ghost justify-start w-full';
+
+
+    const handleLogout = () => {
+        logout()
+    }
+
+    if(loading) {
+        return (
+            <div>
+                {loading}
+            </div>
+        )
+    }
+
+    if(errMessage) {
+        return (
+            <div>
+                {errMessage}
+            </div>
+        )
+    }
 
     return (
         <main className="drawer lg:drawer-open">
@@ -83,6 +108,7 @@ const DashboardLayout: React.FC = () => {
                         <NavLink
                             to="/"
                             className="text-lg btn btn-ghost justify-start w-full"
+                            onClick={handleLogout}
                         >
                             <i className="bi bi-box-arrow-left"></i>
                             Logout
