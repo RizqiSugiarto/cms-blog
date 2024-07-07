@@ -8,7 +8,7 @@ const MyBlogPage: React.FC = () => {
 
     useEffect(() => {
         getAllBlogsByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de');
-    }, [    ]);
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -16,7 +16,7 @@ const MyBlogPage: React.FC = () => {
 
     if (errMessage) {
         return <div>Error: {errMessage}</div>;
-    }6
+    }
 
     return (
         <section>

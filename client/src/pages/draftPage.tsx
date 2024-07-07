@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
+import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
 
 const MyBlogPage: React.FC = () => {
+
+    const {drafts, errMessage, loading, getAllBlogsDraftByUserId}  = useGetAllBlogsDraftByUserId()
+
+    useEffect(() => {
+        getAllBlogsDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
+    }, [])
+
+    if(loading) {
+        return(
+            <div>
+                {loading}
+            </div>
+        )
+    }
+
+    if(errMessage) {
+        return(
+            <div>
+                {errMessage}
+            </div>
+        )
+    }
+
     return (
         <section>
             <div className="card bg-base-100 rounded-box">
@@ -34,18 +58,18 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {[2, 54, 8, 3, 4, 5, 7, 78, 9, 996, 974, 4435, 543].map(
-                            (e) => (
-                                <Table.tr className="border-grayCustom" key={e}>
+                        {drafts && drafts.data.map(
+                            (draft: any) => (
+                                <Table.tr className="border-grayCustom" key={draft.id}>
                                     <Table.td>
-                                        Lorem ipsum dolor sit amet
+                                        {draft.title}
                                     </Table.td>
                                     <Table.td>
                                         <span className="badge badge-sm border-grayCustom">
-                                            Sport
+                                        {draft.tag}
                                         </span>
                                     </Table.td>
-                                    <Table.td>205,454</Table.td>
+                                    <Table.td>{draft.view.length}</Table.td>
                                     <Table.td>
                                         <Link
                                             className="btn btn-primary btn-xs"
