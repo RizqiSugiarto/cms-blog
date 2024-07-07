@@ -1,43 +1,27 @@
-import { useState } from 'react';
+import { useEffect } from "react";
+import { useDispatch} from "react-redux";
+import { fetchBlogsDraftStart, fetchBlogDraftSuccess, fetchBlogsDraftFailure } from '@/store/blogDraftSlice';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
-interface UseGetAllBlogsDraftByUserIdProps {
-    loading: boolean;
-    errMessage: string;
-    drafts: any;
-    getAllBlogsDraftByUserId: (userId: string) => Promise<void>;
-}
-
-const useGetAllBlogsDraftByUserId = (): UseGetAllBlogsDraftByUserIdProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
-    const [drafts, setDrafts] = useState<any>(null);
-
-    const getAllBlogsDraftByUserId = async (userId: string): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
-
-        try {
-            const response = await fetch(`${BaseUrl}/blogs/draft/${userId}`);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch draft blogs by user ID');
+const useGetAllBlogsDraftByUserId = (userId: string): void => {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        const fetchBlogDraft = async () => {
+            try {
+                dispatch(fetchBlogsDraftStart())
+                const response = await fetch(`${BaseUrl}/blogs/draft/${userId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch blogs');
+                  }
+                  const responseData = await response.json();
+            dispatch(fetchBlogDraftSuccess({ count: responseData.count, data: responseData.data }));
+            } catch (error:any) {
+                dispatch(fetchBlogsDraftFailure(error.message || 'Failed to fetch blogs'));
             }
-
-            const data = await response.json();
-            setDrafts(data);
-        } catch (error: any) {
-            setErrMessage(
-                error.message || 'Failed to fetch draft blogs by user ID'
-            );
-            console.error('Error fetching draft blogs by user ID:', error);
-        } finally {
-            setLoading(false);
         }
-    };
-
-    return { loading, errMessage, drafts, getAllBlogsDraftByUserId };
+        fetchBlogDraft()
+    }, [dispatch, userId])
 };
 
 export default useGetAllBlogsDraftByUserId;

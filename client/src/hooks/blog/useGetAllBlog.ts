@@ -1,41 +1,29 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchBlogsStart, fetchBlogsSuccess, fetchBlogsFailure } from '@/store/blogSlice';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
-interface UseGetAllBlogsByUserIdProps {
-    loading: boolean;
-    errMessage: string;
-    blogs: any;
-    getAllBlogsByUserId: (userId: string) => Promise<void>;
-}
+const useGetAllBlogsByUserId = (userId: string): void => {
+  const dispatch = useDispatch();
 
-const useGetAllBlogsByUserId = (): UseGetAllBlogsByUserIdProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
-    const [blogs, setBlogs] = useState<any>(null);
-
-    const getAllBlogsByUserId = async (userId: string): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
-
-        try {
-            const response = await fetch(`${BaseUrl}/blogs/user/${userId}`);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch blogs by user ID');
-            }
-
-            const data = await response.json();
-            setBlogs(data);
-        } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch blogs by user ID');
-            console.error('Error fetching blogs by user ID:', error);
-        } finally {
-            setLoading(false);
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        dispatch(fetchBlogsStart());
+        const response = await fetch(`${BaseUrl}/blogs/user/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch blogs');
         }
+        const responseData = await response.json();
+        dispatch(fetchBlogsSuccess({ count: responseData.count, data: responseData.data }));
+      } catch (error: any) {
+        dispatch(fetchBlogsFailure(error.message || 'Failed to fetch blogs'));
+      }
     };
 
-    return { loading, errMessage, blogs, getAllBlogsByUserId };
+    fetchBlogs();
+  }, [dispatch, userId]);
 };
 
 export default useGetAllBlogsByUserId;

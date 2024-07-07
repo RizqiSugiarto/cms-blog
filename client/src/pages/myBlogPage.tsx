@@ -1,21 +1,26 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
-import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const MyBlogPage: React.FC = () => {
-    const { loading, blogs, getAllBlogsByUserId, errMessage } = useGetAllBlogsByUserId();
+    const { Blogloading, Blogdata: blogs, Blogerror } = useSelector((state: RootState) => state.blog);
 
-    useEffect(() => {
-        getAllBlogsByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de');
-    }, []);
-
-    if (loading) {
-        return <div>Loading...</div>;
+    if(Blogloading) {
+        return (
+            <div>
+                {Blogloading}
+            </div>
+        )
     }
 
-    if (errMessage) {
-        return <div>Error: {errMessage}</div>;
+    if(Blogerror) {
+        return (
+            <div>
+                {Blogerror}
+            </div>
+        )
     }
 
     return (
@@ -49,7 +54,7 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {blogs && blogs.data.map((blog: any) => (
+                        {blogs && blogs.map((blog: any) => (
                             <Table.tr className="border-grayCustom" key={blog.id}>
                                 <Table.td>{blog.title}</Table.td>
                                 <Table.td>

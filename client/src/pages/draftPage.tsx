@@ -1,28 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
-import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const MyBlogPage: React.FC = () => {
 
-    const {drafts, errMessage, loading, getAllBlogsDraftByUserId}  = useGetAllBlogsDraftByUserId()
+    const { BlogDraftloading, BlogDraftdata: blogsDraft, BlogDrafterror } = useSelector((state: RootState) => state.bloDraft);
 
-    useEffect(() => {
-        getAllBlogsDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-    }, [])
-
-    if(loading) {
+    if(BlogDraftloading) {
         return(
             <div>
-                {loading}
+                {BlogDraftloading}
             </div>
         )
     }
 
-    if(errMessage) {
+    if(BlogDrafterror) {
         return(
             <div>
-                {errMessage}
+                {BlogDrafterror}
             </div>
         )
     }
@@ -58,7 +55,7 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {drafts && drafts.data.map(
+                        {blogsDraft && blogsDraft.map(
                             (draft: any) => (
                                 <Table.tr className="border-grayCustom" key={draft.id}>
                                     <Table.td>
