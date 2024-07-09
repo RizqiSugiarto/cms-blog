@@ -48,7 +48,7 @@ const DashboardLayout: React.FC = () => {
                 <div className="mx-2 md:mx-4">
                     <Routes>
                         <Route path="/" element={<DashboardPage />} />
-                        <Route path="/addBlog" element={<AddBlogPage />} />
+                        <Route path="/writeBlog" element={<AddBlogPage />} />
                         <Route path="/draft" element={<DraftPage />} />
                         <Route path="/myblog" element={<MyBlogPage />} />
                     </Routes>
@@ -78,12 +78,12 @@ const DashboardLayout: React.FC = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/dashboard/addblog"
+                            to="/dashboard/writeBlog"
                             end
                             className={getNavLinkClass}
                         >
                             <i className="bi bi-pencil-square"></i>
-                            Add Blog
+                            Write Blog
                         </NavLink>
                     </li>
                     <li>
