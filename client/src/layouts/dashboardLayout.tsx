@@ -1,41 +1,31 @@
-import React from 'react';
-import { lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import HeaderDashboard from '@/components/header/headerDashboard';
 import { NavLink, Route, Routes } from 'react-router-dom';
-const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 import AddBlogPage from '@/pages/addBlogPage';
 import DraftPage from '@/pages/draftPage';
 import MyBlogPage from '@/pages/myBlogPage';
 import useLogout from '@/hooks/auth/useLogout';
 
-const DashboardLayout: React.FC = () => {
+const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 
-    const {loading, logout, errMessage} = useLogout()
+const DashboardLayout: React.FC = () => {
+    const { loading, logout, errMessage } = useLogout();
 
     const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
             ? 'text-lg btn btn-primary justify-start w-full'
             : 'text-lg btn btn-ghost justify-start w-full';
 
-
     const handleLogout = () => {
-        logout()
+        logout();
+    };
+
+    if (loading) {
+        return <div>{loading}</div>;
     }
 
-    if(loading) {
-        return (
-            <div>
-                {loading}
-            </div>
-        )
-    }
-
-    if(errMessage) {
-        return (
-            <div>
-                {errMessage}
-            </div>
-        )
+    if (errMessage) {
+        return <div>{errMessage}</div>;
     }
 
     return (
@@ -46,12 +36,14 @@ const DashboardLayout: React.FC = () => {
                     <HeaderDashboard />
                 </div>
                 <div className="mx-2 md:mx-4">
-                    <Routes>
-                        <Route path="/" element={<DashboardPage />} />
-                        <Route path="/writeBlog" element={<AddBlogPage />} />
-                        <Route path="/draft" element={<DraftPage />} />
-                        <Route path="/myblog" element={<MyBlogPage />} />
-                    </Routes>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Routes>
+                            <Route path="/" element={<DashboardPage />} />
+                            <Route path="/writeBlog" element={<AddBlogPage />} />
+                            <Route path="/draft" element={<DraftPage />} />
+                            <Route path="/myblog" element={<MyBlogPage />} />
+                        </Routes>
+                    </Suspense>
                 </div>
             </div>
             <div className="drawer-side z-30">
@@ -67,49 +59,31 @@ const DashboardLayout: React.FC = () => {
                         </h2>
                     </div>
                     <li>
-                        <NavLink
-                            to="/dashboard"
-                            end
-                            className={getNavLinkClass}
-                        >
+                        <NavLink to="/dashboard" end className={getNavLinkClass}>
                             <i className="bi bi-window-dash"></i>
                             Dashboard
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/writeBlog"
-                            end
-                            className={getNavLinkClass}
-                        >
+                        <NavLink to="/dashboard/writeBlog" end className={getNavLinkClass}>
                             <i className="bi bi-pencil-square"></i>
                             Write Blog
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/myblog"
-                            className={getNavLinkClass}
-                        >
+                        <NavLink to="/dashboard/myblog" className={getNavLinkClass}>
                             <i className="bi bi-file-earmark-richtext"></i>
                             My Blogs
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/draft"
-                            className={getNavLinkClass}
-                        >
+                        <NavLink to="/dashboard/draft" className={getNavLinkClass}>
                             <i className="bi bi-file-earmark-break"></i>
                             Draft
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink
-                            to="/"
-                            className="text-lg btn btn-ghost justify-start w-full"
-                            onClick={handleLogout}
-                        >
+                        <NavLink to="/" className="text-lg btn btn-ghost justify-start w-full" onClick={handleLogout}>
                             <i className="bi bi-box-arrow-left"></i>
                             Logout
                         </NavLink>

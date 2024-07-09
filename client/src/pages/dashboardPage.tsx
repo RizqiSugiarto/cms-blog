@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
 import Stat from '@/components/dashboard/stat';
 import BarChart from '@/components/dashboard/barChart';
 import OneLineChart from '@/components/dashboard/oneLineChart';
@@ -30,21 +28,24 @@ const DashboardPage: React.FC = () => {
 
     const {TotalLikeLoading, TotalLikeErrMessage, TotalLikePerMonth, getTotalLikePerMonthByUserId} = useTotalLikePerMonth()
     const {TotalViewLoading, TotalViewErrMessage, TotalViewPerMonth, getTotalViewPerMonthByUserId} = useTotalViewPerMonth()
+    const {getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId} = useGetAllBlogsByUserId()
+    const {getAllBLogDraftLoading, getAllBlogDraftErrMessage, allBlogDraft, getAllBlogDraftByUserId} = useGetAllBlogsDraftByUserId()
     const {FavTagLoading, FavTagErrMessage, FavTag, getMostFavTag} = useMostFavTag()
     const {ViewdLoading, ViewdErrMessage, mostViewedBlog, getMostViewedBlogByUserId} = useGetMostViewedBlogByUserId()
 
-    const { Blogloading, Blogdata: blogs, Blogerror, Blogcount } = useSelector((state: RootState) => state.blog);
-    const { BlogDraftloading, BlogDraftdata: blogDraft, BlogDrafterror, BlogDraftcount } = useSelector((state: RootState) => state.bloDraft);
+    // const { Blogloading, Blogdata: blogs, Blogerror, Blogcount } = useSelector((state: RootState) => state.blog);
+    // const { BlogDraftloading, BlogDraftdata: blogDraft, BlogDrafterror, BlogDraftcount } = useSelector((state: RootState) => state.bloDraft);
 
-
-    useGetAllBlogsByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-    useGetAllBlogsDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
 
     useEffect(() => {
-        if (blogs) {
-          
-          const totalLikes = blogs.reduce((acc, blog) => acc + blog.like.length, 0);
-          const totalViews = blogs.reduce((acc, blog) => acc + blog.view.length, 0);
+        getAllBlogByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
+        getAllBlogDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
+    }, [])
+
+    useEffect(() => {
+        if (allBLog) {
+          const totalLikes = allBLog.data.reduce((acc: any, blog: { like: string | any[]; }) => acc + blog.like.length, 0);
+          const totalViews = allBLog.data.reduce((acc: any, blog: { view: string | any[]; }) => acc + blog.view.length, 0);
 
           getTotalLikePerMonthByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
           getTotalViewPerMonthByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
@@ -54,12 +55,13 @@ const DashboardPage: React.FC = () => {
           
           setTotalLike(totalLikes);
           settotalView(totalViews);
-          setTotalBlog(Blogcount)
-          setTotalBlogDraft(BlogDraftcount)
+          setTotalBlog(allBLog.count)
+          setTotalBlogDraft(allBlogDraft.count)
         }
-      }, [blogs, blogDraft]);
+      }, [allBLog, allBlogDraft]);
 
       useEffect(() => {
+
         if (TotalLikePerMonth) {
             const likePerMonth = TotalLikePerMonth.data.map((like: { totalLikes: number }) => like.totalLikes);
             const likeLabel = TotalLikePerMonth.data.map((like: {month: string}) => like.month)
@@ -94,18 +96,18 @@ const DashboardPage: React.FC = () => {
         
     }, [TotalLikePerMonth, TotalViewPerMonth, FavTag, mostViewedBlog]);
     
-    if(Blogloading) {
+    if(getAllBlogLoading) {
         return (
             <div>
-                {Blogloading}
+                {getAllBlogLoading}
             </div>
         )
     }
 
-    if(BlogDraftloading) {
+    if(getAllBLogDraftLoading) {
         return (
             <div>
-                {Blogloading}
+                {getAllBLogDraftLoading}
             </div>
         )
     }
@@ -113,7 +115,7 @@ const DashboardPage: React.FC = () => {
     if(TotalLikeLoading) {
         return (
             <div>
-                {Blogloading}
+                {TotalLikeLoading}
             </div>
         )
     }
@@ -121,7 +123,7 @@ const DashboardPage: React.FC = () => {
     if(TotalViewLoading) {
         return (
             <div>
-                {Blogloading}
+                {TotalViewLoading}
             </div>
         )
     }
@@ -142,18 +144,18 @@ const DashboardPage: React.FC = () => {
         )
     }
 
-    if(Blogerror) {
+    if(getAllErrMessage) {
         return (
             <div>
-                {Blogerror}
+                {getAllErrMessage}
             </div>
         )
     }
 
-    if(BlogDrafterror) {
+    if(getAllBlogDraftErrMessage) {
         return (
             <div>
-                {Blogerror}
+                {getAllBlogDraftErrMessage}
             </div>
         )
     }
@@ -161,7 +163,7 @@ const DashboardPage: React.FC = () => {
     if(TotalViewErrMessage) {
         return (
             <div>
-                {Blogerror}
+                {TotalViewErrMessage}
             </div>
         )
     }
@@ -169,7 +171,7 @@ const DashboardPage: React.FC = () => {
     if(TotalLikeErrMessage) {
         return (
             <div>
-                {Blogerror}
+                {TotalLikeErrMessage}
             </div>
         )
     }

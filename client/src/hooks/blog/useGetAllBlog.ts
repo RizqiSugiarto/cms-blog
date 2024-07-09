@@ -1,29 +1,39 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchBlogsStart, fetchBlogsSuccess, fetchBlogsFailure } from '@/store/blogSlice';
+import { useState } from "react";
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
-const useGetAllBlogsByUserId = (userId: string): void => {
-  const dispatch = useDispatch();
+interface UseGetAllBlogProps {
+  getAllBlogLoading: boolean
+  getAllErrMessage: string
+  allBLog: any
+  getAllBlogByUserId: (userId: string) => Promise<void>
+}
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        dispatch(fetchBlogsStart());
-        const response = await fetch(`${BaseUrl}/blogs/user/${userId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch blogs');
-        }
-        const responseData = await response.json();
-        dispatch(fetchBlogsSuccess({ count: responseData.count, data: responseData.data }));
-      } catch (error: any) {
-        dispatch(fetchBlogsFailure(error.message || 'Failed to fetch blogs'));
+const useGetAllBlogsByUserId = (): UseGetAllBlogProps => {
+  const [getAllBlogLoading, setgetAllBlogLoading] = useState<boolean>(false)
+  const [getAllErrMessage, setgetAllErrMessage] = useState<string>('')
+  const [allBLog, setallBLog] = useState<any>(null)
+
+  const getAllBlogByUserId = async(userId: string): Promise<void> => {
+    setgetAllBlogLoading(true)
+
+    try {
+      const response = await fetch(`${BaseUrl}/blogs/${userId}`)
+
+      if(!response.ok) {
+        throw new Error('Failed to fetch All BLog')
       }
-    };
 
-    fetchBlogs();
-  }, [dispatch, userId]);
+      const data = await response.json()
+      setallBLog(data)
+    } catch (error: any) {
+      setgetAllErrMessage(error.message || 'Failed to fetch getAll blog')
+      console.error('Error fetching getAll Blog', error)
+    } finally {
+      setgetAllBlogLoading(false)
+    }
+  }
+  return {allBLog, getAllErrMessage, getAllBlogLoading, getAllBlogByUserId}
 };
 
 export default useGetAllBlogsByUserId;

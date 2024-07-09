@@ -1,24 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
+import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
 
 const MyBlogPage: React.FC = () => {
-    const { Blogloading, Blogdata: blogs, Blogerror } = useSelector((state: RootState) => state.blog);
+    const {getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId} = useGetAllBlogsByUserId()
+    const [search, setSearch] = useState<string>('')
 
-    if(Blogloading) {
+    useEffect(() => {
+        getAllBlogByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
+    }, [])
+
+    if(getAllBlogLoading) {
         return (
             <div>
-                {Blogloading}
+                {getAllBlogLoading}
             </div>
         )
     }
 
-    if(Blogerror) {
+    if(getAllErrMessage) {
         return (
             <div>
-                {Blogerror}
+                {getAllErrMessage}
             </div>
         )
     }
@@ -34,13 +38,9 @@ const MyBlogPage: React.FC = () => {
                                 <input
                                     className="input input-bordered join-item border-grayCustom"
                                     placeholder="Search"
+                                    onChange={(e) => {setSearch(e.target.value)}}
                                 />
                             </div>
-                        </div>
-                        <div className="indicator w-full">
-                            <button className="btn join-item w-full border-grayCustom">
-                                Search
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,9 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {blogs && blogs.map((blog: any) => (
+                        {allBLog && allBLog.data.filter((item: any) => {
+                            return search.toLowerCase() === '' ? item : item.title.toLowerCase().includes(search)
+                        }).map((blog: any) => (
                             <Table.tr className="border-grayCustom" key={blog.id}>
                                 <Table.td>{blog.title}</Table.td>
                                 <Table.td>
