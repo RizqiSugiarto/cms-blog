@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useAuthContext, AuthUser } from '@/context/authContext';
+// import { useAuthContext, AuthUser } from '@/context/authContext';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { LoginRequest } from '@/types';
@@ -10,13 +10,15 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseLoginProps {
     loading: boolean;
     errMessage: string;
+    isSuccess: boolean
     login: (loginData: LoginRequest) => Promise<void>;
 }
 
 const useLogin = (): UseLoginProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const { setAuthUser } = useAuthContext();
+    const [isSuccess, setIsSuccess] = useState<boolean>(false)
+    // const { setAuthUser } = useAuthContext();
 
     const login = async (loginData: LoginRequest): Promise<void> => {
         setLoading(true);
@@ -26,7 +28,10 @@ const useLogin = (): UseLoginProps => {
             const response = await fetch(`${BaseUrl}/auth/login`, {
                 credentials: 'include',
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-web-app': 'cms' 
+                },
                 body: JSON.stringify(loginData)
             });
 
@@ -37,14 +42,14 @@ const useLogin = (): UseLoginProps => {
             }
 
             const tokenVal = Cookies.get('jwt');
-            const Token: AuthUser = {
-                token: tokenVal
-            };
+            // const Token: AuthUser = {
+            //     token: tokenVal
+            // };
             const userData = jwtDecode(tokenVal!);
 
             localStorage.setItem('user-data', JSON.stringify(userData));
-
-            setAuthUser(Token);
+            setIsSuccess(true)
+            // setAuthUser(Token);
         } catch (error: any) {
             console.error('Error during login:', error);
             setErrMessage(
@@ -56,7 +61,7 @@ const useLogin = (): UseLoginProps => {
         }
     };
 
-    return { loading, errMessage, login };
+    return { loading, errMessage, isSuccess,login };
 };
 
 export default useLogin;

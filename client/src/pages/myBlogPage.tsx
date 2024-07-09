@@ -2,14 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
 import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
+import { useAuthContext } from '@/context/authContext';
 
 const MyBlogPage: React.FC = () => {
     const {getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId} = useGetAllBlogsByUserId()
     const [search, setSearch] = useState<string>('')
+    const {authUser} = useAuthContext()    
 
     useEffect(() => {
-        getAllBlogByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-    }, [])
+        if (authUser?.userId) {
+            getAllBlogByUserId(authUser.userId);
+        } else {
+            console.error('authUser is undefined');
+        }
+    }, [authUser])
 
     if(getAllBlogLoading) {
         return (

@@ -4,6 +4,7 @@ import FileInput from '@/components/form/fileInput';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import useCreateBlog from '@/hooks/blog/useCreateBlog';
 import {CreateblogRequest} from '@/types'
+import { useAuthContext } from '@/context/authContext';
 
 const AddBlogPage: React.FC = () => {
     const [text, setText] = useState<string>('');
@@ -12,19 +13,27 @@ const AddBlogPage: React.FC = () => {
     const [file, setFile] = useState<File>();
     const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
     const inputFileRef = useRef<HTMLInputElement>(null);
-    
+    const {authUser} = useAuthContext()
     const {loading, createBlog, errMessage}  = useCreateBlog()
 
-    const req: CreateblogRequest = {
-        title: title,
-        content: text,
-        tag: tag,
-        userId: '16745064-6d56-47bd-ad0c-3fa56eb3106b',
-        isDraft: false
-    }
+    
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        
+        if(!authUser?.userId) {
+            console.error('User not authenticate')
+            return
+        }
+
+        const req: CreateblogRequest = {
+            title: title,
+            content: text,
+            tag: tag,
+            userId: authUser.userId,
+            isDraft: false
+        }
+
         if (title && tag && text && file) {
             createBlog(req, file)
         }

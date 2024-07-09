@@ -29,7 +29,16 @@ export class AuthController {
     async login(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const loginData: LoginDto = req.body
+            const appType = req.headers['x-web-app']
+
+            if(!appType) {
+                res.status(400).json({message: 'Bad Request'})
+            }
+
+            loginData.appType = appType as string
+
             const response = await this.authService.loginUser(loginData)
+
 
             res.cookie('jwt', response, {
                 maxAge: 15 * 24 * 60 * 60 * 1000,  
@@ -39,19 +48,12 @@ export class AuthController {
             });
             res.status(200).json({ message: 'login succesfuly', token: response })
         } catch (error: any) {
-            if (error.message === 'Email not found' || error.message === 'Wrong password') {
-                res.status(401).json({ error: error.message }); 
-            } else {
-                logger.error('Error in register controller:', error);
-                res.status(500).json({ error: 'Failed to register user' }); 
-            }
-            next(error);
+            next(error)
         }
     }
 
     async logout(req: Request, res: Response): Promise<void> {
         try {
-            console.log('LOGUT KENA KOK')
             res.clearCookie('jwt', {
                 httpOnly: false,           
                 secure: process.env.NODE_ENV !== 'development',
@@ -61,6 +63,21 @@ export class AuthController {
             res.end()
         } catch (error) {
             res.status(500).json({ error: 'logout failed' })
+        }
+    }
+
+    async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const {userId} = req.params
+            const profile = await this.authService.getProfileByUserId(userId)
+            const profileData = {
+                name: profile?.name,
+                email: profile?.email,
+                imageUrl: profile?.ImageUrl
+            }
+            res.status(200).json(profileData)
+        } catch (error) {
+            next(error)
         }
     }
 }

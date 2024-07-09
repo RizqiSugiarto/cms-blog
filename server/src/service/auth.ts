@@ -2,6 +2,7 @@ import { User } from '@/entity/users'
 import connectDb from '@/db/mysql'
 import { RegisterDto, LoginDto } from '@/dto/auth'
 import { generateToken, hashPassword, comparePassword } from '@/helpers/auth'
+import {NotFoundError, UnAuthorizedError} from '@/helpers/customErr'
 
 export class AuthService {
     private userRepository = connectDb.getRepository(User)
@@ -31,10 +32,13 @@ export class AuthService {
     }
 
     async loginUser(loginData: LoginDto): Promise<String> {
-        try {
-            const user = await this.findUserByEmail(loginData.email)
+        const user = await this.findUserByEmail(loginData.email)
         if (!user) {
-            throw new Error('Email not found')
+            throw new NotFoundError('Email not found')
+        }
+
+        if(user.role == 'user' && loginData.appType == 'cms') {
+            throw new UnAuthorizedError('User not authorized for CMS')
         }
 
         const isValidPassword = await comparePassword(
@@ -42,24 +46,32 @@ export class AuthService {
             user.password,
         )
         if (!isValidPassword) {
-            throw new Error('Wrong password')
+            throw new UnAuthorizedError('Wrong password')
         }
 
         const token = generateToken(user.id)
 
         return token
-        } catch (error: any) {
-            throw new Error(error.message)
-        }
     }
 
     async findUserByEmail(email: string): Promise<User | null> {
         try {
             const user = await this.userRepository.findOne({ where: { email } })
-            return user || null
+            return user 
         } catch (error) {
             console.error('Error finding user by email:', error)
             return null
         }
+    }
+
+    async getProfileByUserId(userId: string): Promise<User | null> {
+        const user = await this.userRepository.createQueryBuilder('user')
+                    .select(['user.name', 'user.email', 'user.ImageUrl'])
+                    .where('id = :userId', {userId})
+                    .getOne()
+        if(!user) {
+            throw new NotFoundError('User not found')
+        }
+        return user
     }
 }

@@ -9,4 +9,5 @@ export class RegisterDto {
 export class LoginDto {
     email: string
     password: string
+    appType: string
 }

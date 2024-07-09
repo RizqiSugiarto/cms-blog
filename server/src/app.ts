@@ -16,11 +16,11 @@ const app = express()
 app.use(cors({ credentials: true, origin: true }))
 app.use(express.json())
 app.use(cookieParser())
-app.use(errorHandler)
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/like', likeRoutes)
 app.use('/api/v1/view', viewRoutes)
+app.use(errorHandler)
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)

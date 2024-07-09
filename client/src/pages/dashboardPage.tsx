@@ -8,6 +8,7 @@ import useTotalLikePerMonth from '@/hooks/like/useGetTotalLike';
 import useTotalViewPerMonth from '@/hooks/view/useGetTotalView';
 import useMostFavTag from '@/hooks/like/useGetFavTag';
 import useGetMostViewedBlogByUserId from '@/hooks/blog/useGetBlogMostView';
+import { useAuthContext } from '@/context/authContext';
 
 const DashboardPage: React.FC = () => {
     const [totalLike, setTotalLike] = useState<number>(0)
@@ -33,24 +34,33 @@ const DashboardPage: React.FC = () => {
     const {FavTagLoading, FavTagErrMessage, FavTag, getMostFavTag} = useMostFavTag()
     const {ViewdLoading, ViewdErrMessage, mostViewedBlog, getMostViewedBlogByUserId} = useGetMostViewedBlogByUserId()
 
-    // const { Blogloading, Blogdata: blogs, Blogerror, Blogcount } = useSelector((state: RootState) => state.blog);
-    // const { BlogDraftloading, BlogDraftdata: blogDraft, BlogDrafterror, BlogDraftcount } = useSelector((state: RootState) => state.bloDraft);
+    const {authUser} = useAuthContext()
+
 
 
     useEffect(() => {
-        getAllBlogByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-        getAllBlogDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-    }, [])
+        if(authUser?.userId) {
+            getAllBlogByUserId(authUser.userId)
+            getAllBlogDraftByUserId(authUser.userId)
+        }else {
+            console.error('User Not Authenticate')
+        }
+
+    }, [authUser])
 
     useEffect(() => {
         if (allBLog) {
           const totalLikes = allBLog.data.reduce((acc: any, blog: { like: string | any[]; }) => acc + blog.like.length, 0);
           const totalViews = allBLog.data.reduce((acc: any, blog: { view: string | any[]; }) => acc + blog.view.length, 0);
 
-          getTotalLikePerMonthByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-          getTotalViewPerMonthByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-          getMostViewedBlogByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-          getMostFavTag()
+          if(authUser?.userId) {
+            getTotalLikePerMonthByUserId(authUser.userId)
+            getTotalViewPerMonthByUserId(authUser.userId)
+            getMostViewedBlogByUserId(authUser.userId)
+            getMostFavTag()
+        }else {
+            console.error('User Not Authenticate')
+        }
 
           
           setTotalLike(totalLikes);
@@ -58,7 +68,7 @@ const DashboardPage: React.FC = () => {
           setTotalBlog(allBLog.count)
           setTotalBlogDraft(allBlogDraft.count)
         }
-      }, [allBLog, allBlogDraft]);
+      }, [allBLog, allBlogDraft, authUser]);
 
       useEffect(() => {
 
@@ -94,7 +104,7 @@ const DashboardPage: React.FC = () => {
             setLabelMostView(mostViewedBlogLabels)
         }
         
-    }, [TotalLikePerMonth, TotalViewPerMonth, FavTag, mostViewedBlog]);
+    }, [TotalLikePerMonth, TotalViewPerMonth, FavTag, mostViewedBlog, authUser]);
     
     if(getAllBlogLoading) {
         return (

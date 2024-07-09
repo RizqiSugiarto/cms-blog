@@ -5,11 +5,13 @@ import AddBlogPage from '@/pages/addBlogPage';
 import DraftPage from '@/pages/draftPage';
 import MyBlogPage from '@/pages/myBlogPage';
 import useLogout from '@/hooks/auth/useLogout';
+import { useAuthContext } from '@/context/authContext';
 
 const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 
 const DashboardLayout: React.FC = () => {
     const { loading, logout, errMessage } = useLogout();
+    const {setAuthUser} = useAuthContext()
 
     const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
@@ -18,6 +20,7 @@ const DashboardLayout: React.FC = () => {
 
     const handleLogout = () => {
         logout();
+        setAuthUser(null)
     };
 
     if (loading) {

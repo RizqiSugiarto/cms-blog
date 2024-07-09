@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
+import { useAuthContext } from '@/context/authContext';
 import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
 
 const MyBlogPage: React.FC = () => {
-
+    const { authUser } = useAuthContext();
     const {getAllBLogDraftLoading, getAllBlogDraftErrMessage, allBlogDraft, getAllBlogDraftByUserId} = useGetAllBlogsDraftByUserId()
     const [search, setSearch] = useState<string>('')
 
 
     useEffect(() => {
-        getAllBlogDraftByUserId('1b2e7d3c-5f6b-4a93-b9c6-3a9287c0c8de')
-    }, [])
+        if (authUser?.userId) {
+            getAllBlogDraftByUserId(authUser.userId);
+        } else {
+            console.error('authUser is undefined');
+        }
+    }, [authUser])
 
     if(getAllBLogDraftLoading) {
         return(

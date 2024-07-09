@@ -230,8 +230,6 @@ export class BlogService {
                 relations: ['liked', 'view']
             })
 
-            console.log(blogs, "GINI")
-
             const blogsResponse: blogBaseResponse[] = blogs.map((blog) => ({
                 id: blog.id,
                 title: blog.title,
