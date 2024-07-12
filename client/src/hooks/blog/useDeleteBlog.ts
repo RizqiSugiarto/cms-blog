@@ -3,18 +3,18 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseDeleteBlogProps {
-    loading: boolean;
-    errMessage: string;
+    deleteBlogLoading: boolean;
+    deleteBlogErrMessage: string;
     deleteBlog: (blogId: string) => Promise<void>;
 }
 
 const useDeleteBlog = (): UseDeleteBlogProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
+    const [deleteBlogLoading, setDeleteBlogLoading] = useState(false);
+    const [deleteBlogErrMessage, setDeleteBlogErrMessage] = useState<string>('');
 
     const deleteBlog = async (blogId: string): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setDeleteBlogLoading(true);
+        setDeleteBlogErrMessage('');
 
         try {
             const response = await fetch(`${BaseUrl}/blogs/${blogId}`, {
@@ -27,14 +27,14 @@ const useDeleteBlog = (): UseDeleteBlogProps => {
 
             console.log('Blog deleted successfully');
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to delete blog');
+            setDeleteBlogErrMessage(error.message || 'Failed to delete blog');
             console.error('Error deleting blog:', error);
         } finally {
-            setLoading(false);
+            setDeleteBlogLoading(false);
         }
     };
 
-    return { loading, errMessage, deleteBlog };
+    return { deleteBlogLoading, deleteBlogErrMessage, deleteBlog };
 };
 
 export default useDeleteBlog;

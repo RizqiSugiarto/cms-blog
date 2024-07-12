@@ -3,20 +3,20 @@ import { useState } from 'react';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseGetBlogByIdProps {
-    loading: boolean;
-    errMessage: string;
+    GetBlogByIdLoading: boolean;
+    GetBlogByIdErrMessage: string;
     blog: any;
     getBlogById: (blogId: string) => Promise<void>;
 }
 
 const useGetBlogById = (): UseGetBlogByIdProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
+    const [GetBlogByIdLoading, setGetBlogByIdLoading] = useState(false);
+    const [GetBlogByIdErrMessage, setGetBlogByIdErrMessage] = useState<string>('');
     const [blog, setBlog] = useState<any>(null);
 
     const getBlogById = async (blogId: string): Promise<void> => {
-        setLoading(true);
-        setErrMessage('');
+        setGetBlogByIdLoading(true);
+        setGetBlogByIdErrMessage('');
 
         try {
             const response = await fetch(`${BaseUrl}/blogs/${blogId}`);
@@ -28,14 +28,14 @@ const useGetBlogById = (): UseGetBlogByIdProps => {
             const data = await response.json();
             setBlog(data);
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to fetch blog by ID');
+            setGetBlogByIdErrMessage(error.message || 'Failed to fetch blog by ID');
             console.error('Error fetching blog by ID:', error);
         } finally {
-            setLoading(false);
+            setGetBlogByIdLoading(false);
         }
     };
 
-    return { loading, errMessage, blog, getBlogById };
+    return { GetBlogByIdLoading, GetBlogByIdErrMessage, blog, getBlogById };
 };
 
 export default useGetBlogById;

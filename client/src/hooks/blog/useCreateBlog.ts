@@ -13,7 +13,10 @@ const useCreateBlog = (): UseCreateBlogProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
 
-    const createBlog = async (blogRequest: CreateblogRequest, file: File): Promise<any> => {
+    const createBlog = async (
+        blogRequest: CreateblogRequest,
+        file: File
+    ): Promise<any> => {
         setLoading(true);
         setErrMessage('');
 

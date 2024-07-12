@@ -27,11 +27,15 @@ ChartJS.register(
 
 type OnlineChartProps = {
     title: string;
-    labels: string[]
-    dataChart: number[]
+    labels: string[];
+    dataChart: number[];
 };
 
-const OneLineChart: React.FC<OnlineChartProps> = ({ title, labels, dataChart }) => {
+const OneLineChart: React.FC<OnlineChartProps> = ({
+    title,
+    labels,
+    dataChart
+}) => {
     const options = {
         responsive: true,
         plugins: {
@@ -58,7 +62,7 @@ const OneLineChart: React.FC<OnlineChartProps> = ({ title, labels, dataChart }) 
                 fill: true,
                 label: title,
                 data: labels.map((_c, i) => {
-                    return dataChart[i]
+                    return dataChart[i];
                 }),
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(132, 199, 208, 1)'

@@ -10,14 +10,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseLoginProps {
     loading: boolean;
     errMessage: string;
-    isSuccess: boolean
+    isSuccess: boolean;
     login: (loginData: LoginRequest) => Promise<void>;
 }
 
 const useLogin = (): UseLoginProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [isSuccess, setIsSuccess] = useState<boolean>(false)
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
     // const { setAuthUser } = useAuthContext();
 
     const login = async (loginData: LoginRequest): Promise<void> => {
@@ -28,9 +28,9 @@ const useLogin = (): UseLoginProps => {
             const response = await fetch(`${BaseUrl}/auth/login`, {
                 credentials: 'include',
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'x-web-app': 'cms' 
+                    'x-web-app': 'cms'
                 },
                 body: JSON.stringify(loginData)
             });
@@ -48,7 +48,7 @@ const useLogin = (): UseLoginProps => {
             const userData = jwtDecode(tokenVal!);
 
             localStorage.setItem('user-data', JSON.stringify(userData));
-            setIsSuccess(true)
+            setIsSuccess(true);
             // setAuthUser(Token);
         } catch (error: any) {
             console.error('Error during login:', error);
@@ -61,7 +61,7 @@ const useLogin = (): UseLoginProps => {
         }
     };
 
-    return { loading, errMessage, isSuccess,login };
+    return { loading, errMessage, isSuccess, login };
 };
 
 export default useLogin;

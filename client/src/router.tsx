@@ -12,7 +12,7 @@ const RouterComponent: React.FC = () => {
             <Routes>
                 <Route path="/" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route element={<ProtectedRoute/>}>
+                <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard/*" element={<DashboardLayout />} />
                     <Route path="/blog" element={<BlogPages />} />
                 </Route>

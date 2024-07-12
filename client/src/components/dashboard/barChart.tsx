@@ -23,12 +23,12 @@ ChartJS.register(
 );
 
 type BarChartProps = {
-    title: string
-    labels: string[]
-    dataChart: number[]
-}
+    title: string;
+    labels: string[];
+    dataChart: number[];
+};
 
-const BarChart: React.FC<BarChartProps> = ({title, labels, dataChart}) => {
+const BarChart: React.FC<BarChartProps> = ({ title, labels, dataChart }) => {
     const options = {
         responsive: true,
         plugins: {

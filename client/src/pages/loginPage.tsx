@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
                         <h1 className="font-Poppins font-bold text-[40px] text-purpleCustom">
                             Sign In
                         </h1>
-                        <div className='md:relative md:top-8 relative top-20'>
+                        <div className="md:relative md:top-8 relative top-20">
                             {errMessage && (
                                 <div className="text-red-500">{errMessage}</div>
                             )}
@@ -69,10 +69,20 @@ const LoginPage: React.FC = () => {
                                 <InputFrom
                                     placeholder="Password"
                                     value={password}
-                                    typeInput={showPassword ? 'text' : 'password'}
-                                    icon={showPassword ? ShowPasswordIcon : HidePasswordIcon}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    togglePasswordVisibility={handletogglePasswordVisibilityChange}
+                                    typeInput={
+                                        showPassword ? 'text' : 'password'
+                                    }
+                                    icon={
+                                        showPassword
+                                            ? ShowPasswordIcon
+                                            : HidePasswordIcon
+                                    }
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    togglePasswordVisibility={
+                                        handletogglePasswordVisibilityChange
+                                    }
                                 />
                                 <button className="block bg-purpleCustom w-[289px] md:w-[353px] h-[54px] mt-[94px] ml-auto mr-auto rounded-[10px] text-[16px] font-semibold text-white">
                                     {loading ? 'Loading' : 'Login'}

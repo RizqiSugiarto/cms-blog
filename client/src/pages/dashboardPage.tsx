@@ -3,7 +3,7 @@ import Stat from '@/components/dashboard/stat';
 import BarChart from '@/components/dashboard/barChart';
 import OneLineChart from '@/components/dashboard/oneLineChart';
 import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
-import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft'; 
+import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
 import useTotalLikePerMonth from '@/hooks/like/useGetTotalLike';
 import useTotalViewPerMonth from '@/hooks/view/useGetTotalView';
 import useMostFavTag from '@/hooks/like/useGetFavTag';
@@ -11,195 +11,193 @@ import useGetMostViewedBlogByUserId from '@/hooks/blog/useGetBlogMostView';
 import { useAuthContext } from '@/context/authContext';
 
 const DashboardPage: React.FC = () => {
-    const [totalLike, setTotalLike] = useState<number>(0)
-    const [totalView, settotalView] = useState<number>(0)
-    const [totalBlog, setTotalBlog] = useState<number>(0)
+    const [totalLike, setTotalLike] = useState<number>(0);
+    const [totalView, settotalView] = useState<number>(0);
+    const [totalBlog, setTotalBlog] = useState<number>(0);
 
-    const [totalLikePerMonth, setTotalLikePerMonth] = useState<number[]>([])
-    const [totalViewPerMonth, setTotalViewPerMonth] = useState<number[]>([])
-    const [favTagLikes, setFavTagLikes] = useState<number[]>([])
-    const [mostView, setMostView] = useState<number[]>([])
+    const [totalLikePerMonth, setTotalLikePerMonth] = useState<number[]>([]);
+    const [totalViewPerMonth, setTotalViewPerMonth] = useState<number[]>([]);
+    const [favTagLikes, setFavTagLikes] = useState<number[]>([]);
+    const [mostView, setMostView] = useState<number[]>([]);
 
-    const [labelLikePerMonth, setLabelLikePerMonth] = useState<string[]>([])
-    const [labeltotalViewPerMonth, setLabelViewPerMonth] = useState<string[]>([])
-    const [labelFavTag, setlabelFavTag] = useState<string[]>([])
-    const [labelMostView, setLabelMostView] = useState<string[]>([])
+    const [labelLikePerMonth, setLabelLikePerMonth] = useState<string[]>([]);
+    const [labeltotalViewPerMonth, setLabelViewPerMonth] = useState<string[]>(
+        []
+    );
+    const [labelFavTag, setlabelFavTag] = useState<string[]>([]);
+    const [labelMostView, setLabelMostView] = useState<string[]>([]);
 
-    const [totalBlogDraft, setTotalBlogDraft] = useState<number>(0)
+    const [totalBlogDraft, setTotalBlogDraft] = useState<number>(0);
 
-    const {TotalLikeLoading, TotalLikeErrMessage, TotalLikePerMonth, getTotalLikePerMonthByUserId} = useTotalLikePerMonth()
-    const {TotalViewLoading, TotalViewErrMessage, TotalViewPerMonth, getTotalViewPerMonthByUserId} = useTotalViewPerMonth()
-    const {getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId} = useGetAllBlogsByUserId()
-    const {getAllBLogDraftLoading, getAllBlogDraftErrMessage, allBlogDraft, getAllBlogDraftByUserId} = useGetAllBlogsDraftByUserId()
-    const {FavTagLoading, FavTagErrMessage, FavTag, getMostFavTag} = useMostFavTag()
-    const {ViewdLoading, ViewdErrMessage, mostViewedBlog, getMostViewedBlogByUserId} = useGetMostViewedBlogByUserId()
+    const {
+        TotalLikeLoading,
+        TotalLikeErrMessage,
+        TotalLikePerMonth,
+        getTotalLikePerMonthByUserId
+    } = useTotalLikePerMonth();
+    const {
+        TotalViewLoading,
+        TotalViewErrMessage,
+        TotalViewPerMonth,
+        getTotalViewPerMonthByUserId
+    } = useTotalViewPerMonth();
+    const { getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId } =
+        useGetAllBlogsByUserId();
+    const {
+        getAllBLogDraftLoading,
+        getAllBlogDraftErrMessage,
+        allBlogDraft,
+        getAllBlogDraftByUserId
+    } = useGetAllBlogsDraftByUserId();
+    const { FavTagLoading, FavTagErrMessage, FavTag, getMostFavTag } =
+        useMostFavTag();
+    const {
+        ViewdLoading,
+        ViewdErrMessage,
+        mostViewedBlog,
+        getMostViewedBlogByUserId
+    } = useGetMostViewedBlogByUserId();
 
-    const {authUser} = useAuthContext()
-
-
+    const { authUser } = useAuthContext();
 
     useEffect(() => {
-        if(authUser?.userId) {
-            getAllBlogByUserId(authUser.userId)
-            getAllBlogDraftByUserId(authUser.userId)
-        }else {
-            console.error('User Not Authenticate')
+        if (authUser?.userId) {
+            getAllBlogByUserId(authUser.userId);
+            getAllBlogDraftByUserId(authUser.userId);
+        } else {
+            console.error('User Not Authenticate');
         }
-
-    }, [authUser])
+    }, [authUser]);
 
     useEffect(() => {
         if (allBLog) {
-          const totalLikes = allBLog.data.reduce((acc: any, blog: { like: string | any[]; }) => acc + blog.like.length, 0);
-          const totalViews = allBLog.data.reduce((acc: any, blog: { view: string | any[]; }) => acc + blog.view.length, 0);
+            const totalLikes = allBLog.data.reduce(
+                (acc: any, blog: { like: string | any[] }) =>
+                    acc + blog.like.length,
+                0
+            );
+            const totalViews = allBLog.data.reduce(
+                (acc: any, blog: { view: string | any[] }) =>
+                    acc + blog.view.length,
+                0
+            );
 
-          if(authUser?.userId) {
-            getTotalLikePerMonthByUserId(authUser.userId)
-            getTotalViewPerMonthByUserId(authUser.userId)
-            getMostViewedBlogByUserId(authUser.userId)
-            getMostFavTag()
-        }else {
-            console.error('User Not Authenticate')
+            if (authUser?.userId) {
+                getTotalLikePerMonthByUserId(authUser.userId);
+                getTotalViewPerMonthByUserId(authUser.userId);
+                getMostViewedBlogByUserId(authUser.userId);
+                getMostFavTag();
+            } else {
+                console.error('User Not Authenticate');
+            }
+
+            setTotalLike(totalLikes);
+            settotalView(totalViews);
+            setTotalBlog(allBLog.count);
+            setTotalBlogDraft(allBlogDraft.count);
         }
+    }, [allBLog, allBlogDraft, authUser]);
 
-          
-          setTotalLike(totalLikes);
-          settotalView(totalViews);
-          setTotalBlog(allBLog.count)
-          setTotalBlogDraft(allBlogDraft.count)
-        }
-      }, [allBLog, allBlogDraft, authUser]);
-
-      useEffect(() => {
-
+    useEffect(() => {
         if (TotalLikePerMonth) {
-            const likePerMonth = TotalLikePerMonth.data.map((like: { totalLikes: number }) => like.totalLikes);
-            const likeLabel = TotalLikePerMonth.data.map((like: {month: string}) => like.month)
-            
+            const likePerMonth = TotalLikePerMonth.data.map(
+                (like: { totalLikes: number }) => like.totalLikes
+            );
+            const likeLabel = TotalLikePerMonth.data.map(
+                (like: { month: string }) => like.month
+            );
+
             setTotalLikePerMonth(likePerMonth);
-            setLabelLikePerMonth(likeLabel)
+            setLabelLikePerMonth(likeLabel);
         }
 
         if (TotalViewPerMonth) {
-            const viewPerMonth = TotalViewPerMonth.data.map((view: { totalView: number }) => view.totalView);
-            const viewLabel = TotalViewPerMonth.data.map((view: {month: string}) => view.month)
+            const viewPerMonth = TotalViewPerMonth.data.map(
+                (view: { totalView: number }) => view.totalView
+            );
+            const viewLabel = TotalViewPerMonth.data.map(
+                (view: { month: string }) => view.month
+            );
 
             setTotalViewPerMonth(viewPerMonth);
-            setLabelViewPerMonth(viewLabel)
+            setLabelViewPerMonth(viewLabel);
         }
 
         if (FavTag) {
-            const favTags= FavTag.map((fav: { totalLikes: number }) => fav.totalLikes);
-            const favLabels = FavTag.map((fav: {tag: string}) => fav.tag)
+            const favTags = FavTag.map(
+                (fav: { totalLikes: number }) => fav.totalLikes
+            );
+            const favLabels = FavTag.map((fav: { tag: string }) => fav.tag);
 
             setFavTagLikes(favTags);
-            setlabelFavTag(favLabels)
+            setlabelFavTag(favLabels);
         }
 
         if (mostViewedBlog) {
-            const mostViewedBlogs= mostViewedBlog.map((mostView: { viewCount: number }) => mostView.viewCount);
-            const mostViewedBlogLabels = mostViewedBlog.map((mostView: {blog_title: string}) => mostView.blog_title)
+            const mostViewedBlogs = mostViewedBlog.map(
+                (mostView: { viewCount: number }) => mostView.viewCount
+            );
+            const mostViewedBlogLabels = mostViewedBlog.map(
+                (mostView: { blog_title: string }) => mostView.blog_title
+            );
 
             setMostView(mostViewedBlogs);
-            setLabelMostView(mostViewedBlogLabels)
+            setLabelMostView(mostViewedBlogLabels);
         }
-        
-    }, [TotalLikePerMonth, TotalViewPerMonth, FavTag, mostViewedBlog, authUser]);
-    
-    if(getAllBlogLoading) {
-        return (
-            <div>
-                {getAllBlogLoading}
-            </div>
-        )
+    }, [
+        TotalLikePerMonth,
+        TotalViewPerMonth,
+        FavTag,
+        mostViewedBlog,
+        authUser
+    ]);
+
+    if (getAllBlogLoading) {
+        return <div>{getAllBlogLoading}</div>;
     }
 
-    if(getAllBLogDraftLoading) {
-        return (
-            <div>
-                {getAllBLogDraftLoading}
-            </div>
-        )
+    if (getAllBLogDraftLoading) {
+        return <div>{getAllBLogDraftLoading}</div>;
     }
 
-    if(TotalLikeLoading) {
-        return (
-            <div>
-                {TotalLikeLoading}
-            </div>
-        )
+    if (TotalLikeLoading) {
+        return <div>{TotalLikeLoading}</div>;
     }
 
-    if(TotalViewLoading) {
-        return (
-            <div>
-                {TotalViewLoading}
-            </div>
-        )
+    if (TotalViewLoading) {
+        return <div>{TotalViewLoading}</div>;
     }
 
-    if(FavTagLoading) {
-        return (
-            <div>
-                {FavTagLoading}
-            </div>
-        )
+    if (FavTagLoading) {
+        return <div>{FavTagLoading}</div>;
     }
 
-    if(ViewdLoading) {
-        return (
-            <div>
-                {ViewdLoading}
-            </div>
-        )
+    if (ViewdLoading) {
+        return <div>{ViewdLoading}</div>;
     }
 
-    if(getAllErrMessage) {
-        return (
-            <div>
-                {getAllErrMessage}
-            </div>
-        )
+    if (getAllErrMessage) {
+        return <div>{getAllErrMessage}</div>;
     }
 
-    if(getAllBlogDraftErrMessage) {
-        return (
-            <div>
-                {getAllBlogDraftErrMessage}
-            </div>
-        )
+    if (getAllBlogDraftErrMessage) {
+        return <div>{getAllBlogDraftErrMessage}</div>;
     }
 
-    if(TotalViewErrMessage) {
-        return (
-            <div>
-                {TotalViewErrMessage}
-            </div>
-        )
+    if (TotalViewErrMessage) {
+        return <div>{TotalViewErrMessage}</div>;
     }
 
-    if(TotalLikeErrMessage) {
-        return (
-            <div>
-                {TotalLikeErrMessage}
-            </div>
-        )
+    if (TotalLikeErrMessage) {
+        return <div>{TotalLikeErrMessage}</div>;
     }
 
-    if(FavTagErrMessage) {
-        return (
-            <div>
-                {FavTagErrMessage}
-            </div>
-        )
+    if (FavTagErrMessage) {
+        return <div>{FavTagErrMessage}</div>;
     }
 
-    if(ViewdErrMessage) {
-        return (
-            <div>
-                {ViewdErrMessage}
-            </div>
-        )
+    if (ViewdErrMessage) {
+        return <div>{ViewdErrMessage}</div>;
     }
 
     return (
@@ -231,25 +229,25 @@ const DashboardPage: React.FC = () => {
                 />
             </section>
             <section className="flex flex-col md:flex-row gap-4">
-                <OneLineChart 
+                <OneLineChart
                     title="view"
                     labels={labeltotalViewPerMonth}
-                    dataChart={totalViewPerMonth} 
+                    dataChart={totalViewPerMonth}
                 />
-                <OneLineChart 
+                <OneLineChart
                     title="likes"
                     labels={labelLikePerMonth}
-                    dataChart={totalLikePerMonth} 
+                    dataChart={totalLikePerMonth}
                 />
             </section>
             <section className="flex flex-col md:flex-row gap-4">
-                <BarChart 
-                    title='favorite tags'
+                <BarChart
+                    title="favorite tags"
                     labels={labelFavTag}
                     dataChart={favTagLikes}
                 />
-                <BarChart 
-                    title='most popular blog'
+                <BarChart
+                    title="most popular blog"
                     labels={labelMostView}
                     dataChart={mostView}
                 />

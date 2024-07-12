@@ -3,12 +3,22 @@ import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
 import { useAuthContext } from '@/context/authContext';
 import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
+import UpdateModal from '@/components/form/updateInputModal';
 
 const MyBlogPage: React.FC = () => {
     const { authUser } = useAuthContext();
-    const {getAllBLogDraftLoading, getAllBlogDraftErrMessage, allBlogDraft, getAllBlogDraftByUserId} = useGetAllBlogsDraftByUserId()
-    const [search, setSearch] = useState<string>('')
-
+    const {
+        getAllBLogDraftLoading,
+        getAllBlogDraftErrMessage,
+        allBlogDraft,
+        getAllBlogDraftByUserId
+    } = useGetAllBlogsDraftByUserId();
+    const [search, setSearch] = useState<string>('');
+    const [modalUpdateFormVisible, setModalUpdateFormVisible] =
+        useState<boolean>(false);
+    const ToggleUpdateForm = () => {
+        setModalUpdateFormVisible(!modalUpdateFormVisible);
+    };
 
     useEffect(() => {
         if (authUser?.userId) {
@@ -16,22 +26,14 @@ const MyBlogPage: React.FC = () => {
         } else {
             console.error('authUser is undefined');
         }
-    }, [authUser])
+    }, [authUser]);
 
-    if(getAllBLogDraftLoading) {
-        return(
-            <div>
-                {getAllBLogDraftLoading}
-            </div>
-        )
+    if (getAllBLogDraftLoading) {
+        return <div>{getAllBLogDraftLoading}</div>;
     }
 
-    if(getAllBlogDraftErrMessage) {
-        return(
-            <div>
-                {getAllBlogDraftErrMessage}
-            </div>
-        )
+    if (getAllBlogDraftErrMessage) {
+        return <div>{getAllBlogDraftErrMessage}</div>;
     }
 
     return (
@@ -45,7 +47,9 @@ const MyBlogPage: React.FC = () => {
                                 <input
                                     className="input input-bordered join-item border-grayCustom"
                                     placeholder="Search"
-                                    onChange={(e) => {setSearch(e.target.value)}}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value);
+                                    }}
                                 />
                             </div>
                         </div>
@@ -61,44 +65,59 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {allBlogDraft && allBlogDraft.data.filter((item: any) => {
-                            return search.toLowerCase() === '' ? item : item.title.toLowerCase().includes(search)
-                        }).map(
-                            (draft: any) => (
-                                <Table.tr className="border-grayCustom" key={draft.id}>
-                                    <Table.td>
-                                        {draft.title}
-                                    </Table.td>
-                                    <Table.td>
-                                        <span className="badge badge-sm border-grayCustom">
-                                        {draft.tag}
-                                        </span>
-                                    </Table.td>
-                                    <Table.td>{draft.view.length}</Table.td>
-                                    <Table.td>
-                                        <Link
-                                            className="btn btn-primary btn-xs"
-                                            to={`/blog`}
-                                        >
-                                            View
-                                        </Link>
-                                    </Table.td>
-                                    <Table.td className="flex gap-1">
-                                        <button className="btn btn-success btn-xs">
-                                            Post!!
-                                        </button>
-                                        <button className="btn btn-info btn-xs">
-                                            Update
-                                        </button>
-                                        <button className="btn btn-error btn-xs">
-                                            Delete
-                                        </button>
-                                    </Table.td>
-                                </Table.tr>
-                            )
-                        )}
+                        {allBlogDraft &&
+                            allBlogDraft.data
+                                .filter((item: any) => {
+                                    return search.toLowerCase() === ''
+                                        ? item
+                                        : item.title
+                                              .toLowerCase()
+                                              .includes(search);
+                                })
+                                .map((draft: any) => (
+                                    <Table.tr
+                                        className="border-grayCustom"
+                                        key={draft.id}
+                                    >
+                                        <Table.td>{draft.title}</Table.td>
+                                        <Table.td>
+                                            <span className="badge badge-sm border-grayCustom">
+                                                {draft.tag}
+                                            </span>
+                                        </Table.td>
+                                        <Table.td>{draft.view.length}</Table.td>
+                                        <Table.td>
+                                            <Link
+                                                className="btn btn-primary btn-xs"
+                                                to={`/blog`}
+                                            >
+                                                View
+                                            </Link>
+                                        </Table.td>
+                                        <Table.td className="flex gap-1">
+                                            <button className="btn btn-success btn-xs">
+                                                Post!!
+                                            </button>
+                                            <button
+                                                className="btn btn-info btn-xs"
+                                                onClick={ToggleUpdateForm}
+                                            >
+                                                Update
+                                            </button>
+                                            <button className="btn btn-error btn-xs">
+                                                Delete
+                                            </button>
+                                        </Table.td>
+                                    </Table.tr>
+                                ))}
                     </Table>
                 </div>
+                {modalUpdateFormVisible && (
+                    <UpdateModal
+                        isVisible={modalUpdateFormVisible}
+                        onClose={ToggleUpdateForm}
+                    />
+                )}
             </div>
         </section>
     );

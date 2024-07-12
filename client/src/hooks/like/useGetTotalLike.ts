@@ -10,9 +10,9 @@ interface UseTotalLikePerMonthProps {
 }
 
 const useTotalLikePerMonth = (): UseTotalLikePerMonthProps => {
-    const [TotalLikeLoading,    setLikeLoading] = useState(false);
+    const [TotalLikeLoading, setLikeLoading] = useState(false);
     const [TotalLikeErrMessage, setLikeErrMessage] = useState<string>('');
-    const [TotalLikePerMonth,   setTotalLikePerMonth] = useState<any>(null);
+    const [TotalLikePerMonth, setTotalLikePerMonth] = useState<any>(null);
 
     const getTotalLikePerMonthByUserId = async (
         userId: string
@@ -39,7 +39,12 @@ const useTotalLikePerMonth = (): UseTotalLikePerMonthProps => {
         }
     };
 
-    return { TotalLikeLoading, TotalLikeErrMessage, TotalLikePerMonth, getTotalLikePerMonthByUserId };
+    return {
+        TotalLikeLoading,
+        TotalLikeErrMessage,
+        TotalLikePerMonth,
+        getTotalLikePerMonthByUserId
+    };
 };
 
 export default useTotalLikePerMonth;

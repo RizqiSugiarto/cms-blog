@@ -10,7 +10,7 @@ interface UseTotalViewPerMonthProps {
 }
 
 const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
-    const [TotalViewLoading,    setLoadingTotalView] = useState(false);
+    const [TotalViewLoading, setLoadingTotalView] = useState(false);
     const [TotalViewErrMessage, setErrMessageTotalView] = useState<string>('');
     const [TotalViewPerMonth, setTotalViewPerMonth] = useState<any>(null);
 
@@ -39,7 +39,12 @@ const useTotalViewPerMonth = (): UseTotalViewPerMonthProps => {
         }
     };
 
-    return { TotalViewLoading, TotalViewErrMessage, TotalViewPerMonth, getTotalViewPerMonthByUserId };
+    return {
+        TotalViewLoading,
+        TotalViewErrMessage,
+        TotalViewPerMonth,
+        getTotalViewPerMonthByUserId
+    };
 };
 
 export default useTotalViewPerMonth;

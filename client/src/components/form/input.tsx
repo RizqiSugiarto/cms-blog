@@ -10,6 +10,7 @@ type InputType = {
     classInput?: string;
     auth?: boolean;
     required?: boolean;
+    value?: any
 };
 
 const Input: React.FC<InputType> = ({
@@ -20,7 +21,8 @@ const Input: React.FC<InputType> = ({
     className,
     auth,
     classInput,
-    required
+    required,
+    value
 }) => {
     return (
         <div className={'form-control ' + className}>
@@ -31,6 +33,7 @@ const Input: React.FC<InputType> = ({
             )}
             <input
                 required={required}
+                value={value}
                 type={type || 'text'}
                 placeholder={placeholder || label}
                 onChange={(e) => setData(e.target.value)}

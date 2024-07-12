@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode} from 'react';
-// import Cookies from 'js-cookie';
-// import {jwtDecode} from 'jwt-decode';
+import React, {
+    createContext,
+    useContext,
+    useState,
+    ReactNode,
+    useEffect
+} from 'react';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 export type AuthUser = {
     userId: string;
@@ -11,12 +17,16 @@ type AuthContextType = {
     setAuthUser: React.Dispatch<React.SetStateAction<AuthUser | null>>;
 };
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+    undefined
+);
 
 export const useAuthContext = (): AuthContextType => {
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuthContext must be used within an AuthContextProvider');
+        throw new Error(
+            'useAuthContext must be used within an AuthContextProvider'
+        );
     }
     return context;
 };
@@ -28,17 +38,17 @@ type AuthContextProviderProps = {
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
-    // useEffect(() => {
-    //     const token = Cookies.get('jwt');
-    //     if (token) {
-    //         const decodedToken: AuthUser = jwtDecode(token);
-    //         setAuthUser(decodedToken);
-    //     }
-    // }, []);
+    useEffect(() => {
+        const token = Cookies.get('jwt');
+        if (token) {
+            const decodedToken: AuthUser = jwtDecode(token);
+            setAuthUser(decodedToken);
+        }
+    }, []);
 
     const contextValue: AuthContextType = {
         authUser,
-        setAuthUser, // Provide the setter function
+        setAuthUser // Provide the setter function
     };
 
     return (

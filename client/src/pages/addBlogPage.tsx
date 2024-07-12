@@ -3,27 +3,30 @@ import Input from '@/components/form/input';
 import FileInput from '@/components/form/fileInput';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import useCreateBlog from '@/hooks/blog/useCreateBlog';
-import {CreateblogRequest} from '@/types'
+import { CreateblogRequest } from '@/types';
 import { useAuthContext } from '@/context/authContext';
 
 const AddBlogPage: React.FC = () => {
     const [text, setText] = useState<string>('');
     const [title, setTitle] = useState<string>('');
-    const [tag, setTag] = useState<string>('sport'); 
+    const [tag, setTag] = useState<string>('sport');
     const [file, setFile] = useState<File>();
-    const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
-    const inputFileRef = useRef<HTMLInputElement>(null);
-    const {authUser} = useAuthContext()
-    const {loading, createBlog, errMessage}  = useCreateBlog()
+    const [imagePreview, setImagePreview] = useState<
+        string | ArrayBuffer | null
+    >(null);
 
-    
+    const inputFileRef = useRef<HTMLInputElement>(null);
+
+    const { authUser } = useAuthContext();
+
+    const { loading, createBlog, errMessage } = useCreateBlog();
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
-        if(!authUser?.userId) {
-            console.error('User not authenticate')
-            return
+
+        if (!authUser?.userId) {
+            console.error('User not authenticate');
+            return;
         }
 
         const req: CreateblogRequest = {
@@ -32,10 +35,10 @@ const AddBlogPage: React.FC = () => {
             tag: tag,
             userId: authUser.userId,
             isDraft: false
-        }
+        };
 
         if (title && tag && text && file) {
-            createBlog(req, file)
+            createBlog(req, file);
         }
     };
 
@@ -45,11 +48,9 @@ const AddBlogPage: React.FC = () => {
 
     return (
         <div className="min-h-screen max-w-5xl mx-auto space-y-5">
-            <div className='md:relative md:top-8 relative top-20'>
-                        {errMessage && (
-                            <div className="text-red-500">{errMessage}</div>
-                        )}
-                        </div>
+            <div className="md:relative md:top-8 relative top-20">
+                {errMessage && <div className="text-red-500">{errMessage}</div>}
+            </div>
             <div className="flex flex-col md:flex-row gap-5">
                 <div
                     onClick={handleFileInputClick}
@@ -106,7 +107,7 @@ const AddBlogPage: React.FC = () => {
                             setFile={setFile}
                             setImagePreview={setImagePreview}
                             className="hidden"
-                            name='imageUpload'
+                            name="imageUpload"
                         />
                         <button type="submit" className="btn btn-primary">
                             {loading ? 'Loading' : 'Publish'}

@@ -10,8 +10,8 @@ interface UseMostFavTagProps {
 }
 
 const useMostFavTag = (): UseMostFavTagProps => {
-    const [FavTagLoading,     setLoadingFavTag] = useState(false);
-    const [FavTagErrMessage,  setErrMessageFavTag] = useState<string>('');
+    const [FavTagLoading, setLoadingFavTag] = useState(false);
+    const [FavTagErrMessage, setErrMessageFavTag] = useState<string>('');
     const [FavTag, setFavTags] = useState<any>(null);
 
     const getMostFavTag = async (): Promise<void> => {
@@ -28,7 +28,9 @@ const useMostFavTag = (): UseMostFavTagProps => {
             const data = await response.json();
             setFavTags(data);
         } catch (error: any) {
-            setErrMessageFavTag(error.message || 'Failed to fetch most liked tags');
+            setErrMessageFavTag(
+                error.message || 'Failed to fetch most liked tags'
+            );
             console.error('Error fetching most liked tags:', error);
         } finally {
             setLoadingFavTag(false);

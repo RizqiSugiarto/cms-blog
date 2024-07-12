@@ -14,15 +14,23 @@ export type CreateblogRequest = {
     title: string;
     content: string;
     tag: string;
-    userId: string
-    image?: File
-    isDraft: boolean
+    userId: string;
+    image?: File;
+    isDraft: boolean;
 };
 
 export type UpdateBlogRequest = {
     title: string;
     content: string;
-    imageUrl: string;
+    blogId: string;
+    image?: File;
     isDraft: boolean;
     tag: string;
 };
+
+export type UpdateProfileRequest = {
+    userId: string
+    name: string
+    email: string
+    imageProfile?: File 
+}

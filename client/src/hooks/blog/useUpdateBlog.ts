@@ -4,27 +4,25 @@ import { UpdateBlogRequest } from '@/types';
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseUpdateBlogProps {
-    loading: boolean;
-    errMessage: string;
+    UpdateBlogLoading: boolean;
+    UpdateBlogErrMessage: string;
     updateBlog: (
-        blogId: string,
         blogRequest: UpdateBlogRequest
-    ) => Promise<any>;
+    ) => Promise<void>;
 }
 
 const useUpdateBlog = (): UseUpdateBlogProps => {
-    const [loading, setLoading] = useState(false);
-    const [errMessage, setErrMessage] = useState<string>('');
+    const [UpdateBlogLoading,    setUpdateBlogLoading] = useState(false);
+    const [UpdateBlogErrMessage, setUpdateBlogErrMessage] = useState<string>('');
 
     const updateBlog = async (
-        blogId: string,
         blogRequest: UpdateBlogRequest
-    ): Promise<any> => {
-        setLoading(true);
-        setErrMessage('');
+    ): Promise<void> => {
+        setUpdateBlogLoading(true);
+        setUpdateBlogErrMessage('');
 
         try {
-            const response = await fetch(`${BaseUrl}/blogs/${blogId}`, {
+            const response = await fetch(`${BaseUrl}/blogs/${blogRequest.blogId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -38,14 +36,14 @@ const useUpdateBlog = (): UseUpdateBlogProps => {
 
             return response.json();
         } catch (error: any) {
-            setErrMessage(error.message || 'Failed to update blog');
+            setUpdateBlogErrMessage(error.message || 'Failed to update blog');
             console.error('Error updating blog:', error);
         } finally {
-            setLoading(false);
+            setUpdateBlogLoading(false);
         }
     };
 
-    return { loading, errMessage, updateBlog };
+    return { UpdateBlogLoading, UpdateBlogErrMessage, updateBlog };
 };
 
 export default useUpdateBlog;

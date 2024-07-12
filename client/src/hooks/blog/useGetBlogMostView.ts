@@ -28,14 +28,21 @@ const useGetMostViewedBlogByUserId = (): UseGetMostViewedBlogByUserIdProps => {
             const data = await response.json();
             setMostViewedBlog(data);
         } catch (error: any) {
-            setViewdErrMessage(error.message || 'Failed to fetch most viewed blog');
+            setViewdErrMessage(
+                error.message || 'Failed to fetch most viewed blog'
+            );
             console.error('Error fetching most viewed blog:', error);
         } finally {
             setViewdLoading(false);
         }
     };
 
-    return { ViewdLoading, ViewdErrMessage, mostViewedBlog, getMostViewedBlogByUserId };
+    return {
+        ViewdLoading,
+        ViewdErrMessage,
+        mostViewedBlog,
+        getMostViewedBlogByUserId
+    };
 };
 
 export default useGetMostViewedBlogByUserId;

@@ -9,7 +9,7 @@ type FileInputType = {
     accept: string;
     className?: string;
     required?: boolean;
-    name?: string
+    name?: string;
 };
 
 type FileInputHandle = {
@@ -17,7 +17,10 @@ type FileInputHandle = {
 };
 
 const FileInput = forwardRef<FileInputHandle, FileInputType>(
-    ({ label, setFile, setImagePreview, accept, required, className, name }, ref) => {
+    (
+        { label, setFile, setImagePreview, accept, required, className, name },
+        ref
+    ) => {
         const inputFileRef = useRef<HTMLInputElement>(null);
 
         const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

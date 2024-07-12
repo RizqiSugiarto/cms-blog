@@ -1,36 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
-import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
+import UpdateModal from '@/components/form/updateInputModal';
+import { useBlogContext } from '@/context/blogContext';
 import { useAuthContext } from '@/context/authContext';
+import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
+import useDeleteBlog from '@/hooks/blog/useDeleteBlog';
+
 
 const MyBlogPage: React.FC = () => {
-    const {getAllBlogLoading, getAllErrMessage, allBLog, getAllBlogByUserId} = useGetAllBlogsByUserId()
-    const [search, setSearch] = useState<string>('')
-    const {authUser} = useAuthContext()    
+    const [search, setSearch] = useState<string>('');
+
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    const [modalUpdateFormVisible, setModalUpdateFormVisible] = useState<boolean>(false);
+    const [modalDeleteConfirm, setModalDeleteConfirm] = useState<boolean>(false)
+
+    const [selectedBlog, setSelectedBlog] = useState<any>(null);
+
+    const {blogs, dispatch} = useBlogContext()
+    const { authUser } = useAuthContext();
+    const { allBLog, getAllBlogByUserId } = useGetAllBlogsByUserId();
+    const {deleteBlog} = useDeleteBlog()
+    
+    useEffect(() => {
+        const fetchInitialBlogs = async () => {
+            if(authUser?.userId) {
+                console.log(authUser.userId)
+                await getAllBlogByUserId(authUser.userId);
+            }
+        };
+        fetchInitialBlogs();
+    }, [authUser]);
 
     useEffect(() => {
-        if (authUser?.userId) {
-            getAllBlogByUserId(authUser.userId);
-        } else {
-            console.error('authUser is undefined');
+        if (allBLog) {
+            dispatch({ type: 'SET_BLOGS', payload: allBLog.data });
         }
-    }, [authUser])
+    }, [allBLog])
 
-    if(getAllBlogLoading) {
-        return (
-            <div>
-                {getAllBlogLoading}
-            </div>
-        )
+    useEffect (() => {
+        if(modalDeleteConfirm) {
+            dialogRef.current?.showModal()
+        } else {
+            dialogRef.current?.close()
+        }
+    }, [modalDeleteConfirm])
+
+    const toggleUpdateForm = (blog: any) => {
+        setSelectedBlog(blog);
+        setModalUpdateFormVisible(!modalUpdateFormVisible);
+        };
+    
+    const toggleDeleteModal = (blog: any) => {
+        setSelectedBlog(blog);
+        console.log(selectedBlog)
+        setModalDeleteConfirm(!modalDeleteConfirm)
     }
 
-    if(getAllErrMessage) {
-        return (
-            <div>
-                {getAllErrMessage}
-            </div>
-        )
+    const handleDeleteBlog = (blogId: string) => {
+        deleteBlog(blogId)
+        dispatch({type: 'DELETE_BLOG', payload: blogId})
     }
 
     return (
@@ -40,57 +70,57 @@ const MyBlogPage: React.FC = () => {
                     <h2 className="section-title my-4">My Blogs</h2>
                     <div className="join xs:join-vertical md:join-horizontal">
                         <div>
-                            <div>
-                                <input
-                                    className="input input-bordered join-item border-grayCustom"
-                                    placeholder="Search"
-                                    onChange={(e) => {setSearch(e.target.value)}}
-                                />
-                            </div>
+                            <input
+                                className="input input-bordered join-item border-grayCustom"
+                                placeholder="Search"
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
                 <div className="card-body px-4 md:px-6 overflow-x-scroll py-4">
-                    <Table
-                        titles={[
-                            'Title',
-                            'Tag',
-                            'Total view',
-                            'Show',
-                            'Options'
-                        ]}
-                    >
-                        {allBLog && allBLog.data.filter((item: any) => {
-                            return search.toLowerCase() === '' ? item : item.title.toLowerCase().includes(search)
-                        }).map((blog: any) => (
-                            <Table.tr className="border-grayCustom" key={blog.id}>
-                                <Table.td>{blog.title}</Table.td>
-                                <Table.td>
-                                    <span className="badge badge-sm border-grayCustom">
-                                        {blog.tag}
-                                    </span>
-                                </Table.td>
-                                <Table.td>{blog.view.length}</Table.td>
-                                <Table.td>
-                                    <Link
-                                        className="btn btn-primary btn-xs"
-                                        to={`/blog/${blog.id}`}
-                                    >
-                                        View
-                                    </Link>
-                                </Table.td>
-                                <Table.td className="flex gap-1">
-                                    <button className="btn btn-info btn-xs">
-                                        Update
-                                    </button>
-                                    <button className="btn btn-error btn-xs">
-                                        Delete
-                                    </button>
-                                </Table.td>
-                            </Table.tr>
-                        ))}
+                    <Table titles={['Title', 'Tag', 'Total view', 'Show', 'Options']}>
+                        {blogs &&
+                            blogs.filter((item: any) => search.toLowerCase() === '' ? item : item.title.toLowerCase().includes(search))
+                                .map((blog: any) => (
+                                    <Table.tr className="border-grayCustom" key={blog.id}>
+                                        <Table.td>{blog.title}</Table.td>
+                                        <Table.td><span className="badge badge-sm border-grayCustom">{blog.tag}</span></Table.td>
+                                        <Table.td>{blog.view.length}</Table.td>
+                                        <Table.td>
+                                            <Link className="btn btn-primary btn-xs" to={`/blog/${blog.id}`}>View</Link>
+                                        </Table.td>
+                                        <Table.td className="flex gap-1">
+                                            <button className="btn btn-info btn-xs" onClick={() => toggleUpdateForm(blog)}>Update</button>
+                                            <button className="btn btn-error btn-xs" onClick={() => toggleDeleteModal(blog)}>Delete</button>
+                                        </Table.td>
+                                    </Table.tr>
+                                ))}
                     </Table>
                 </div>
+                {modalUpdateFormVisible && selectedBlog && (
+                    <UpdateModal
+                        isVisible={modalUpdateFormVisible}
+                        onClose={() => setModalUpdateFormVisible(false)}
+                        blog={selectedBlog}
+                    />
+                )}
+                {modalDeleteConfirm && selectedBlog && (
+                    <dialog id="my_modal_1" className="modal" ref={dialogRef}>
+                    <div className="modal-box">
+                      <h3 className="font-bold text-lg">Hello!</h3>
+                      <p className="py-4">Are you sure to delete this blog?</p>
+                      <div className="modal-action">
+                        <form method="dialog">
+                          <div className='min-w-40 flex justify-between'>
+                          <button className='btn btn-error' onClick={() => handleDeleteBlog(selectedBlog.id)}>Delete</button>
+                          <button className="btn" onClick={() => toggleDeleteModal('')}>Cancel</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
+                )}
             </div>
         </section>
     );
