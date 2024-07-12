@@ -64,14 +64,5 @@ export class AuthService {
         }
     }
 
-    async getProfileByUserId(userId: string): Promise<User | null> {
-        const user = await this.userRepository.createQueryBuilder('user')
-                    .select(['user.name', 'user.email', 'user.ImageUrl'])
-                    .where('id = :userId', {userId})
-                    .getOne()
-        if(!user) {
-            throw new NotFoundError('User not found')
-        }
-        return user
-    }
+    
 }

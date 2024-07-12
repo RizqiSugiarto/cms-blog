@@ -30,7 +30,6 @@ export class BlogController {
                 tag: tag
             }
 
-            console.log(blogData, "JADI GINI")
 
             const message = await this.blogService.createBlog(blogData)
             res.status(201).json({ message })

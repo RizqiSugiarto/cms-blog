@@ -9,6 +9,5 @@ const authController = new AuthController(authService)
 router.post('/register', (req, res, next) => authController.register(req, res,next))
 router.post('/login', (req, res, next) => authController.login(req, res, next))
 router.post('/logout', (req, res) => authController.logout(req, res))
-router.get('/profile/:userId', (req, res, next) => authController.getProfile(req, res, next))
 
 export default router

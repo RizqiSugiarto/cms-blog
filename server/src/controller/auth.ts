@@ -65,19 +65,4 @@ export class AuthController {
             res.status(500).json({ error: 'logout failed' })
         }
     }
-
-    async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const {userId} = req.params
-            const profile = await this.authService.getProfileByUserId(userId)
-            const profileData = {
-                name: profile?.name,
-                email: profile?.email,
-                imageUrl: profile?.ImageUrl
-            }
-            res.status(200).json(profileData)
-        } catch (error) {
-            next(error)
-        }
-    }
 }
