@@ -10,7 +10,7 @@ type InputType = {
     classInput?: string;
     auth?: boolean;
     required?: boolean;
-    value?: any
+    value?: any;
 };
 
 const Input: React.FC<InputType> = ({

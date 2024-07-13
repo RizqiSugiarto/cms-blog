@@ -8,15 +8,20 @@ import { UpdateProfileRequest } from '@/types';
 
 const RightLink: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const [isVisibleModalProfile, setVisibleModalProfile] = useState<boolean>(false);
+    const [isVisibleModalProfile, setVisibleModalProfile] =
+        useState<boolean>(false);
 
-    const { getProfileLoading, getProfileErrMessage, profile, getProfile } = useGetProfile();
-    const {updateProfileLoading, updateProfileErrMessage, updateProfile} = useUpdateProfile()
+    const { getProfileLoading, getProfileErrMessage, profile, getProfile } =
+        useGetProfile();
+    const { updateProfileLoading, updateProfileErrMessage, updateProfile } =
+        useUpdateProfile();
 
     const [file, setFile] = useState<File>();
-    const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
-    const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
+    const [imagePreview, setImagePreview] = useState<
+        string | ArrayBuffer | null
+    >(null);
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
 
     const { authUser } = useAuthContext();
 
@@ -27,24 +32,24 @@ const RightLink: React.FC = () => {
     };
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault
+        e.preventDefault;
 
         if (!authUser?.userId) {
             console.error('User not authenticate');
             return;
         }
-        
+
         const req: UpdateProfileRequest = {
             userId: authUser.userId,
             name: name,
             email: email,
             imageProfile: file
-        }
+        };
 
-        if(req.email || req.name || req.imageProfile) {
-         updateProfile(req)   
+        if (req.email || req.name || req.imageProfile) {
+            updateProfile(req);
         }
-    }
+    };
 
     const handleFileInputClick = () => {
         inputFileRef.current?.click();
@@ -65,7 +70,6 @@ const RightLink: React.FC = () => {
             dialogRef.current?.close();
         }
     }, [isVisibleModalProfile]);
-
 
     if (getProfileLoading) {
         return <div>Loading...</div>;
@@ -93,7 +97,9 @@ const RightLink: React.FC = () => {
             </div>
             <div className="dropdown dropdown-end">
                 <button className="btn btn-ghost px-2">
-                    <span className="hidden md:block">{profile?.data.name}</span>
+                    <span className="hidden md:block">
+                        {profile?.data.name}
+                    </span>
                     <div tabIndex={0} className="avatar">
                         <div className="w-10 rounded-full">
                             <img alt="Profile" src={profile?.data.ImageUrl} />
@@ -144,7 +150,9 @@ const RightLink: React.FC = () => {
                             <div className="flex items-center justify-center h-full w-full rounded-full">
                                 <h4 className="text-grayCustom flex flex-col items-center">
                                     <i className="bi bi-filetype-jpg text-4xl "></i>
-                                    <span className="text-lg">Photo Profile</span>
+                                    <span className="text-lg">
+                                        Photo Profile
+                                    </span>
                                 </h4>
                             </div>
                         )}
@@ -158,30 +166,28 @@ const RightLink: React.FC = () => {
                                 required
                                 auth
                                 setData={setName}
-                                type='text'
-                                className='w-full'
-                                placeholder='name'
+                                type="text"
+                                className="w-full"
+                                placeholder="name"
                             />
                             <Input
                                 required
                                 auth
                                 setData={setEmail}
-                                type='text'
-                                className='w-full'
-                                placeholder='email'
+                                type="text"
+                                className="w-full"
+                                placeholder="email"
                             />
-                            
-                    <FileInput
-                        ref={inputFileRef}
-                        accept="image/*"
-                        setFile={setFile}
-                        setImagePreview={setImagePreview}
-                        className="hidden"
-                        name="profileUpload"
-                    />
-                    <button type='submit'>
-                        Update
-                    </button>
+
+                            <FileInput
+                                ref={inputFileRef}
+                                accept="image/*"
+                                setFile={setFile}
+                                setImagePreview={setImagePreview}
+                                className="hidden"
+                                name="profileUpload"
+                            />
+                            <button type="submit">Update</button>
                         </form>
                     </div>
                 </div>

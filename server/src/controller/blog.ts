@@ -42,6 +42,7 @@ export class BlogController {
     async updateBlog(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params
+            console.log(id)
             const blogData: BlogDto = req.body
             const message = await this.blogService.updateBlog(id, blogData)
             res.status(200).json({ message })

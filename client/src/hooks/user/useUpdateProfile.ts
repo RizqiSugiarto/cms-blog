@@ -1,22 +1,24 @@
-import { useState } from "react";
-import { UpdateProfileRequest } from "@/types";
+import { useState } from 'react';
+import { UpdateProfileRequest } from '@/types';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
 
 interface UseUpdateProfileProps {
-    updateProfileLoading: boolean
-    updateProfileErrMessage: string
-    updateProfile: (updateProfileData: UpdateProfileRequest) => Promise<void>
+    updateProfileLoading: boolean;
+    updateProfileErrMessage: string;
+    updateProfile: (updateProfileData: UpdateProfileRequest) => Promise<void>;
 }
 
 const useUpdateProfile = (): UseUpdateProfileProps => {
-    const [updateProfileLoading, setUpdateProfileLoading] = useState<boolean>(false)
-    const [updateProfileErrMessage, setUpdateProfileErrMessage] = useState<string>('')
-    
+    const [updateProfileLoading, setUpdateProfileLoading] =
+        useState<boolean>(false);
+    const [updateProfileErrMessage, setUpdateProfileErrMessage] =
+        useState<string>('');
+
     const updateProfile = async (updateProfileData: UpdateProfileRequest) => {
-        setUpdateProfileLoading(true)
+        setUpdateProfileLoading(true);
         try {
-            const formData = new FormData()
+            const formData = new FormData();
             if (updateProfileData.name) {
                 formData.append('name', updateProfileData.name);
             }
@@ -27,22 +29,25 @@ const useUpdateProfile = (): UseUpdateProfileProps => {
                 formData.append('imageProfile', updateProfileData.imageProfile);
             }
 
-            const response = await fetch(`${BaseUrl}/api/v1/users/profile/${updateProfileData.userId}`, {
-                method: 'PUT',
-                body: formData
-            })
-            if(!response.ok) {
-                throw new Error('Error when update profile')
+            const response = await fetch(
+                `${BaseUrl}/api/v1/users/profile/${updateProfileData.userId}`,
+                {
+                    method: 'PUT',
+                    body: formData
+                }
+            );
+            if (!response.ok) {
+                throw new Error('Error when update profile');
             }
 
-            return response.json()
+            return response.json();
         } catch (error: any) {
-            setUpdateProfileErrMessage(error.message)
+            setUpdateProfileErrMessage(error.message);
         } finally {
-            setUpdateProfileLoading(true)
+            setUpdateProfileLoading(true);
         }
-    }
-    return {updateProfileLoading, updateProfileErrMessage, updateProfile}
-}
+    };
+    return { updateProfileLoading, updateProfileErrMessage, updateProfile };
+};
 
-export default useUpdateProfile
+export default useUpdateProfile;

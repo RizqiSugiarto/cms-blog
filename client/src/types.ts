@@ -29,8 +29,8 @@ export type UpdateBlogRequest = {
 };
 
 export type UpdateProfileRequest = {
-    userId: string
-    name: string
-    email: string
-    imageProfile?: File 
-}
+    userId: string;
+    name: string;
+    email: string;
+    imageProfile?: File;
+};

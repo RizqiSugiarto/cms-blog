@@ -39,3 +39,5 @@ coverage/
 package-lock.json
 
 error.log
+
+public/uploads

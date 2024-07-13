@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import Input from '@/components/form/input';
 import FileInput from '@/components/form/fileInput';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import useCreateBlog from '@/hooks/blog/useCreateBlog';
 import { CreateblogRequest } from '@/types';
 import { useAuthContext } from '@/context/authContext';
+import { useUnsavedChangesContext } from '@/context/unsavedChangesContext';
 
 const AddBlogPage: React.FC = () => {
     const [text, setText] = useState<string>('');
@@ -14,18 +16,21 @@ const AddBlogPage: React.FC = () => {
     const [imagePreview, setImagePreview] = useState<
         string | ArrayBuffer | null
     >(null);
+    const [isDraft, setIsDraft] = useState<boolean>(false);
 
+    // const dialogRef = useRef<HTMLDialogElement>(null);
     const inputFileRef = useRef<HTMLInputElement>(null);
 
     const { authUser } = useAuthContext();
-
     const { loading, createBlog, errMessage } = useCreateBlog();
+    const { isSaved, setIsSaved } = useUnsavedChangesContext();
+    // const history = useNavigate();
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!authUser?.userId) {
-            console.error('User not authenticate');
+            console.error('User not authenticated');
             return;
         }
 
@@ -34,11 +39,18 @@ const AddBlogPage: React.FC = () => {
             content: text,
             tag: tag,
             userId: authUser.userId,
-            isDraft: false
+            isDraft: isDraft
         };
 
         if (title && tag && text && file) {
             createBlog(req, file);
+            setTitle('');
+            setText('');
+            setTag('sport');
+            setFile(undefined);
+            setImagePreview(null);
+        } else {
+            console.error('Please fill in all required fields.');
         }
     };
 
@@ -46,6 +58,38 @@ const AddBlogPage: React.FC = () => {
         inputFileRef.current?.click();
     };
 
+    // const handleNavigate = (path: string) => {
+    //     if (isSaved) {
+    //         dialogRef.current?.showModal();
+    //     } else {
+    //         history(path);
+    //     }
+    // };
+
+    useEffect(() => {
+        if (title || text || file) {
+            setIsSaved(true);
+        } else {
+            setIsSaved(false);
+        }
+    }, [title, tag, text, file]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            if (isSaved) {
+                console.log('GINI');
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isSaved]);
+    console.log(isDraft, 'DRAFT');
     return (
         <div className="min-h-screen max-w-5xl mx-auto space-y-5">
             <div className="md:relative md:top-8 relative top-20">
@@ -54,7 +98,9 @@ const AddBlogPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-5">
                 <div
                     onClick={handleFileInputClick}
-                    className={`cursor-pointer card md:w-64 overflow-hidden rounded border-2 ${typeof imagePreview !== 'string' ? 'h-64' : 'max-h-64'}`}
+                    className={`cursor-pointer card md:w-64 overflow-hidden rounded border-2 ${
+                        typeof imagePreview !== 'string' ? 'h-64' : 'max-h-64'
+                    }`}
                 >
                     {typeof imagePreview === 'string' ? (
                         <img
@@ -101,6 +147,21 @@ const AddBlogPage: React.FC = () => {
                                 <option value="health">Health</option>
                             </select>
                         </div>
+                        <div className="w-20 my-2">
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text text-sm font-medium text-gray-700">
+                                        Draft?
+                                    </span>
+                                    <input
+                                        type="checkbox"
+                                        checked={isDraft}
+                                        className="checkbox checkbox-primary"
+                                        onChange={() => setIsDraft(!isDraft)}
+                                    />
+                                </label>
+                            </div>
+                        </div>
                         <FileInput
                             ref={inputFileRef}
                             accept="image/*"
@@ -110,7 +171,7 @@ const AddBlogPage: React.FC = () => {
                             name="imageUpload"
                         />
                         <button type="submit" className="btn btn-primary">
-                            {loading ? 'Loading' : 'Publish'}
+                            {isDraft ? 'Save' : 'Publish'}
                         </button>
                     </form>
                 </div>
@@ -119,6 +180,7 @@ const AddBlogPage: React.FC = () => {
                 value={text}
                 onChange={(value) => {
                     setText(value);
+                    setIsSaved(false); // Mark as unsaved when text changes
                 }}
                 minHeight="50vh"
                 maxHeight="100vh"

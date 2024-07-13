@@ -11,7 +11,8 @@ interface UseGetBlogByIdProps {
 
 const useGetBlogById = (): UseGetBlogByIdProps => {
     const [GetBlogByIdLoading, setGetBlogByIdLoading] = useState(false);
-    const [GetBlogByIdErrMessage, setGetBlogByIdErrMessage] = useState<string>('');
+    const [GetBlogByIdErrMessage, setGetBlogByIdErrMessage] =
+        useState<string>('');
     const [blog, setBlog] = useState<any>(null);
 
     const getBlogById = async (blogId: string): Promise<void> => {
@@ -28,7 +29,9 @@ const useGetBlogById = (): UseGetBlogByIdProps => {
             const data = await response.json();
             setBlog(data);
         } catch (error: any) {
-            setGetBlogByIdErrMessage(error.message || 'Failed to fetch blog by ID');
+            setGetBlogByIdErrMessage(
+                error.message || 'Failed to fetch blog by ID'
+            );
             console.error('Error fetching blog by ID:', error);
         } finally {
             setGetBlogByIdLoading(false);

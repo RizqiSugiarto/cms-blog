@@ -1,17 +1,26 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import HeaderDashboard from '@/components/header/headerDashboard';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import AddBlogPage from '@/pages/addBlogPage';
 import DraftPage from '@/pages/draftPage';
 import MyBlogPage from '@/pages/myBlogPage';
 import useLogout from '@/hooks/auth/useLogout';
 import { useAuthContext } from '@/context/authContext';
+import { useUnsavedChangesContext } from '@/context/unsavedChangesContext';
+import ConfirmNavigationModal from '@/components/global/confirmNavigationmodal';
 
 const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 
 const DashboardLayout: React.FC = () => {
     const { loading, logout, errMessage } = useLogout();
     const { setAuthUser } = useAuthContext();
+    const { isSaved } = useUnsavedChangesContext();
+    const navigate = useNavigate();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pendingNavigationPath, setPendingNavigationPath] = useState<
+        string | null
+    >(null);
 
     const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive
@@ -21,6 +30,28 @@ const DashboardLayout: React.FC = () => {
     const handleLogout = () => {
         logout();
         setAuthUser(null);
+    };
+
+    const handleNavigate = (path: string) => {
+        if (isSaved) {
+            setPendingNavigationPath(path);
+            setIsModalOpen(true);
+        } else {
+            navigate(path);
+        }
+    };
+
+    const handleConfirmNavigation = () => {
+        if (pendingNavigationPath) {
+            navigate(pendingNavigationPath);
+        }
+        setIsModalOpen(false);
+        setPendingNavigationPath(null);
+    };
+
+    const handleCancelNavigation = () => {
+        setIsModalOpen(false);
+        setPendingNavigationPath(null);
     };
 
     if (loading) {
@@ -65,55 +96,74 @@ const DashboardLayout: React.FC = () => {
                         </h2>
                     </div>
                     <li>
-                        <NavLink
-                            to="/dashboard"
-                            end
-                            className={getNavLinkClass}
+                        <button
+                            onClick={() => handleNavigate('/dashboard')}
+                            className={getNavLinkClass({
+                                isActive:
+                                    window.location.pathname === '/dashboard'
+                            })}
                         >
                             <i className="bi bi-window-dash"></i>
                             Dashboard
-                        </NavLink>
+                        </button>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/writeBlog"
-                            end
-                            className={getNavLinkClass}
+                        <button
+                            onClick={() =>
+                                handleNavigate('/dashboard/writeBlog')
+                            }
+                            className={getNavLinkClass({
+                                isActive:
+                                    window.location.pathname ===
+                                    '/dashboard/writeBlog'
+                            })}
                         >
                             <i className="bi bi-pencil-square"></i>
                             Write Blog
-                        </NavLink>
+                        </button>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/myblog"
-                            className={getNavLinkClass}
+                        <button
+                            onClick={() => handleNavigate('/dashboard/myblog')}
+                            className={getNavLinkClass({
+                                isActive:
+                                    window.location.pathname ===
+                                    '/dashboard/myblog'
+                            })}
                         >
                             <i className="bi bi-file-earmark-richtext"></i>
                             My Blogs
-                        </NavLink>
+                        </button>
                     </li>
                     <li>
-                        <NavLink
-                            to="/dashboard/draft"
-                            className={getNavLinkClass}
+                        <button
+                            onClick={() => handleNavigate('/dashboard/draft')}
+                            className={getNavLinkClass({
+                                isActive:
+                                    window.location.pathname ===
+                                    '/dashboard/draft'
+                            })}
                         >
                             <i className="bi bi-file-earmark-break"></i>
                             Draft
-                        </NavLink>
+                        </button>
                     </li>
                     <li>
-                        <NavLink
-                            to="/"
-                            className="text-lg btn btn-ghost justify-start w-full"
+                        <button
                             onClick={handleLogout}
+                            className="text-lg btn btn-ghost justify-start w-full"
                         >
                             <i className="bi bi-box-arrow-left"></i>
                             Logout
-                        </NavLink>
+                        </button>
                     </li>
                 </ul>
             </div>
+            <ConfirmNavigationModal
+                isOpen={isModalOpen}
+                onConfirm={handleConfirmNavigation}
+                onCancel={handleCancelNavigation}
+            />
         </main>
     );
 };

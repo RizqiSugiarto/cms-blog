@@ -33,7 +33,11 @@ export default {
         themes: [
             {
                 light: {
-                    primary: '#7164AF'
+                    primary: '#7164AF',
+                    '.btn-xs': {
+                        height: '2rem',
+                        'min-height': '2rem'
+                    }
                 }
             }
         ]

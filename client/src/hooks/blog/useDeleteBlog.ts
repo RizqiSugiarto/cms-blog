@@ -10,7 +10,8 @@ interface UseDeleteBlogProps {
 
 const useDeleteBlog = (): UseDeleteBlogProps => {
     const [deleteBlogLoading, setDeleteBlogLoading] = useState(false);
-    const [deleteBlogErrMessage, setDeleteBlogErrMessage] = useState<string>('');
+    const [deleteBlogErrMessage, setDeleteBlogErrMessage] =
+        useState<string>('');
 
     const deleteBlog = async (blogId: string): Promise<void> => {
         setDeleteBlogLoading(true);

@@ -4,6 +4,10 @@ import Table from '@/components/dashboard/table';
 import { useAuthContext } from '@/context/authContext';
 import useGetAllBlogsDraftByUserId from '@/hooks/blog/useGetAllBlogDraft';
 import UpdateModal from '@/components/form/updateInputModal';
+import { useBlogContext } from '@/context/blogContext';
+import DeleteModal from '@/components/form/deleteModal';
+import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
+import { UpdateBlogRequest } from '@/types';
 
 const MyBlogPage: React.FC = () => {
     const { authUser } = useAuthContext();
@@ -13,11 +17,45 @@ const MyBlogPage: React.FC = () => {
         allBlogDraft,
         getAllBlogDraftByUserId
     } = useGetAllBlogsDraftByUserId();
+
+    const { UpdateBlogErrMessage, updateBlog } = useUpdateBlog();
+
+    const { blogs, dispatch } = useBlogContext();
     const [search, setSearch] = useState<string>('');
     const [modalUpdateFormVisible, setModalUpdateFormVisible] =
         useState<boolean>(false);
-    const ToggleUpdateForm = () => {
+    const [modalDeleteVisible, setModalDeleteVisible] =
+        useState<boolean>(false);
+    const [selectedBlog, setSelectedBlog] = useState<any>(null);
+
+    const toggleUpdateForm = (blog: any) => {
+        setSelectedBlog(blog);
         setModalUpdateFormVisible(!modalUpdateFormVisible);
+    };
+
+    const toggleDeleteModal = (blog: any) => {
+        setSelectedBlog(blog);
+        setModalDeleteVisible(!modalDeleteVisible);
+    };
+
+    const handlePostDraft = (blog: any) => {
+        const req: UpdateBlogRequest = {
+            title: blog.title,
+            content: blog.text,
+            tag: blog.tag,
+            blogId: blog.id,
+            isDraft: false,
+            image: blog.file
+        };
+        updateBlog(req);
+
+        if (!UpdateBlogErrMessage) {
+            dispatch({ type: 'DELETE_BLOG', payload: req.blogId });
+        }
+    };
+
+    const trimTag = (tag: string): string => {
+        return tag.replace(/^"(.*)"$/, '$1');
     };
 
     useEffect(() => {
@@ -27,6 +65,16 @@ const MyBlogPage: React.FC = () => {
             console.error('authUser is undefined');
         }
     }, [authUser]);
+
+    useEffect(() => {
+        if (allBlogDraft) {
+            dispatch({ type: 'SET_BLOGS', payload: allBlogDraft.data });
+        }
+    }, [allBlogDraft]);
+
+    if (UpdateBlogErrMessage) {
+        console.log(UpdateBlogErrMessage);
+    }
 
     if (getAllBLogDraftLoading) {
         return <div>{getAllBLogDraftLoading}</div>;
@@ -65,8 +113,8 @@ const MyBlogPage: React.FC = () => {
                             'Options'
                         ]}
                     >
-                        {allBlogDraft &&
-                            allBlogDraft.data
+                        {blogs &&
+                            blogs
                                 .filter((item: any) => {
                                     return search.toLowerCase() === ''
                                         ? item
@@ -82,7 +130,7 @@ const MyBlogPage: React.FC = () => {
                                         <Table.td>{draft.title}</Table.td>
                                         <Table.td>
                                             <span className="badge badge-sm border-grayCustom">
-                                                {draft.tag}
+                                                {trimTag(draft.tag)}
                                             </span>
                                         </Table.td>
                                         <Table.td>{draft.view.length}</Table.td>
@@ -95,16 +143,28 @@ const MyBlogPage: React.FC = () => {
                                             </Link>
                                         </Table.td>
                                         <Table.td className="flex gap-1">
-                                            <button className="btn btn-success btn-xs">
-                                                Post!!
+                                            <button
+                                                className="btn btn-success btn-xs"
+                                                onClick={() =>
+                                                    handlePostDraft(draft)
+                                                }
+                                            >
+                                                Launch
                                             </button>
                                             <button
                                                 className="btn btn-info btn-xs"
-                                                onClick={ToggleUpdateForm}
+                                                onClick={() =>
+                                                    toggleUpdateForm(draft)
+                                                }
                                             >
                                                 Update
                                             </button>
-                                            <button className="btn btn-error btn-xs">
+                                            <button
+                                                className="btn btn-error btn-xs"
+                                                onClick={() =>
+                                                    toggleDeleteModal(draft)
+                                                }
+                                            >
                                                 Delete
                                             </button>
                                         </Table.td>
@@ -112,10 +172,18 @@ const MyBlogPage: React.FC = () => {
                                 ))}
                     </Table>
                 </div>
-                {modalUpdateFormVisible && (
+                {modalUpdateFormVisible && selectedBlog && (
                     <UpdateModal
                         isVisible={modalUpdateFormVisible}
-                        onClose={ToggleUpdateForm}
+                        onClose={() => setModalUpdateFormVisible(false)}
+                        blog={selectedBlog}
+                    />
+                )}
+                {modalDeleteVisible && selectedBlog && (
+                    <DeleteModal
+                        isVisible={modalDeleteVisible}
+                        onClose={() => setModalDeleteVisible(false)}
+                        blogId={selectedBlog.id}
                     />
                 )}
             </div>
