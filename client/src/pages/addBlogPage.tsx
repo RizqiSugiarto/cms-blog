@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import Input from '@/components/form/input';
 import FileInput from '@/components/form/fileInput';
 import MarkdownEditor from '@uiw/react-markdown-editor';
@@ -7,6 +6,7 @@ import useCreateBlog from '@/hooks/blog/useCreateBlog';
 import { CreateblogRequest } from '@/types';
 import { useAuthContext } from '@/context/authContext';
 import { useUnsavedChangesContext } from '@/context/unsavedChangesContext';
+import showToast from '@/utils/toastify';
 
 const AddBlogPage: React.FC = () => {
     const [text, setText] = useState<string>('');
@@ -18,19 +18,17 @@ const AddBlogPage: React.FC = () => {
     >(null);
     const [isDraft, setIsDraft] = useState<boolean>(false);
 
-    // const dialogRef = useRef<HTMLDialogElement>(null);
     const inputFileRef = useRef<HTMLInputElement>(null);
 
     const { authUser } = useAuthContext();
-    const { loading, createBlog, errMessage } = useCreateBlog();
+    const { createBlog, errMessage } = useCreateBlog();
     const { isSaved, setIsSaved } = useUnsavedChangesContext();
-    // const history = useNavigate();
 
     const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!authUser?.userId) {
-            console.error('User not authenticated');
+            showToast('User not authenticated. Please refresh this page.', 'error');
             return;
         }
 
@@ -49,22 +47,15 @@ const AddBlogPage: React.FC = () => {
             setTag('sport');
             setFile(undefined);
             setImagePreview(null);
+            showToast(isDraft ? 'Draft saved successfully!' : 'Blog published successfully!', 'success');
         } else {
-            console.error('Please fill in all required fields.');
+            showToast('Please fill in all required fields.', 'error');
         }
     };
 
     const handleFileInputClick = () => {
         inputFileRef.current?.click();
     };
-
-    // const handleNavigate = (path: string) => {
-    //     if (isSaved) {
-    //         dialogRef.current?.showModal();
-    //     } else {
-    //         history(path);
-    //     }
-    // };
 
     useEffect(() => {
         if (title || text || file) {
@@ -77,7 +68,6 @@ const AddBlogPage: React.FC = () => {
     useEffect(() => {
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             if (isSaved) {
-                console.log('GINI');
                 e.preventDefault();
                 e.returnValue = '';
             }
@@ -89,7 +79,13 @@ const AddBlogPage: React.FC = () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [isSaved]);
-    console.log(isDraft, 'DRAFT');
+
+    useEffect(() => {
+        if (errMessage) {
+            showToast(`${errMessage}. Please refresh this page.`, 'error');
+        }
+    }, [errMessage]);
+
     return (
         <div className="min-h-screen max-w-5xl mx-auto space-y-5">
             <div className="md:relative md:top-8 relative top-20">
@@ -180,7 +176,7 @@ const AddBlogPage: React.FC = () => {
                 value={text}
                 onChange={(value) => {
                     setText(value);
-                    setIsSaved(false); // Mark as unsaved when text changes
+                    setIsSaved(false);
                 }}
                 minHeight="50vh"
                 maxHeight="100vh"

@@ -9,6 +9,7 @@ import useTotalViewPerMonth from '@/hooks/view/useGetTotalView';
 import useMostFavTag from '@/hooks/like/useGetFavTag';
 import useGetMostViewedBlogByUserId from '@/hooks/blog/useGetBlogMostView';
 import { useAuthContext } from '@/context/authContext';
+import showToast from '@/utils/toastify';
 
 const DashboardPage: React.FC = () => {
     const [totalLike, setTotalLike] = useState<number>(0);
@@ -65,7 +66,7 @@ const DashboardPage: React.FC = () => {
             getAllBlogByUserId(authUser.userId);
             getAllBlogDraftByUserId(authUser.userId);
         } else {
-            console.error('User Not Authenticate');
+            showToast('User Not Authenticated. Please refresh this page', 'error');
         }
     }, [authUser]);
 
@@ -88,7 +89,7 @@ const DashboardPage: React.FC = () => {
                 getMostViewedBlogByUserId(authUser.userId);
                 getMostFavTag();
             } else {
-                console.error('User Not Authenticate');
+                showToast('User Not Authenticated. Please refresh this page', 'error');
             }
 
             setTotalLike(totalLikes);
@@ -152,6 +153,35 @@ const DashboardPage: React.FC = () => {
         authUser
     ]);
 
+    // Error handling using toastify
+    useEffect(() => {
+        if (getAllErrMessage) {
+            showToast(`${getAllErrMessage}. Please refresh this page.`, 'error');
+        }
+        if (getAllBlogDraftErrMessage) {
+            showToast(`${getAllBlogDraftErrMessage}. Please refresh this page.`, 'error');
+        }
+        if (TotalViewErrMessage) {
+            showToast(`${TotalViewErrMessage}. Please refresh this page.`, 'error');
+        }
+        if (TotalLikeErrMessage) {
+            showToast(`${TotalLikeErrMessage}. Please refresh this page.`, 'error');
+        }
+        if (FavTagErrMessage) {
+            showToast(`${FavTagErrMessage}. Please refresh this page.`, 'error');
+        }
+        if (ViewdErrMessage) {
+            showToast(`${ViewdErrMessage}. Please refresh this page.`, 'error');
+        }
+    }, [
+        getAllErrMessage,
+        getAllBlogDraftErrMessage,
+        TotalViewErrMessage,
+        TotalLikeErrMessage,
+        FavTagErrMessage,
+        ViewdErrMessage
+    ]);
+
     if (getAllBlogLoading) {
         return <div>{getAllBlogLoading}</div>;
     }
@@ -174,30 +204,6 @@ const DashboardPage: React.FC = () => {
 
     if (ViewdLoading) {
         return <div>{ViewdLoading}</div>;
-    }
-
-    if (getAllErrMessage) {
-        return <div>{getAllErrMessage}</div>;
-    }
-
-    if (getAllBlogDraftErrMessage) {
-        return <div>{getAllBlogDraftErrMessage}</div>;
-    }
-
-    if (TotalViewErrMessage) {
-        return <div>{TotalViewErrMessage}</div>;
-    }
-
-    if (TotalLikeErrMessage) {
-        return <div>{TotalLikeErrMessage}</div>;
-    }
-
-    if (FavTagErrMessage) {
-        return <div>{FavTagErrMessage}</div>;
-    }
-
-    if (ViewdErrMessage) {
-        return <div>{ViewdErrMessage}</div>;
     }
 
     return (

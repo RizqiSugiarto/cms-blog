@@ -8,6 +8,7 @@ import useGetAllBlogsByUserId from '@/hooks/blog/useGetAllBlog';
 import DeleteModal from '@/components/form/deleteModal';
 import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
 import { UpdateBlogRequest } from '@/types';
+import showToast from '@/utils/toastify';
 
 const MyBlogPage: React.FC = () => {
     const [search, setSearch] = useState<string>('');
@@ -22,7 +23,7 @@ const MyBlogPage: React.FC = () => {
 
     const { blogs, dispatch } = useBlogContext();
     const { authUser } = useAuthContext();
-    const { allBLog, getAllBlogByUserId } = useGetAllBlogsByUserId();
+    const { allBLog, getAllBlogByUserId, getAllErrMessage } = useGetAllBlogsByUserId();
     const {UpdateBlogErrMessage, updateBlog} = useUpdateBlog()
 
     useEffect(() => {
@@ -41,6 +42,16 @@ const MyBlogPage: React.FC = () => {
         }
     }, [allBLog]);
 
+    useEffect(() => {
+        if(getAllErrMessage) {
+            showToast(`${getAllErrMessage} Please refresh this page`, 'error')
+        }
+
+        if(UpdateBlogErrMessage) {
+            showToast(`${UpdateBlogErrMessage} Please refresh this page`, 'error')
+        }
+    }, [getAllErrMessage, UpdateBlogErrMessage])
+
     const toggleUpdateForm = (blog: any) => {
         setSelectedBlog(blog);
         setModalUpdateFormVisible(!modalUpdateFormVisible);
@@ -48,7 +59,6 @@ const MyBlogPage: React.FC = () => {
 
     const toggleDeleteModal = (blog: any) => {
         setSelectedBlog(blog);
-        console.log(selectedBlog);
         setModalDeleteVisible(!modalDeleteVisible);
     };
 

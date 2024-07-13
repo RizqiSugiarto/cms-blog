@@ -8,6 +8,7 @@ import { useBlogContext } from '@/context/blogContext';
 import DeleteModal from '@/components/form/deleteModal';
 import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
 import { UpdateBlogRequest } from '@/types';
+import showToast from '@/utils/toastify';
 
 const MyBlogPage: React.FC = () => {
     const { authUser } = useAuthContext();
@@ -62,7 +63,7 @@ const MyBlogPage: React.FC = () => {
         if (authUser?.userId) {
             getAllBlogDraftByUserId(authUser.userId);
         } else {
-            console.error('authUser is undefined');
+            showToast('User Not Authenticated. Please refresh this page', 'error');
         }
     }, [authUser]);
 
@@ -72,17 +73,18 @@ const MyBlogPage: React.FC = () => {
         }
     }, [allBlogDraft]);
 
-    if (UpdateBlogErrMessage) {
-        console.log(UpdateBlogErrMessage);
-    }
-
+    useEffect(() => {
+        if (UpdateBlogErrMessage) {
+            showToast(`${UpdateBlogErrMessage} Please refresh this page.`, 'error');
+        }
+        if (getAllBlogDraftErrMessage) {
+            showToast(`${getAllBlogDraftErrMessage} Please refresh this page.`, 'error');
+        }
+    }, [UpdateBlogErrMessage, getAllBlogDraftErrMessage]);
     if (getAllBLogDraftLoading) {
         return <div>{getAllBLogDraftLoading}</div>;
     }
 
-    if (getAllBlogDraftErrMessage) {
-        return <div>{getAllBlogDraftErrMessage}</div>;
-    }
 
     return (
         <section>
