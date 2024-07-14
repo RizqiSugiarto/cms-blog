@@ -19,7 +19,6 @@ export class UserService {
     
     async updateProfileByUserId(updateData: UpdateProfileDto): Promise<void> {
         const user = await this.userRepository.findOne({where: {id: updateData.userId}})
-        console.log(updateData.imageProfile ,"KENA DISINI KOK")
 
         if (!user) {
             throw new Error('User not found');

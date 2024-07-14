@@ -3,6 +3,6 @@ export class BlogDto {
     content: string
     tag: string
     userId: string
-    imageUrl: string
+    image: any
     isDraft: boolean
 }

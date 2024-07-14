@@ -66,7 +66,10 @@ const DashboardPage: React.FC = () => {
             getAllBlogByUserId(authUser.userId);
             getAllBlogDraftByUserId(authUser.userId);
         } else {
-            showToast('User Not Authenticated. Please refresh this page', 'error');
+            showToast(
+                'User Not Authenticated. Please refresh this page',
+                'error'
+            );
         }
     }, [authUser]);
 
@@ -89,7 +92,10 @@ const DashboardPage: React.FC = () => {
                 getMostViewedBlogByUserId(authUser.userId);
                 getMostFavTag();
             } else {
-                showToast('User Not Authenticated. Please refresh this page', 'error');
+                showToast(
+                    'User Not Authenticated. Please refresh this page',
+                    'error'
+                );
             }
 
             setTotalLike(totalLikes);
@@ -156,19 +162,34 @@ const DashboardPage: React.FC = () => {
     // Error handling using toastify
     useEffect(() => {
         if (getAllErrMessage) {
-            showToast(`${getAllErrMessage}. Please refresh this page.`, 'error');
+            showToast(
+                `${getAllErrMessage}. Please refresh this page.`,
+                'error'
+            );
         }
         if (getAllBlogDraftErrMessage) {
-            showToast(`${getAllBlogDraftErrMessage}. Please refresh this page.`, 'error');
+            showToast(
+                `${getAllBlogDraftErrMessage}. Please refresh this page.`,
+                'error'
+            );
         }
         if (TotalViewErrMessage) {
-            showToast(`${TotalViewErrMessage}. Please refresh this page.`, 'error');
+            showToast(
+                `${TotalViewErrMessage}. Please refresh this page.`,
+                'error'
+            );
         }
         if (TotalLikeErrMessage) {
-            showToast(`${TotalLikeErrMessage}. Please refresh this page.`, 'error');
+            showToast(
+                `${TotalLikeErrMessage}. Please refresh this page.`,
+                'error'
+            );
         }
         if (FavTagErrMessage) {
-            showToast(`${FavTagErrMessage}. Please refresh this page.`, 'error');
+            showToast(
+                `${FavTagErrMessage}. Please refresh this page.`,
+                'error'
+            );
         }
         if (ViewdErrMessage) {
             showToast(`${ViewdErrMessage}. Please refresh this page.`, 'error');

@@ -52,10 +52,13 @@ export class BlogService {
             if (!user) {
                 throw new Error('User not found')
             }
+            console.log(blogData.image.filename, "GINISERVICE")
+
+            const imgUrl = `http://localhost:5000/uploads/${blogData.image.filename}`
 
             const blog = this.blogRepository.create({
                 title: blogData.title,
-                imageUrl: 'https://picsum.photos/200',
+                imageUrl: imgUrl,
                 content: blogData.content,
                 isDraft: blogData.isDraft,
                 tag: blogData.tag,
@@ -184,7 +187,7 @@ export class BlogService {
 
             blog.title = blogData.title
             blog.content = blogData.content
-            blog.imageUrl = blogData.imageUrl
+            blog.imageUrl = blogData.image
             blog.isDraft = blogData.isDraft
             blog.updatedAt = new Date()
 

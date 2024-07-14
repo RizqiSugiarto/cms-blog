@@ -28,7 +28,10 @@ const AddBlogPage: React.FC = () => {
         e.preventDefault();
 
         if (!authUser?.userId) {
-            showToast('User not authenticated. Please refresh this page.', 'error');
+            showToast(
+                'User not authenticated. Please refresh this page.',
+                'error'
+            );
             return;
         }
 
@@ -47,7 +50,12 @@ const AddBlogPage: React.FC = () => {
             setTag('sport');
             setFile(undefined);
             setImagePreview(null);
-            showToast(isDraft ? 'Draft saved successfully!' : 'Blog published successfully!', 'success');
+            showToast(
+                isDraft
+                    ? 'Draft saved successfully!'
+                    : 'Blog published successfully!',
+                'success'
+            );
         } else {
             showToast('Please fill in all required fields.', 'error');
         }

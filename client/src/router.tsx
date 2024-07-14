@@ -14,7 +14,7 @@ const RouterComponent: React.FC = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard/*" element={<DashboardLayout />} />
-                    <Route path="/blog" element={<BlogPages />} />
+                    <Route path="/blog/:blogId" element={<BlogPages />} />
                 </Route>
             </Routes>
         </Router>

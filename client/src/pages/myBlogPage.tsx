@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Table from '@/components/dashboard/table';
 import UpdateModal from '@/components/form/updateInputModal';
 import { useBlogContext } from '@/context/blogContext';
@@ -9,6 +8,7 @@ import DeleteModal from '@/components/form/deleteModal';
 import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
 import { UpdateBlogRequest } from '@/types';
 import showToast from '@/utils/toastify';
+import { useNavigate } from 'react-router-dom';
 
 const MyBlogPage: React.FC = () => {
     const [search, setSearch] = useState<string>('');
@@ -23,8 +23,9 @@ const MyBlogPage: React.FC = () => {
 
     const { blogs, dispatch } = useBlogContext();
     const { authUser } = useAuthContext();
-    const { allBLog, getAllBlogByUserId, getAllErrMessage } = useGetAllBlogsByUserId();
-    const {UpdateBlogErrMessage, updateBlog} = useUpdateBlog()
+    const { allBLog, getAllBlogByUserId, getAllErrMessage } =
+        useGetAllBlogsByUserId();
+    const { UpdateBlogErrMessage, updateBlog } = useUpdateBlog();
 
     useEffect(() => {
         const fetchInitialBlogs = async () => {
@@ -43,14 +44,19 @@ const MyBlogPage: React.FC = () => {
     }, [allBLog]);
 
     useEffect(() => {
-        if(getAllErrMessage) {
-            showToast(`${getAllErrMessage} Please refresh this page`, 'error')
+        if (getAllErrMessage) {
+            showToast(`${getAllErrMessage} Please refresh this page`, 'error');
         }
 
-        if(UpdateBlogErrMessage) {
-            showToast(`${UpdateBlogErrMessage} Please refresh this page`, 'error')
+        if (UpdateBlogErrMessage) {
+            showToast(
+                `${UpdateBlogErrMessage} Please refresh this page`,
+                'error'
+            );
         }
-    }, [getAllErrMessage, UpdateBlogErrMessage])
+    }, [getAllErrMessage, UpdateBlogErrMessage]);
+
+    const navigate = useNavigate()
 
     const toggleUpdateForm = (blog: any) => {
         setSelectedBlog(blog);
@@ -70,15 +76,18 @@ const MyBlogPage: React.FC = () => {
             blogId: blog.id,
             isDraft: true,
             image: blog.file
+        };
 
-        }
-        
-        updateBlog(req)
+        updateBlog(req);
 
-        if(!UpdateBlogErrMessage) {
-            dispatch({type: 'DELETE_BLOG', payload: blog.id})
+        if (!UpdateBlogErrMessage) {
+            dispatch({ type: 'DELETE_BLOG', payload: blog.id });
         }
-    }
+    };
+
+    const handleViewBlog = (blogId: string) => {
+        navigate(`/blog/${blogId}`);
+    };
 
     const trimTag = (tag: string): string => {
         return tag.replace(/^"(.*)"$/, '$1');
@@ -131,15 +140,20 @@ const MyBlogPage: React.FC = () => {
                                         </Table.td>
                                         <Table.td>{blog.view.length}</Table.td>
                                         <Table.td>
-                                            <Link
+                                            <button
                                                 className="btn btn-primary btn-xs"
-                                                to={`/blog/${blog.id}`}
+                                                onClick={() => handleViewBlog(blog.id)}
                                             >
                                                 View
-                                            </Link>
+                                            </button>
                                         </Table.td>
                                         <Table.td className="flex gap-1">
-                                            <button className='btn btn-success btn-xs' onClick={() => handleBlogToDraft(blog)}>
+                                            <button
+                                                className="btn btn-success btn-xs"
+                                                onClick={() =>
+                                                    handleBlogToDraft(blog)
+                                                }
+                                            >
                                                 Draft
                                             </button>
                                             <button

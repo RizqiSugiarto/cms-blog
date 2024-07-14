@@ -63,7 +63,10 @@ const MyBlogPage: React.FC = () => {
         if (authUser?.userId) {
             getAllBlogDraftByUserId(authUser.userId);
         } else {
-            showToast('User Not Authenticated. Please refresh this page', 'error');
+            showToast(
+                'User Not Authenticated. Please refresh this page',
+                'error'
+            );
         }
     }, [authUser]);
 
@@ -75,16 +78,21 @@ const MyBlogPage: React.FC = () => {
 
     useEffect(() => {
         if (UpdateBlogErrMessage) {
-            showToast(`${UpdateBlogErrMessage} Please refresh this page.`, 'error');
+            showToast(
+                `${UpdateBlogErrMessage} Please refresh this page.`,
+                'error'
+            );
         }
         if (getAllBlogDraftErrMessage) {
-            showToast(`${getAllBlogDraftErrMessage} Please refresh this page.`, 'error');
+            showToast(
+                `${getAllBlogDraftErrMessage} Please refresh this page.`,
+                'error'
+            );
         }
     }, [UpdateBlogErrMessage, getAllBlogDraftErrMessage]);
     if (getAllBLogDraftLoading) {
         return <div>{getAllBLogDraftLoading}</div>;
     }
-
 
     return (
         <section>
