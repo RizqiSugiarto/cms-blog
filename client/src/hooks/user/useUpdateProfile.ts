@@ -30,7 +30,7 @@ const useUpdateProfile = (): UseUpdateProfileProps => {
             }
 
             const response = await fetch(
-                `${BaseUrl}/api/v1/users/profile/${updateProfileData.userId}`,
+                `${BaseUrl}/users/profile/${updateProfileData.userId}`,
                 {
                     method: 'PUT',
                     body: formData
@@ -44,7 +44,7 @@ const useUpdateProfile = (): UseUpdateProfileProps => {
         } catch (error: any) {
             setUpdateProfileErrMessage(error.message);
         } finally {
-            setUpdateProfileLoading(true);
+            setUpdateProfileLoading(false);
         }
     };
     return { updateProfileLoading, updateProfileErrMessage, updateProfile };

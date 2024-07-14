@@ -5,21 +5,17 @@ import { useAuthContext } from '@/context/authContext';
 import FileInput from '../form/fileInput';
 import Input from '../form/input';
 import { UpdateProfileRequest } from '@/types';
+import showToast from '@/utils/toastify';
 
 const RightLink: React.FC = () => {
     const dialogRef = useRef<HTMLDialogElement>(null);
-    const [isVisibleModalProfile, setVisibleModalProfile] =
-        useState<boolean>(false);
+    const [isVisibleModalProfile, setVisibleModalProfile] = useState<boolean>(false);
 
-    const { getProfileLoading, getProfileErrMessage, profile, getProfile } =
-        useGetProfile();
-    const { updateProfileLoading, updateProfileErrMessage, updateProfile } =
-        useUpdateProfile();
+    const { getProfileLoading, getProfileErrMessage, profile, getProfile } = useGetProfile();
+    const { updateProfileLoading, updateProfileErrMessage, updateProfile } = useUpdateProfile();
 
     const [file, setFile] = useState<File>();
-    const [imagePreview, setImagePreview] = useState<
-        string | ArrayBuffer | null
-    >(null);
+    const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
 
@@ -31,11 +27,11 @@ const RightLink: React.FC = () => {
         setVisibleModalProfile(!isVisibleModalProfile);
     };
 
-    const handleForm = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault;
+    const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         if (!authUser?.userId) {
-            console.error('User not authenticate');
+            console.error('authUser is undefined');
             return;
         }
 
@@ -47,7 +43,16 @@ const RightLink: React.FC = () => {
         };
 
         if (req.email || req.name || req.imageProfile) {
-            updateProfile(req);
+            try {
+                await updateProfile(req);
+                showToast('Update profile success', 'success');
+                if (authUser.userId) {
+                    getProfile(authUser.userId);
+                }
+            } catch (error) {
+                console.error('Update profile failed:', error);
+                showToast('Failed to update profile', 'error');
+            }
         }
     };
 
@@ -71,20 +76,25 @@ const RightLink: React.FC = () => {
         }
     }, [isVisibleModalProfile]);
 
-    if (getProfileLoading) {
+    useEffect(() => {
+        if (profile?.data) {
+            setName(profile.data.name);
+            setEmail(profile.data.email);
+            setImagePreview(profile.data.ImageUrl); 
+        }
+    }, [profile]);
+
+    useEffect(() => {
+        if (getProfileErrMessage && getProfileErrMessage.trim() !== '') {
+            showToast(getProfileErrMessage, 'error');
+        }
+        if (updateProfileErrMessage && updateProfileErrMessage.trim() !== '') {
+            showToast(updateProfileErrMessage, 'error');
+        }
+    }, [getProfileErrMessage, updateProfileErrMessage]);
+
+    if (getProfileLoading || updateProfileLoading) {
         return <div>Loading...</div>;
-    }
-
-    if (getProfileErrMessage) {
-        return <div>Error: {getProfileErrMessage}</div>;
-    }
-
-    if (updateProfileLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (updateProfileErrMessage) {
-        return <div>Error: {updateProfileErrMessage}</div>;
     }
 
     return (
@@ -138,11 +148,11 @@ const RightLink: React.FC = () => {
                     </form>
                     <div
                         onClick={handleFileInputClick}
-                        className={`cursor-pointer card mx-auto w-64 overflow-hidden rounded-full border-2 bg-pink-400 ${typeof imagePreview !== 'string' ? 'h-64' : 'max-h-64'}`}
+                        className={`cursor-pointer card mx-auto w-64 overflow-hidden rounded-full border-2 ${typeof imagePreview !== 'string' ? 'h-64' : 'max-h-64'}`}
                     >
                         {typeof imagePreview === 'string' ? (
                             <img
-                                src={imagePreview}
+                                src={imagePreview as string}
                                 alt="Preview"
                                 className="w-full h-full"
                             />
@@ -157,38 +167,38 @@ const RightLink: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <div>
-                        <h1>
-                            <span></span>
-                        </h1>
-                        <form onSubmit={handleForm}>
-                            <Input
-                                required
-                                auth
-                                setData={setName}
-                                type="text"
-                                className="w-full"
-                                placeholder="name"
-                            />
-                            <Input
-                                required
-                                auth
-                                setData={setEmail}
-                                type="text"
-                                className="w-full"
-                                placeholder="email"
-                            />
-
-                            <FileInput
-                                ref={inputFileRef}
-                                accept="image/*"
-                                setFile={setFile}
-                                setImagePreview={setImagePreview}
-                                className="hidden"
-                                name="profileUpload"
-                            />
-                            <button type="submit">Update</button>
-                        </form>
+                    <div className='mt-6'>
+                        <div className='w-[300px] mx-auto'>
+                            <form onSubmit={handleForm} className='flex flex-col gap-6'>
+                                <Input
+                                    required
+                                    auth
+                                    setData={setName}
+                                    type="text"
+                                    className="w-full"
+                                    placeholder="name"
+                                    value={name}
+                                />
+                                <Input
+                                    required
+                                    auth
+                                    setData={setEmail}
+                                    type="text"
+                                    className="w-full"
+                                    placeholder="email"
+                                    value={email}
+                                />
+                                <FileInput
+                                    ref={inputFileRef}
+                                    accept="image/*"
+                                    setFile={setFile}
+                                    setImagePreview={setImagePreview}
+                                    className="hidden"
+                                    name="imageProfile"
+                                />
+                                <button type="submit" className='btn btn-primary w-full'>Update</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </dialog>
