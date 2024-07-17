@@ -12,14 +12,13 @@ export class BlogController {
     async createBlog(req: Request, res: Response): Promise<void> {
         try {
             const { title, content, isDraft, tag, userId } = req.body
-            const image = req.file;
+            const image = req.file
 
-            const isDraftBoolean = isDraft === 'true';
+            const isDraftBoolean = isDraft === 'true'
 
             // if(!imagePath) {
             //     throw new Error('Error when upload image')
             // }
-
 
             const blogData: BlogDto = {
                 title: title,
@@ -27,15 +26,26 @@ export class BlogController {
                 userId: userId,
                 image: image,
                 isDraft: isDraftBoolean,
-                tag: tag
+                tag: tag,
             }
-
 
             const message = await this.blogService.createBlog(blogData)
             res.status(201).json({ message })
         } catch (error) {
             console.error('Error creating blog:', error)
             res.status(500).json({ error: 'Failed to create blog' })
+        }
+    }
+
+    async getAllBlogWithUserProfile(
+        req: Request,
+        res: Response,
+    ): Promise<void> {
+        try {
+            const response = await this.blogService.getAllBLogWithUserProfile()
+            res.status(200).json(response)
+        } catch (error: any) {
+            res.status(500).json(error.message)
         }
     }
 
@@ -89,11 +99,12 @@ export class BlogController {
         }
     }
 
-    async getBlogBySimilarName(req: Request, res: Response): Promise<void> {
+    async getBlogByTag(req: Request, res: Response): Promise<void> {
+        console.log('gini')
         try {
-            const blogData: BlogDto = req.body
-            const blog =
-                await this.blogService.getBlogsByUserIdSimilarTitle(blogData)
+            const { tag } = req.query
+            console.log(tag, 'GINI')
+            const blog = await this.blogService.getBlogsByTags(tag as string)
             if (!blog) {
                 res.status(404).json({ error: 'Blog not found' })
                 return

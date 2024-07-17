@@ -10,43 +10,53 @@ export class AuthController {
         this.authService = authService
     }
 
-    async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async register(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<void> {
         try {
-            const registerData: RegisterDto = req.body;
-            const response = await this.authService.registerUser(registerData);
-            res.status(201).json(response);
+            const registerData: RegisterDto = req.body
+            const response = await this.authService.registerUser(registerData)
+            res.status(201).json(response)
         } catch (error: any) {
             if (error.message === 'Email is already in use') {
-                res.status(400).json({ error: error.message }); 
+                res.status(400).json({ error: error.message })
             } else {
-                logger.error('Error in register controller:', error);
-                res.status(500).json({ error: 'Failed to register user' }); 
+                logger.error('Error in register controller:', error)
+                res.status(500).json({ error: 'Failed to register user' })
             }
-            next(error);
+            next(error)
         }
     }
 
-    async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async login(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<void> {
         try {
             const loginData: LoginDto = req.body
             const appType = req.headers['x-web-app']
 
-            if(!appType) {
-                res.status(400).json({message: 'Bad Request'})
+            if (!appType) {
+                res.status(400).json({ message: 'Bad Request' })
             }
 
             loginData.appType = appType as string
 
             const response = await this.authService.loginUser(loginData)
 
-
             res.cookie('jwt', response, {
-                maxAge: 15 * 24 * 60 * 60 * 1000,  
-                httpOnly: false,                  
+                maxAge: 15 * 24 * 60 * 60 * 1000,
+                httpOnly: false,
                 secure: process.env.NODE_ENV !== 'development',
-                path: '/',                       
-            });
-            res.status(200).json({ message: 'login succesfuly', token: response })
+                path: '/',
+            })
+            res.status(200).json({
+                message: 'login succesfuly',
+                token: response,
+            })
         } catch (error: any) {
             next(error)
         }
@@ -55,10 +65,10 @@ export class AuthController {
     async logout(req: Request, res: Response): Promise<void> {
         try {
             res.clearCookie('jwt', {
-                httpOnly: false,           
+                httpOnly: false,
                 secure: process.env.NODE_ENV !== 'development',
-                path: '/',                
-            });
+                path: '/',
+            })
             res.status(200).json({ message: 'Logged out successfully' })
             res.end()
         } catch (error) {

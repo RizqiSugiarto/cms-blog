@@ -21,7 +21,7 @@ app.use('/uploads', express.static(publicPath))
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }))
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/like', likeRoutes)

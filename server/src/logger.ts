@@ -1,4 +1,4 @@
-import { createLogger, transports, format } from 'winston';
+import { createLogger, transports, format } from 'winston'
 
 const logger = createLogger({
     level: 'error',
@@ -6,18 +6,15 @@ const logger = createLogger({
         format.timestamp(),
         format.errors({ stack: true }),
         format.splat(),
-        format.json()
+        format.json(),
     ),
     defaultMeta: { service: 'user-service' },
     transports: [
         new transports.Console({
-            format: format.combine(
-                format.colorize(),
-                format.simple()
-            )
+            format: format.combine(format.colorize(), format.simple()),
         }),
-        new transports.File({ filename: 'error.log', level: 'error' })
+        new transports.File({ filename: 'error.log', level: 'error' }),
     ],
-});
+})
 
-export default logger;
+export default logger

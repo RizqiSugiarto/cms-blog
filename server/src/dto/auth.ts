@@ -11,4 +11,3 @@ export class LoginDto {
     password: string
     appType: string
 }
-

@@ -2,7 +2,7 @@ import { User } from '@/entity/users'
 import connectDb from '@/db/mysql'
 import { RegisterDto, LoginDto } from '@/dto/auth'
 import { generateToken, hashPassword, comparePassword } from '@/helpers/auth'
-import {NotFoundError, UnAuthorizedError} from '@/helpers/customErr'
+import { NotFoundError, UnAuthorizedError } from '@/helpers/customErr'
 
 export class AuthService {
     private userRepository = connectDb.getRepository(User)
@@ -11,21 +11,23 @@ export class AuthService {
         try {
             const hashedPassword = await hashPassword(registerData.password)
             const user = this.userRepository.create({
-            name: registerData.name,
-            email: registerData.email,
-            password: hashedPassword,
-            ImageUrl: 'https://picsum.photos/200',
-            role: registerData.role,
-            createdAt: new Date(),
-        })
+                name: registerData.name,
+                email: registerData.email,
+                password: hashedPassword,
+                ImageUrl: 'https://picsum.photos/200',
+                role: registerData.role,
+                createdAt: new Date(),
+            })
 
-        const isRegistered = await this.userRepository.findOne({ where: { email: registerData.email } })
+            const isRegistered = await this.userRepository.findOne({
+                where: { email: registerData.email },
+            })
 
-        if(isRegistered) {
-            throw new Error('Email is already in use')
-        }
+            if (isRegistered) {
+                throw new Error('Email is already in use')
+            }
 
-        return this.userRepository.save(user)
+            return this.userRepository.save(user)
         } catch (error: any) {
             throw new Error(error.message)
         }
@@ -37,7 +39,7 @@ export class AuthService {
             throw new NotFoundError('Email not found')
         }
 
-        if(user.role == 'user' && loginData.appType == 'cms') {
+        if (user.role == 'user' && loginData.appType == 'cms') {
             throw new UnAuthorizedError('User not authorized for CMS')
         }
 
@@ -57,12 +59,10 @@ export class AuthService {
     async findUserByEmail(email: string): Promise<User | null> {
         try {
             const user = await this.userRepository.findOne({ where: { email } })
-            return user 
+            return user
         } catch (error) {
             console.error('Error finding user by email:', error)
             return null
         }
     }
-
-    
 }

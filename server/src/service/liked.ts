@@ -3,9 +3,11 @@ import { Liked } from '@/entity/liked'
 import { User } from '@/entity/users'
 import { Blog } from '@/entity/blog'
 import { LikedDto } from '@/dto/liked'
+import { NotFoundError } from '@/helpers/customErr'
+import { QueryRunner } from 'typeorm';
 
 type LikesPerMonth = {
-    month: string // Month in YYYY-MM format
+    month: string 
 }
 
 type LikedPerMontResponse = {
@@ -24,35 +26,49 @@ export class LikedService {
     private userRepository = connectDb.getRepository(User)
 
     async createLiked(likedData: LikedDto): Promise<string | Error> {
+        const queryRunner: QueryRunner = connectDb.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+    
         try {
-            const blog = await this.blogRepository.findOne({
-                where: { id: likedData.blogId },
-            })
-            const user = await this.userRepository.findOne({
-                where: { id: likedData.userId },
-            })
-
-            if (!blog) {
-                throw new Error('Blog not found')
+            const existingLike = await queryRunner.manager.findOne(Liked, {
+                where: { user: { id: likedData.userId }, blog: { id: likedData.blogId } },
+                relations: ['user', 'blog']
+            });
+    
+            if (existingLike) {
+                await queryRunner.manager.remove(Liked, existingLike);
+                await queryRunner.commitTransaction();
+                return 'Unlike successfully';
             }
-
-            if (!user) {
-                throw new Error('User not found')
+    
+            const user = await queryRunner.manager.findOne(User, { where: { id: likedData.userId } });
+            const blog = await queryRunner.manager.findOne(Blog, { where: { id: likedData.blogId } });
+    
+            if (!user || !blog) {
+                throw new Error('User or Blog not found');
             }
-
-            const liked = this.likedRepository.create({
-                blog: blog,
+    
+            const newLike = this.likedRepository.create({
                 user: user,
-                createdAt: new Date(),
-            })
-
-            await this.likedRepository.save(liked)
-            return 'Liked successfully created'
+                blog: blog
+            });
+    
+            console.log(newLike, "New Like Object");
+    
+            await queryRunner.manager.save(Liked, newLike);
+            await queryRunner.commitTransaction();
+            return 'Liked successfully created';
         } catch (error) {
-            console.error('Error in createLiked service:', error)
-            throw new Error('Failed to create like')
+            await queryRunner.rollbackTransaction();
+            console.error('Error in createLiked service:', error);
+            throw new Error('Failed to create like');
+        } finally {
+            await queryRunner.release();
         }
     }
+    
+    
 
     async getTotalLikePerMonthByUserId(
         userId: string,
@@ -77,6 +93,35 @@ export class LikedService {
             console.error('Error in getTotalLikedPerMonth service:', error)
             throw new Error('Failed to get like')
         }
+    }
+
+    async deleteLike(likeData: LikedDto): Promise<string> {
+        const like = await this.likedRepository.findOne({
+            where: {
+                user: { id: likeData.userId },
+                blog: { id: likeData.blogId },
+            },
+            relations: ['user', 'blog'],
+        });
+    
+        if (!like) {
+            throw new NotFoundError('Like not found');
+        }
+    
+        await this.likedRepository.remove(like);
+    
+        return 'Like successfully deleted';
+    }
+
+    async getLikeStatus(likeData: LikedDto): Promise<boolean> {
+        const like = await this.likedRepository.findOne({
+            where: {
+                user: {id: likeData.userId},
+                blog: {id: likeData.blogId}
+            },
+            relations: ['user', 'blog']
+        })
+        return !!like;
     }
 
     async getMostFavTag(): Promise<MostLikedTag[]> {

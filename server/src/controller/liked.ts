@@ -18,7 +18,43 @@ export class LikedController {
                 })
                 return
             }
+            likeData.createdAt = new Date
             const newLike = await this.likedService.createLiked(likeData)
+            res.status(201).json({ message: newLike })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: error })
+        }
+    }
+
+    async unlike(req: Request, res: Response): Promise<void> {
+        try {
+            const likeData: LikedDto = req.body
+            if (!likeData.blogId || !likeData.userId) {
+                res.status(400).json({
+                    message: 'Bad Request - not valid request',
+                })
+                return
+            }
+            const newLike = await this.likedService.deleteLike(likeData)
+            res.status(201).json({ message: newLike })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: error })
+        }
+    }
+
+    async checkLike(req: Request, res: Response): Promise<void> {
+        try {
+            console.log("KENAA")
+            const likeData: LikedDto = req.body
+            if (!likeData.blogId || !likeData.userId) {
+                res.status(400).json({
+                    message: 'Bad Request - not valid request',
+                })
+                return
+            }
+            const newLike = await this.likedService.getLikeStatus(likeData)
             res.status(201).json({ message: newLike })
         } catch (error) {
             console.log(error)

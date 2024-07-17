@@ -17,6 +17,12 @@ type view = {
     createdAt: Date
 }
 
+type userBaseResopnse = {
+    id?: string
+    name: string
+    imageUrl: string
+}
+
 type blogBaseResponse = {
     id: string
     title: string
@@ -27,7 +33,8 @@ type blogBaseResponse = {
     createdAt: Date
     updatedAt: Date
     like: likeBaseResponse[]
-    view: view[]
+    view?: view[]
+    user?: userBaseResopnse
 }
 
 type blogResponse = {
@@ -52,7 +59,7 @@ export class BlogService {
             if (!user) {
                 throw new Error('User not found')
             }
-            console.log(blogData.image.filename, "GINISERVICE")
+            console.log(blogData.image.filename, 'GINISERVICE')
 
             const imgUrl = `http://localhost:5000/uploads/${blogData.image.filename}`
 
@@ -74,48 +81,89 @@ export class BlogService {
         }
     }
 
-    async getBlogsByUserIdSimilarTitle(
-        blogData: BlogDto,
-    ): Promise<blogResponse> {
-        try {
-            const blogs = await this.blogRepository.find({
-                where: {
-                    user: { id: blogData.userId },
-                    isDraft: blogData.isDraft,
-                    title: ILike(`%${blogData.title}%`),
-                },
+    async getAllBLogWithUserProfile(): Promise<blogBaseResponse[]> {
+        const blogs = await this.blogRepository.find({
+            relations: ['user', 'liked'],
+        })
+
+        const blogResponseData: blogBaseResponse[] = blogs.map((blog) => ({
+            id: blog.id,
+            title: blog.title,
+            imageUrl: blog.imageUrl,
+            tag: blog.tag,
+            content: blog.content,
+            isDraft: blog.isDraft,
+            createdAt: blog.createdAt,
+            updatedAt: blog.updatedAt,
+            like: blog.liked.map((like) => ({
+                id: like.id,
+                blogId: like.blog ? like.blog.id : '',
+                userId: like.user ? like.user.id : '',
+                createdAt: like.createdAt,
+            })),
+            view: blog.view?.map((view) => ({
+                id: view.id,
+                blogId: view.blog.id,
+                createdAt: view.createdAt,
+            })),
+            user: blog.user
+                ? {
+                      id: blog.user.id,
+                      name: blog.user.name,
+                      imageUrl: blog.user.ImageUrl,
+                  }
+                : undefined,
+        }))
+
+        return blogResponseData
+    }
+
+    async getBlogsByTags(tags: string): Promise<blogBaseResponse[]> {
+        let blogs
+
+        if (tags == 'All') {
+            blogs = await this.blogRepository.find({
+                relations: ['user', 'liked'],
             })
-
-            const blogsResponse: blogBaseResponse[] = blogs.map((blog) => ({
-                id: blog.id,
-                title: blog.title,
-                imageUrl: blog.imageUrl,
-                tag: blog.tag,
-                content: blog.content,
-                isDraft: blog.isDraft,
-                createdAt: blog.createdAt,
-                updatedAt: blog.updatedAt,
-                like: blog.liked.map((liked) => ({
-                    id: liked.id,
-                    blogId: liked.blog ? liked.blog.id : '',
-                    userId: liked.user ? liked.user.id : '',
-                    createdAt: liked.createdAt,
-                })),
-                view: blog.view.map((view) => ({
-                    id: view.id,
-                    blogId: view.blog ? view.blog.id : '',
-                    createdAt: view.createdAt,
-                })),
-            }))
-
-            return {
-                count: blogs.length,
-                data: blogsResponse,
-            }
-        } catch (error) {
-            console.error('Error fetching blogs by user ID:', error)
-            throw new Error('Failed to fetch blogs')
+        } else {
+            blogs = await this.blogRepository.find({
+                where: {
+                    tag: tags,
+                },
+                relations: ['user', 'liked'],
+            })
         }
+
+        const blogResponseData: blogBaseResponse[] = blogs.map((blog) => ({
+            id: blog.id,
+            title: blog.title,
+            imageUrl: blog.imageUrl,
+            tag: blog.tag,
+            content: blog.content,
+            isDraft: blog.isDraft,
+            createdAt: blog.createdAt,
+            updatedAt: blog.updatedAt,
+            like: blog.liked.map((like) => ({
+                id: like.id,
+                blogId: like.blog ? like.blog.id : '',
+                userId: like.user ? like.user.id : '',
+                createdAt: like.createdAt,
+            })),
+            view: blog.view?.map((view) => ({
+                id: view.id,
+                blogId: view.blog.id,
+                createdAt: view.createdAt,
+            })),
+            user: blog.user
+                ? {
+                      id: blog.user.id,
+                      name: blog.user.name,
+                      imageUrl: blog.user.ImageUrl,
+                  }
+                : undefined,
+        }))
+
+        return blogResponseData
     }
 
     async getAllBlogsByUserId(userId: string): Promise<blogResponse> {
@@ -216,7 +264,7 @@ export class BlogService {
 
     async getBlogById(id: string): Promise<Blog | null> {
         try {
-            return await this.blogRepository.findOne({ where: { id } })
+            return await this.blogRepository.findOne({ where: { id }, relations: ['user'] })
         } catch (error) {
             console.error('Error fetching blog by ID:', error)
             throw new Error('Failed to fetch blog')
@@ -230,7 +278,7 @@ export class BlogService {
                     user: { id: userId },
                     isDraft: true,
                 },
-                relations: ['liked', 'view']
+                relations: ['liked', 'view'],
             })
 
             const blogsResponse: blogBaseResponse[] = blogs.map((blog) => ({

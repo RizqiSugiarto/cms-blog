@@ -8,9 +8,9 @@ const likeService = new LikedService()
 const likeController = new LikedController(likeService)
 
 router.post('/', (req, res) => likeController.like(req, res))
-router.get('/tag', (req, res) =>
-    likeController.getMostFavoriteTag(req, res),
-)
+router.delete('/remove', (req, res) => likeController.unlike(req, res))
+router.post('/status', (req, res) => likeController.checkLike(req, res))
+router.get('/tag', (req, res) => likeController.getMostFavoriteTag(req, res))
 router.get('/:userId', (req, res) =>
     likeController.getTotalLikePerMonth(req, res),
 )
