@@ -3,6 +3,7 @@ import { User } from '@/entity/users'
 import connectDb from '@/db/mysql'
 import { BlogDto } from '@/dto/blog'
 import { ILike } from 'typeorm'
+import { NotFoundError, UnAuthorizedError } from '@/helpers/customErr'
 
 type likeBaseResponse = {
     id: string
@@ -52,33 +53,27 @@ export class BlogService {
     private userRepository = connectDb.getRepository(User)
 
     async createBlog(blogData: BlogDto): Promise<string> {
-        try {
-            const user = await this.userRepository.findOne({
-                where: { id: blogData.userId },
-            })
-            if (!user) {
-                throw new Error('User not found')
-            }
-            console.log(blogData.image.filename, 'GINISERVICE')
-
-            const imgUrl = `http://localhost:5000/uploads/${blogData.image.filename}`
-
-            const blog = this.blogRepository.create({
-                title: blogData.title,
-                imageUrl: imgUrl,
-                content: blogData.content,
-                isDraft: blogData.isDraft,
-                tag: blogData.tag,
-                user: user,
-                createdAt: new Date(),
-            })
-
-            await this.blogRepository.save(blog)
-            return 'Blog created successfully'
-        } catch (error) {
-            console.error('Error creating blog:', error)
-            throw new Error('Failed to create blog')
+        const user = await this.userRepository.findOne({
+            where: { id: blogData.userId },
+        })
+        if (!user) {
+            throw new NotFoundError('User not found')
         }
+
+        const imgUrl = `http://localhost:5000/uploads/${blogData.image.filename}`
+
+        const blog = this.blogRepository.create({
+            title: blogData.title,
+            imageUrl: imgUrl,
+            content: blogData.content,
+            isDraft: blogData.isDraft,
+            tag: blogData.tag,
+            user: user,
+            createdAt: new Date(),
+        })
+
+        await this.blogRepository.save(blog)
+        return 'Blog created successfully'
     }
 
     async getAllBLogWithUserProfile(): Promise<blogBaseResponse[]> {

@@ -40,4 +40,4 @@ package-lock.json
 
 error.log
 
-public/uploads
+# public/uploads

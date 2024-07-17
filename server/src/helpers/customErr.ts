@@ -19,3 +19,9 @@ export class NotFoundError extends CustomError {
         super(message, 404)
     }
 }
+
+export class ValidationError extends CustomError {
+    constructor(message: string) {
+        super(message, 400)
+    }
+}
