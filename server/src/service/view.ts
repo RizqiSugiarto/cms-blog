@@ -1,40 +1,42 @@
-import connectDb from '@/db/mysql'
-import { Blog } from '@/entity/blog'
-import { View } from '@/entity/view'
+import connectDb from '@/db/mysql';
+import { Blog } from '@/entity/blog';
+import { View } from '@/entity/view';
+import { NotFoundError } from '@/helpers/customErr';
+import logger from '@/logger';
 
 type ViewPerMonth = {
-    month: string
-}
+    month: string;
+};
 
 type ViewPerMonthResponse = {
-    count: number
-    data: ViewPerMonth[]
-}
+    count: number;
+    data: ViewPerMonth[];
+};
 
 export class ViewService {
-    private blogRepository = connectDb.getRepository(Blog)
-    private viewRepository = connectDb.getRepository(View)
+    private blogRepository = connectDb.getRepository(Blog);
+    private viewRepository = connectDb.getRepository(View);
 
-    async createView(blogId: string): Promise<string | Error> {
+    async createView(blogId: string): Promise<string> {
         try {
             const blog = await this.blogRepository.findOne({
                 where: { id: blogId },
-            })
+            });
 
             if (!blog) {
-                throw new Error('Blog not found')
+                throw new NotFoundError('Blog not found');
             }
 
             const viewed = this.viewRepository.create({
                 blog: blog,
                 createdAt: new Date(),
-            })
+            });
 
-            await this.viewRepository.save(viewed)
-            return 'viewed successfully created'
-        } catch (error) {
-            console.error('Error in create view service:', error)
-            throw new Error('Failed to create view')
+            await this.viewRepository.save(viewed);
+            return 'View successfully created';
+        } catch (error: any) {
+            logger.error('Error in create view service:', error);
+            throw new Error('Failed to create view');
         }
     }
 
@@ -49,15 +51,15 @@ export class ViewService {
                 .where('user.id = :userId', { userId })
                 .groupBy('month')
                 .orderBy('month', 'ASC')
-                .getRawMany()
+                .getRawMany();
 
             return {
                 count: result.length,
                 data: result,
-            }
-        } catch (error) {
-            console.error('Error in get total view service:', error)
-            throw new Error('Failed to get total view')
+            };
+        } catch (error: any) {
+            logger.error('Error in get total view service:', error);
+            throw new Error('Failed to get total view');
         }
     }
 }

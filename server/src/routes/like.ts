@@ -1,18 +1,15 @@
-import { LikedController } from '@/controller/liked'
-// import protectRoute from '@/middleware/protectedRoute'
-import { LikedService } from '@/service/liked'
-import { Router } from 'express'
+import { Router } from 'express';
+import { LikedService } from '@/service/liked';
+import { LikedController } from '@/controller/liked';
 
-const router = Router()
-const likeService = new LikedService()
-const likeController = new LikedController(likeService)
+const router = Router();
+const likedService = new LikedService();
+const likedController = new LikedController(likedService);
 
-router.post('/', (req, res) => likeController.like(req, res))
-router.delete('/remove', (req, res) => likeController.unlike(req, res))
-router.post('/status', (req, res) => likeController.checkLike(req, res))
-router.get('/tag', (req, res) => likeController.getMostFavoriteTag(req, res))
-router.get('/:userId', (req, res) =>
-    likeController.getTotalLikePerMonth(req, res),
-)
+router.post('/', (req, res, next) => likedController.createLiked(req, res, next));
+router.get('/total/:userId', (req, res, next) => likedController.getTotalLikePerMonthByUserId(req, res, next));
+router.delete('/', (req, res, next) => likedController.deleteLike(req, res, next));
+router.get('/status', (req, res, next) => likedController.getLikeStatus(req, res, next));
+router.get('/most-fav-tag', (req, res, next) => likedController.getMostFavTag(req, res, next));
 
-export default router
+export default router;

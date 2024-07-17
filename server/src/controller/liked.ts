@@ -1,91 +1,71 @@
-import { Request, Response } from 'express'
-import { LikedDto } from '@/dto/liked'
-import { LikedService } from '@/service/liked'
+import { NextFunction, Request, Response } from 'express';
+import { LikedDto } from '@/dto/liked';
+import { LikedService } from '@/service/liked';
+import logger from '@/logger';
 
 export class LikedController {
-    private likedService: LikedService
+    private likedService: LikedService;
 
     constructor(likedService: LikedService) {
-        this.likedService = likedService
+        this.likedService = likedService;
     }
 
-    async like(req: Request, res: Response): Promise<void> {
+    async createLiked(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const likeData: LikedDto = req.body
-            if (!likeData.blogId || !likeData.userId) {
-                res.status(400).json({
-                    message: 'Bad Request - not valid request',
-                })
-                return
-            }
-            likeData.createdAt = new Date
-            const newLike = await this.likedService.createLiked(likeData)
-            res.status(201).json({ message: newLike })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: error })
+            const likedData: LikedDto = req.body;
+            const response = await this.likedService.createLiked(likedData);
+            res.status(201).json(response);
+        } catch (error: any) {
+            logger.error('Error in createLiked controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create like' });
+            next(error);
         }
     }
 
-    async unlike(req: Request, res: Response): Promise<void> {
+    async getTotalLikePerMonthByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const likeData: LikedDto = req.body
-            if (!likeData.blogId || !likeData.userId) {
-                res.status(400).json({
-                    message: 'Bad Request - not valid request',
-                })
-                return
-            }
-            const newLike = await this.likedService.deleteLike(likeData)
-            res.status(201).json({ message: newLike })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: error })
+            const { userId } = req.params;
+            const response = await this.likedService.getTotalLikePerMonthByUserId(userId);
+            res.status(200).json(response);
+        } catch (error: any) {
+            logger.error('Error in getTotalLikePerMonthByUserId controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to get likes' });
+            next(error);
         }
     }
 
-    async checkLike(req: Request, res: Response): Promise<void> {
+    async deleteLike(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log("KENAA")
-            const likeData: LikedDto = req.body
-            if (!likeData.blogId || !likeData.userId) {
-                res.status(400).json({
-                    message: 'Bad Request - not valid request',
-                })
-                return
-            }
-            const newLike = await this.likedService.getLikeStatus(likeData)
-            res.status(201).json({ message: newLike })
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: error })
+            const likedData: LikedDto = req.body;
+            const response = await this.likedService.deleteLike(likedData);
+            res.status(200).json(response);
+        } catch (error: any) {
+            logger.error('Error in deleteLike controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to delete like' });
+            next(error);
         }
     }
 
-    async getTotalLikePerMonth(req: Request, res: Response): Promise<void> {
+    async getLikeStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { userId } = req.params
-            if (!userId) {
-                res.status(400).json({
-                    message: 'Bad Request - not valid request',
-                })
-                return
-            }
-            const resp =
-                await this.likedService.getTotalLikePerMonthByUserId(userId)
-            res.status(200).json(resp)
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ error: error })
+            const likedData: LikedDto = req.body;
+            const response = await this.likedService.getLikeStatus(likedData);
+            res.status(200).json(response);
+        } catch (error: any) {
+            logger.error('Error in getLikeStatus controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to get like status' });
+            next(error);
         }
     }
 
-    async getMostFavoriteTag(req: Request, res: Response): Promise<void> {
+    async getMostFavTag(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const resp = await this.likedService.getMostFavTag()
-            res.status(200).json(resp)
-        } catch (error) {
-            res.status(500).json({ error: error })
+            const response = await this.likedService.getMostFavTag();
+            res.status(200).json(response);
+        } catch (error: any) {
+            logger.error('Error in getMostFavTag controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to get most favorite tags' });
+            next(error);
         }
     }
 }

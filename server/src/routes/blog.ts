@@ -1,30 +1,38 @@
-import { Router } from 'express'
-import { BlogService } from '@/service/blog'
-import { BlogController } from '@/controller/blog'
-import { upload } from '@/middleware/uploadImage'
+import { Router } from 'express';
+import { BlogService } from '@/service/blog';
+import { BlogController } from '@/controller/blog';
+import { upload } from '@/middleware/uploadImage';
 
-const router = Router()
-const blogService = new BlogService()
-const blogController = new BlogController(blogService)
+const router = Router();
+const blogService = new BlogService();
+const blogController = new BlogController(blogService);
 
-router.post('/', upload.single('imageUpload'), (req, res) =>
-    blogController.createBlog(req, res),
-)
-router.get('/tags', (req, res) => blogController.getBlogByTag(req, res))
-router.get('/view/:userId', (req, res) =>
-    blogController.getMostViewBlogUserId(req, res),
-)
-router.put('/:id', (req, res) => blogController.updateBlog(req, res))
-router.delete('/:id', (req, res) => blogController.deleteBlog(req, res))
-router.get('/user', (req, res) =>
-    blogController.getAllBlogWithUserProfile(req, res),
-)
-router.get('/user/:userId', (req, res) =>
-    blogController.getAllBlogsByUserId(req, res),
-)
-router.get('/draft/:userId', (req, res) =>
-    blogController.getAllBlogsDraftByUserId(req, res),
-)
-router.get('/:id', (req, res) => blogController.getBlogById(req, res))
+router.post('/', upload.single('imageUpload'), (req, res, next) => 
+    blogController.createBlog(req, res, next)
+);
+router.get('/tags', (req, res, next) => 
+    blogController.getBlogByTag(req, res, next)
+);
+router.get('/view/:userId', (req, res, next) => 
+    blogController.getMostViewBlogUserId(req, res, next)
+);
+router.put('/:id', (req, res, next) => 
+    blogController.updateBlog(req, res, next)
+);
+router.delete('/:id', (req, res, next) => 
+    blogController.deleteBlog(req, res, next)
+);
+router.get('/user', (req, res, next) => 
+    blogController.getAllBlogWithUserProfile(req, res, next)
+);
+router.get('/user/:userId', (req, res, next) => 
+    blogController.getAllBlogsByUserId(req, res, next)
+);
+router.get('/draft/:userId', (req, res, next) => 
+    blogController.getAllBlogsDraftByUserId(req, res, next)
+);
+router.get('/:id', (req, res, next) => 
+    blogController.getBlogById(req, res, next)
+);
 
-export default router
+export default router;
