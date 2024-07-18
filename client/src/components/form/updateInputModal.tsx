@@ -62,7 +62,6 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
 
     useEffect(() => {
         if (!UpdateBlogLoading && !UpdateBlogErrMessage) {
-            console.log('KENA SINI');
             const updatedBlog = {
                 ...blog,
                 title: title,

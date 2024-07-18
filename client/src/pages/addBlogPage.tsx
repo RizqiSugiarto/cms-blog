@@ -147,8 +147,8 @@ const AddBlogPage: React.FC = () => {
                             >
                                 <option value="sport">Sport</option>
                                 <option value="fashion">Fashion</option>
-                                <option value="finance">Finance</option>
-                                <option value="health">Health</option>
+                                <option value="food">Food</option>
+                                <option value="life">Life</option>
                             </select>
                         </div>
                         <div className="w-20 my-2">

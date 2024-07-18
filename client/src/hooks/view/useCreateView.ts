@@ -28,7 +28,6 @@ const useCreateView = (): UseCreateViewProps => {
                 throw new Error('Failed to create view');
             }
 
-            console.log('Viewed successfully created');
         } catch (error: any) {
             setErrMessage(error.message || 'Failed to create view');
             console.error('Error creating view:', error);

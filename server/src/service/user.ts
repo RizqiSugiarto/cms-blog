@@ -35,7 +35,6 @@ export class UserService {
             user.email = updateData.email
         }
 
-        console.log(updateData.imageProfile, 'IMG')
 
         if (updateData.imageProfile !== undefined) {
             const imgUrl = `http://localhost:5000/uploads/${updateData.imageProfile.filename}`

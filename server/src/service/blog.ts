@@ -3,8 +3,7 @@ import { User } from '@/entity/users'
 import connectDb from '@/db/mysql'
 import { BlogDto } from '@/dto/blog'
 import { NotFoundError } from '@/helpers/customErr'
-
-
+import { trimTag } from '@/helpers/common'
 
 export class BlogService {
     private blogRepository = connectDb.getRepository(Blog)
@@ -25,7 +24,7 @@ export class BlogService {
             imageUrl: imgUrl,
             content: blogData.content,
             isDraft: blogData.isDraft,
-            tag: blogData.tag,
+            tag: trimTag(blogData.tag),
             user: user,
             createdAt: new Date(),
         })
@@ -45,7 +44,7 @@ export class BlogService {
     async getBlogsByTags(tags: string): Promise<Blog[]> {
         let blogs
 
-        if (tags == 'All') {
+        if (tags.trim() == "All") {
             blogs = await this.blogRepository.find({
                 relations: ['user', 'liked'],
             })
@@ -71,24 +70,19 @@ export class BlogService {
     }
 
     async getMostViewedBlog(userId: string): Promise<Blog[]> {
-        try {
-            const result = await this.blogRepository
-                .createQueryBuilder('blog')
-                .leftJoin('blog.view', 'view')
-                .select('blog.title')
-                .addSelect('COUNT(view.id)', 'viewCount')
-                .where('blog.user.id = :userId', { userId })
-                .groupBy('blog.id')
-                .having('COUNT(view.id) > 0')
-                .orderBy('viewCount', 'DESC')
-                .limit(5)
-                .getRawMany()
+        const result = await this.blogRepository
+            .createQueryBuilder('blog')
+            .leftJoin('blog.view', 'view')
+            .select('blog.title')
+            .addSelect('COUNT(view.id)', 'viewCount')
+            .where('blog.user.id = :userId', { userId })
+            .groupBy('blog.id')
+            .having('COUNT(view.id) > 0')
+            .orderBy('viewCount', 'DESC')
+            .limit(5)
+            .getRawMany()
 
-            return result
-        } catch (error) {
-            console.error('Error fetching blogs by user ID:', error)
-            throw new Error('Failed to fetch blogs')
-        }
+        return result
     }
 
     async updateBlog(id: string, blogData: BlogDto): Promise<string> {

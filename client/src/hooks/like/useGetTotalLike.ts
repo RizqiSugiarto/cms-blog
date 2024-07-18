@@ -21,7 +21,7 @@ const useTotalLikePerMonth = (): UseTotalLikePerMonthProps => {
         setLikeErrMessage('');
 
         try {
-            const response = await fetch(`${BaseUrl}/like/${userId}`);
+            const response = await fetch(`${BaseUrl}/like/total/${userId}`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch total likes per month');

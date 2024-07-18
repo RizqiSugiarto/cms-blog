@@ -65,26 +65,21 @@ export class LikedService {
     }
     
     async getTotalLikePerMonthByUserId(userId: string): Promise<LikedPerMontResponse> {
-        try {
-            const result: LikesPerMonth[] = await this.likedRepository
-                .createQueryBuilder('liked')
-                .select('DATE_FORMAT(liked.createdAt, "%Y-%m") as month')
-                .addSelect('COUNT(liked.id)', 'totalLikes')
-                .leftJoin('liked.blog', 'blog')
-                .leftJoin('blog.user', 'user')
-                .where('user.id = :userId', { userId })
-                .groupBy('month')
-                .orderBy('month', 'ASC')
-                .getRawMany();
+        const result: LikesPerMonth[] = await this.likedRepository
+            .createQueryBuilder('liked')
+            .select('DATE_FORMAT(liked.createdAt, "%Y-%m") as month')
+            .addSelect('COUNT(liked.id)', 'totalLikes')
+            .leftJoin('liked.blog', 'blog')
+            .leftJoin('blog.user', 'user')
+            .where('user.id = :userId', { userId })
+            .groupBy('month')
+            .orderBy('month', 'ASC')
+            .getRawMany();
 
-            return {
-                count: result.length,
-                data: result,
-            };
-        } catch (error) {
-            console.error('Error in getTotalLikedPerMonth service:', error);
-            throw new Error('Failed to get like');
-        }
+        return {
+            count: result.length,
+            data: result,
+        };
     }
 
     async deleteLike(likeData: LikedDto): Promise<string> {
@@ -117,20 +112,15 @@ export class LikedService {
     }
 
     async getMostFavTag(): Promise<MostLikedTag[]> {
-        try {
-            const result: MostLikedTag[] = await this.likedRepository
-                .createQueryBuilder('liked')
-                .select('blog.tag', 'tag')
-                .addSelect('COUNT(liked.id)', 'totalLikes')
-                .leftJoin('liked.blog', 'blog')
-                .groupBy('blog.tag')
-                .orderBy('totalLikes', 'DESC')
-                .getRawMany();
+        const result: MostLikedTag[] = await this.likedRepository
+            .createQueryBuilder('liked')
+            .select('blog.tag', 'tag')
+            .addSelect('COUNT(liked.id)', 'totalLikes')
+            .leftJoin('liked.blog', 'blog')
+            .groupBy('blog.tag')
+            .orderBy('totalLikes', 'DESC')
+            .getRawMany();
 
-            return result;
-        } catch (error) {
-            console.error('Error in getMostFavTag service:', error);
-            throw new Error('Failed to get favorite tags');
-        }
+        return result;
     }
 }

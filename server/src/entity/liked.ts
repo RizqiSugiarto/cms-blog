@@ -10,9 +10,8 @@ import { Blog } from './blog'
 import { User } from './users'
 
 @Entity()
-// @Unique(['blog', 'user']) // Unique constraint
-@Index(['blog']) // Index for BlogId
-@Index(['user']) // Index for UserId
+@Index(['blog']) 
+@Index(['user']) 
 export class Liked {
     @PrimaryGeneratedColumn('uuid')
     id: string

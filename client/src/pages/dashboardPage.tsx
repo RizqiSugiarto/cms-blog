@@ -75,12 +75,12 @@ const DashboardPage: React.FC = () => {
 
     useEffect(() => {
         if (allBLog) {
-            const totalLikes = allBLog.data.reduce(
-                (acc: any, blog: { like: string | any[] }) =>
-                    acc + blog.like.length,
+            const totalLikes = allBLog.reduce(
+                (acc: any, blog: { liked: string | any[] }) =>
+                    acc + blog.liked.length,
                 0
             );
-            const totalViews = allBLog.data.reduce(
+            const totalViews = allBLog.reduce(
                 (acc: any, blog: { view: string | any[] }) =>
                     acc + blog.view.length,
                 0
@@ -100,8 +100,8 @@ const DashboardPage: React.FC = () => {
 
             setTotalLike(totalLikes);
             settotalView(totalViews);
-            setTotalBlog(allBLog.count);
-            setTotalBlogDraft(allBlogDraft.count);
+            setTotalBlog(allBLog.length);
+            setTotalBlogDraft(allBlogDraft.length);
         }
     }, [allBLog, allBlogDraft, authUser]);
 

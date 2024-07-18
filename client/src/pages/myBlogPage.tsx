@@ -30,7 +30,6 @@ const MyBlogPage: React.FC = () => {
     useEffect(() => {
         const fetchInitialBlogs = async () => {
             if (authUser?.userId) {
-                console.log(authUser.userId);
                 await getAllBlogByUserId(authUser.userId);
             }
         };
@@ -39,7 +38,7 @@ const MyBlogPage: React.FC = () => {
 
     useEffect(() => {
         if (allBLog) {
-            dispatch({ type: 'SET_BLOGS', payload: allBLog.data });
+            dispatch({ type: 'SET_BLOGS', payload: allBLog });
         }
     }, [allBLog]);
 

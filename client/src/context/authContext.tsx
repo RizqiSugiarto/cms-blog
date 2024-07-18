@@ -48,7 +48,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
     const contextValue: AuthContextType = {
         authUser,
-        setAuthUser // Provide the setter function
+        setAuthUser 
     };
 
     return (

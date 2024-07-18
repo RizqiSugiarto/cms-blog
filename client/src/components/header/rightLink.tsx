@@ -31,7 +31,7 @@ const RightLink: React.FC = () => {
         e.preventDefault();
 
         if (!authUser?.userId) {
-            console.error('authUser is undefined');
+            console.warn('auth user undifined');
             return;
         }
 
@@ -64,7 +64,7 @@ const RightLink: React.FC = () => {
         if (authUser?.userId) {
             getProfile(authUser.userId);
         } else {
-            console.error('authUser is undefined');
+            console.warn('auth user undifined');
         }
     }, [authUser]);
 

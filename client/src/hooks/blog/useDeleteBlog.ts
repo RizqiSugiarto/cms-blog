@@ -26,7 +26,6 @@ const useDeleteBlog = (): UseDeleteBlogProps => {
                 throw new Error('Failed to delete blog');
             }
 
-            console.log('Blog deleted successfully');
         } catch (error: any) {
             setDeleteBlogErrMessage(error.message || 'Failed to delete blog');
             console.error('Error deleting blog:', error);

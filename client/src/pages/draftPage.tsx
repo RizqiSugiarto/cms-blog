@@ -8,6 +8,7 @@ import { useBlogContext } from '@/context/blogContext';
 import DeleteModal from '@/components/form/deleteModal';
 import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
 import { UpdateBlogRequest } from '@/types';
+import { useNavigate } from 'react-router-dom';
 import showToast from '@/utils/toastify';
 
 const MyBlogPage: React.FC = () => {
@@ -20,6 +21,7 @@ const MyBlogPage: React.FC = () => {
     } = useGetAllBlogsDraftByUserId();
 
     const { UpdateBlogErrMessage, updateBlog } = useUpdateBlog();
+    const navigate = useNavigate()
 
     const { blogs, dispatch } = useBlogContext();
     const [search, setSearch] = useState<string>('');
@@ -72,7 +74,7 @@ const MyBlogPage: React.FC = () => {
 
     useEffect(() => {
         if (allBlogDraft) {
-            dispatch({ type: 'SET_BLOGS', payload: allBlogDraft.data });
+            dispatch({ type: 'SET_BLOGS', payload: allBlogDraft });
         }
     }, [allBlogDraft]);
 
@@ -93,6 +95,10 @@ const MyBlogPage: React.FC = () => {
     if (getAllBLogDraftLoading) {
         return <div>{getAllBLogDraftLoading}</div>;
     }
+
+    const handleViewBlog = (blogId: string) => {
+        navigate(`/blog/${blogId}`);
+    };
 
     return (
         <section>
@@ -145,12 +151,12 @@ const MyBlogPage: React.FC = () => {
                                         </Table.td>
                                         <Table.td>{draft.view.length}</Table.td>
                                         <Table.td>
-                                            <Link
+                                            <button
                                                 className="btn btn-primary btn-xs"
-                                                to={`/blog`}
+                                                onClick={() => handleViewBlog(draft.id)}
                                             >
                                                 View
-                                            </Link>
+                                            </button>
                                         </Table.td>
                                         <Table.td className="flex gap-1">
                                             <button

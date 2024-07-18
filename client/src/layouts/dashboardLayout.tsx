@@ -13,8 +13,10 @@ const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 
 const DashboardLayout: React.FC = () => {
     const { loading, logout, errMessage } = useLogout();
-    const { setAuthUser } = useAuthContext();
     const { isSaved } = useUnsavedChangesContext();
+
+    const { setAuthUser } = useAuthContext();
+    
     const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,6 +31,7 @@ const DashboardLayout: React.FC = () => {
 
     const handleLogout = () => {
         logout();
+        navigate('/')
         setAuthUser(null);
     };
 

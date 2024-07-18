@@ -34,7 +34,6 @@ const useCreateLiked = (): UseCreateLikedProps => {
                 throw new Error('Failed to create like');
             }
 
-            console.log('Liked successfully created');
         } catch (error: any) {
             setErrMessage(error.message || 'Failed to create like');
             console.error('Error creating like:', error);

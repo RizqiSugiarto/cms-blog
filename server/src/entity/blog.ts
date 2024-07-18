@@ -13,9 +13,9 @@ import { Liked } from './liked'
 import { View } from './view'
 
 @Entity()
-@Index(['title']) // Index for title
-@Index(['tag']) // Index for tag
-@Index(['user']) // Index for UserId
+@Index(['title'])   
+@Index(['tag'])     
+@Index(['user']) 
 export class Blog {
     @PrimaryGeneratedColumn('uuid')
     id: string

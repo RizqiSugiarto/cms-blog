@@ -9,8 +9,7 @@ import {
 import { Blog } from './blog'
 
 @Entity()
-// @Unique(['blog', 'user']) // Unique constraint
-@Index(['blog']) // Index for BlogId
+@Index(['blog']) 
 export class View {
     @PrimaryGeneratedColumn('uuid')
     id: string

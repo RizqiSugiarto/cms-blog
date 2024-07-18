@@ -19,7 +19,6 @@ const useUpdateBlog = (): UseUpdateBlogProps => {
     ): Promise<void> => {
         setUpdateBlogLoading(true);
         setUpdateBlogErrMessage('');
-        console.log(blogRequest.blogId, 'DI USE UPDATE');
         try {
             const response = await fetch(
                 `${BaseUrl}/blogs/${blogRequest.blogId}`,

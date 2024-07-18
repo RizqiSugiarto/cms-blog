@@ -19,7 +19,7 @@ const useMostFavTag = (): UseMostFavTagProps => {
         setErrMessageFavTag('');
 
         try {
-            const response = await fetch(`${BaseUrl}/like/tag`);
+            const response = await fetch(`${BaseUrl}/like/most-fav-tag`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch most liked tags');
