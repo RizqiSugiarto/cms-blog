@@ -4,6 +4,7 @@ import { RegisterDto, LoginDto } from '@/dto/auth'
 import { generateToken, hashPassword, comparePassword } from '@/helpers/auth'
 import { NotFoundError, UnAuthorizedError } from '@/helpers/customErr'
 
+
 export class AuthService {
     private userRepository = connectDb.getRepository(User)
 

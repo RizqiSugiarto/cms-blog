@@ -13,6 +13,7 @@ import path from 'path'
 dotenv.config()
 
 const port = process.env.APP_PORT || 3000
+const mode = process.env.NODE_ENV
 const app = express()
 const publicPath = path.join(__dirname, '../public/uploads')
 
@@ -31,4 +32,5 @@ app.use(errorHandler)
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
+    console.log(`Running in ${mode} mode`)
 })

@@ -4,6 +4,11 @@ import connectDb from '@/db/mysql'
 import { BlogDto } from '@/dto/blog'
 import { NotFoundError } from '@/helpers/customErr'
 import { trimTag } from '@/helpers/common'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const BaseUrl = process.env.BASE_URL_IMG
 
 export class BlogService {
     private blogRepository = connectDb.getRepository(Blog)
@@ -17,7 +22,7 @@ export class BlogService {
             throw new NotFoundError('User not found')
         }
 
-        const imgUrl = `http://localhost:5000/uploads/${blogData.image.filename}`
+        const imgUrl = `${BaseUrl}/${blogData.image.filename}`
 
         const blog = this.blogRepository.create({
             title: blogData.title,
