@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-// import { useAuthContext, AuthUser } from '@/context/authContext';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { LoginRequest } from '@/types';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
@@ -18,7 +17,6 @@ const useLogin = (): UseLoginProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
-    // const { setAuthUser } = useAuthContext();
 
     const login = async (loginData: LoginRequest): Promise<void> => {
         setLoading(true);
@@ -41,16 +39,24 @@ const useLogin = (): UseLoginProps => {
                 throw new Error(responseBody.error || 'Failed to login');
             }
 
-            const tokenVal = Cookies.get('jwt') as string | undefined;
-            // const Token: AuthUser = {
-            //     token: tokenVal
-            // };
-            console.log(tokenVal, "DI USELOGIN")
-            const userData = jwtDecode(tokenVal!);
+            // Retrieve the JWT token from cookies
+            const tokenVal = Cookies.get('jwt');
 
-            localStorage.setItem('user-data', JSON.stringify(userData));
+            if (!tokenVal) {
+                throw new Error('No token found. Login might have failed.');
+            }
+
+            try {
+                // Decode the JWT token
+                const userData = jwtDecode(tokenVal);
+                // Save user data in local storage
+                localStorage.setItem('user-data', JSON.stringify(userData));
+            } catch (decodeError) {
+                console.error('Error decoding JWT:', decodeError);
+                throw new Error('Invalid token format. Please log in again.');
+            }
+
             setIsSuccess(true);
-            // setAuthUser(Token);
         } catch (error: any) {
             console.error('Error during login:', error);
             setErrMessage(
