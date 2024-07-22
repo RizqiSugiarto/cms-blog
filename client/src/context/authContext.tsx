@@ -41,6 +41,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     useEffect(() => {
         const token = Cookies.get('jwt');
         if (token) {
+            console.log(token, "DI AUTHCONTEXT")
             const decodedToken: AuthUser = jwtDecode(token);
             setAuthUser(decodedToken);
         }

@@ -38,6 +38,7 @@ const LoginPage: React.FC = () => {
         if (isSuccess) {
             const token = Cookies.get('jwt');
             if (token) {
+                console.log(token, "DI LOGIN PAGES")
                 const decodedToken: AuthUser = jwtDecode(token);
                 setAuthUser(decodedToken);
             }

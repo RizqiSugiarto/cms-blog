@@ -41,10 +41,11 @@ const useLogin = (): UseLoginProps => {
                 throw new Error(responseBody.error || 'Failed to login');
             }
 
-            const tokenVal = Cookies.get('jwt');
+            const tokenVal = Cookies.get('jwt') as string | undefined;
             // const Token: AuthUser = {
             //     token: tokenVal
             // };
+            console.log(tokenVal, "DI USELOGIN")
             const userData = jwtDecode(tokenVal!);
 
             localStorage.setItem('user-data', JSON.stringify(userData));
