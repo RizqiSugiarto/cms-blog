@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const connectDb = new DataSource({
     url: process.env.DATABASE_URL,
     type: 'mysql',
@@ -12,9 +14,11 @@ const connectDb = new DataSource({
         connectionLimit: 10,
         connectTimeout: 60000
     },
-    synchronize: true,
-    logging: false,
-    entities: ['./src/entity/**/*.ts'],
+    synchronize: !isProduction,
+    logging: !isProduction,
+    entities: isProduction ? ['./dist/entity/**/*.js'] : ['./src/entity/**/*.ts'],
+    migrations: isProduction ? ['./dist/migration/**/*.js'] : ['./src/migration/**/*.ts'],
+    
 })
 
 connectDb

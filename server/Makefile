@@ -17,3 +17,6 @@ env-dev:
 
 env-prod:
 	cp .env.prod .env
+
+init-migration:
+	npm run typeorm migration:create src/migration/initialSetup
