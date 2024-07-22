@@ -9,7 +9,7 @@
         "start": "npm run migration:run && node -r tsconfig-paths/register dist/app.js",
         "prettier": "prettier --write .",
         "typeorm": "typeorm-ts-node-commonjs",
-        "migration:run": "typeorm migration:run"
+        "migration:run": "typeorm migration:run -d dist/db/mysql.js"
     },
     "author": "RIzqi",
     "license": "ISC",

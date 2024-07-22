@@ -1,9 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from 'typeorm';
 
-export class initTables1659634074032 implements MigrationInterface {
-
+export class InitTables1659634074032 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
-
         const tableExistenceChecks = {
             user: await queryRunner.hasTable('user'),
             blog: await queryRunner.hasTable('blog'),
@@ -18,10 +16,10 @@ export class initTables1659634074032 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                         isPrimary: true,
-                        isGenerated: true,
-                        generationStrategy: 'uuid',
+                        isGenerated: false,
                     },
                     {
                         name: 'name',
@@ -71,10 +69,10 @@ export class initTables1659634074032 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                         isPrimary: true,
-                        isGenerated: true,
-                        generationStrategy: 'uuid',
+                        isGenerated: false,
                     },
                     {
                         name: 'title',
@@ -113,7 +111,8 @@ export class initTables1659634074032 implements MigrationInterface {
                     },
                     {
                         name: 'userId',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                     },
                 ],
             }), true);
@@ -147,10 +146,10 @@ export class initTables1659634074032 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                         isPrimary: true,
-                        isGenerated: true,
-                        generationStrategy: 'uuid',
+                        isGenerated: false,
                     },
                     {
                         name: 'createdAt',
@@ -159,11 +158,13 @@ export class initTables1659634074032 implements MigrationInterface {
                     },
                     {
                         name: 'blogId',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                     },
                     {
                         name: 'userId',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                     },
                 ],
             }), true);
@@ -198,10 +199,10 @@ export class initTables1659634074032 implements MigrationInterface {
                 columns: [
                     {
                         name: 'id',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                         isPrimary: true,
-                        isGenerated: true,
-                        generationStrategy: 'uuid',
+                        isGenerated: false,
                     },
                     {
                         name: 'createdAt',
@@ -210,7 +211,8 @@ export class initTables1659634074032 implements MigrationInterface {
                     },
                     {
                         name: 'blogId',
-                        type: 'uuid',
+                        type: 'char',
+                        length: '36',
                     },
                 ],
             }), true);
