@@ -6,6 +6,7 @@ dotenv.config()
 const connectDb = new DataSource({
     url: process.env.DATABASE_URL,
     type: 'mysql',
+    driver: require('mysql2'),
     connectTimeout: 60000,
     extra: {
         connectionLimit: 10,
