@@ -18,7 +18,7 @@ const app = express()
 const publicPath = path.join(__dirname, '../public/uploads')
 
 const corsOptions = {
-    origin: 'https://simpleblogcms.netlify.app/',
+    origin: 'https://simpleblogcms.netlify.app',
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Web-App'],
