@@ -31,11 +31,6 @@ app.use('/uploads', express.static(publicPath))
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://simpleblogcms.netlify.app");
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-});
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/like', likeRoutes)
