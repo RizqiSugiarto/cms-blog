@@ -17,7 +17,14 @@ const mode = process.env.NODE_ENV
 const app = express()
 const publicPath = path.join(__dirname, '../public/uploads')
 
-app.use(cors({ credentials: true, origin: true }))
+const corsOptions = {
+    origin: 'https://your-frontend-domain.com',
+    credentials: true,
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Web-App'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+};
+
+app.use(cors(corsOptions))
 app.use('/uploads', express.static(publicPath))
 
 app.use(express.json())

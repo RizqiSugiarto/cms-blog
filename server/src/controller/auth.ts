@@ -52,6 +52,7 @@ export class AuthController {
                 httpOnly: process.env.NODE_ENV === 'production',
                 secure: process.env.NODE_ENV === 'production',
                 path: '/',
+                sameSite: 'none'
             })
             res.status(200).json({
                 message: 'login succesfuly',
