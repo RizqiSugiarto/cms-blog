@@ -13,4 +13,4 @@ COPY --from=builder /app/dist /app/dist
 # RUN npm install 
 EXPOSE 3000
 
-CMD ["node", "dist/app.js"]
+CMD ["npm", "start"]
