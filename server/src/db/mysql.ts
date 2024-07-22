@@ -11,6 +11,10 @@ const connectDb = new DataSource({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     connectTimeout: 60000,
+    extra: {
+        connectionLimit: 10,
+        connectTimeout: 60000
+      },
     synchronize: true,
     logging: false,
     entities: ['./src/entity/**/*.ts'],
