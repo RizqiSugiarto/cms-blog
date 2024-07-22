@@ -15,5 +15,5 @@ compose-prod:
 env-dev:
 	cp .env.dev .env
 
-env-production:
-	cp .env.production .env
+env-prod:
+	cp .env.prod .env

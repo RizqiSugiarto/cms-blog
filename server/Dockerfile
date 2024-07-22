@@ -8,8 +8,9 @@ RUN npm run build
 FROM node:16-alpine
 WORKDIR /app
 COPY --from=builder /app/package.json /app/package-lock.json /app/
+COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
-RUN npm install --only=production
+# RUN npm install 
 EXPOSE 3000
 
 CMD ["node", "dist/app.js"]
