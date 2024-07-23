@@ -50,11 +50,12 @@ export class AuthController {
             const response = await this.authService.loginUser(loginData)
 
             res.cookie('jwt', response, {
-                maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-                httpOnly: true, // Should be true to enhance security
-                secure: true,
+                maxAge: 15 * 24 * 60 * 60 * 1000, 
+                httpOnly: true, 
+                secure: process.env.NODE_ENV === 'production',
                 path: '/',
-                sameSite: 'none', // Ensures the cookie is sent in cross-site requests
+                sameSite: 'none',
+                domain: 'simpleblogcms.netlify.app'
             });
 
             res.status(200).json({
