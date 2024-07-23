@@ -54,7 +54,7 @@ export class AuthController {
                 secure: process.env.NODE_ENV === 'production',
                 path: '/',
                 sameSite: 'none'
-            })
+            }).status(202).json({message: "set cookie successfuly"})
             res.status(200).json({
                 message: 'login succesfuly',
                 token: response,
