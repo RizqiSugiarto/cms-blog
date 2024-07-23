@@ -41,6 +41,7 @@ export class AuthController {
 
             if (!appType) {
                 res.status(400).json({ message: 'Bad Request' })
+                return
             }
 
             loginData.appType = appType as string
@@ -53,8 +54,9 @@ export class AuthController {
                 httpOnly: process.env.NODE_ENV === 'production',
                 path: '/',
                 sameSite: 'none',
-                domain: 'https://simpleblogcms.netlify.app'
-            }).status(202).json({message: "set cookie successfuly"})
+                domain: 'simpleblogcms.netlify.app'
+            })
+
             res.status(200).json({
                 message: 'login succesfuly',
                 token: response,
