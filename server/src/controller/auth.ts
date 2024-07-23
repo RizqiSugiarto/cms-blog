@@ -55,7 +55,7 @@ export class AuthController {
                 secure: process.env.NODE_ENV === 'production',
                 path: '/',
                 sameSite: 'none',
-                domain: 'simpleblogcms.netlify.app'
+                domain: 'blog-be-production-c4b4.up.railway.app'
             });
 
             res.status(200).json({
