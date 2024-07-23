@@ -52,10 +52,9 @@ export class AuthController {
             res.cookie('jwt', response, {
                 maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
                 httpOnly: true, // Should be true to enhance security
-                secure: process.env.NODE_ENV === 'production',
+                secure: true,
                 path: '/',
                 sameSite: 'none', // Ensures the cookie is sent in cross-site requests
-                domain: 'simpleblogcms.netlify.app' // Ensure no 'https://'
             });
 
             res.status(200).json({
