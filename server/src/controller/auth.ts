@@ -51,7 +51,6 @@ export class AuthController {
             res.cookie('jwt', response, {
                 maxAge: 15 * 24 * 60 * 60 * 1000,
                 httpOnly: process.env.NODE_ENV === 'production',
-                secure: true,
                 path: '/',
                 sameSite: 'none'
             }).status(202).json({message: "set cookie successfuly"})
