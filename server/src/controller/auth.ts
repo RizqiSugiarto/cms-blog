@@ -52,7 +52,8 @@ export class AuthController {
                 maxAge: 15 * 24 * 60 * 60 * 1000,
                 httpOnly: process.env.NODE_ENV === 'production',
                 path: '/',
-                sameSite: 'none'
+                sameSite: 'none',
+                domain: 'https://simpleblogcms.netlify.app'
             }).status(202).json({message: "set cookie successfuly"})
             res.status(200).json({
                 message: 'login succesfuly',
