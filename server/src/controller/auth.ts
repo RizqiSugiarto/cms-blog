@@ -45,6 +45,7 @@ export class AuthController {
 
             loginData.appType = appType as string
 
+
             const response = await this.authService.loginUser(loginData)
 
             res.cookie('jwt', response, {
