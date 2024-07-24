@@ -138,4 +138,16 @@ export class BlogController {
             next(error);
         }
     }
+    
+    async getStatsByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { userId } = req.params;
+            const blogs = await this.blogService.getStatsBlog(userId);
+            res.status(200).json(blogs);
+        } catch (error: any) {
+            logger.error('Error fetching most viewed blogs by user ID:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to fetch most viewed blogs' });
+            next(error);
+        }
+    }
 }

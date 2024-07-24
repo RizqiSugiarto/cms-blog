@@ -14,7 +14,7 @@ export class LikedController {
         try {
             const likedData: LikedDto = req.body;
             const response = await this.likedService.createLiked(likedData);
-            res.status(201).json(response);
+            res.status(201).json({message: response});
         } catch (error: any) {
             logger.error('Error in createLiked controller:', error);
             res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create like' });

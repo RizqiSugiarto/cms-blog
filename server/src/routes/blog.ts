@@ -13,6 +13,7 @@ router.post('/', upload.single('imageUpload'), (req, res, next) =>
 router.get('/tags', (req, res, next) => 
     blogController.getBlogByTag(req, res, next)
 );
+router.get('/stats/:userId', (req, res, next) => blogController.getStatsByUserId(req, res, next))
 router.get('/view/:userId', (req, res, next) => 
     blogController.getMostViewBlogUserId(req, res, next)
 );

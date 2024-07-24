@@ -18,7 +18,7 @@ const app = express()
 const publicPath = path.join(__dirname, '../public/uploads')
 
 const corsOptions = {
-    origin: mode === 'production' ? 'https://simpleblogcms.netlify.app' : 'http://localhost:3001',
+    origin: mode === 'production' ? 'https://simpleblogcms.netlify.app' : 'http://localhost:3000',
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Web-App'],
@@ -36,6 +36,7 @@ app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/like', likeRoutes)
 app.use('/api/v1/view', viewRoutes)
 app.use('/api/v1/users', userRoutes)
+
 app.use(errorHandler)
 
 app.listen(port, () => {

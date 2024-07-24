@@ -4,7 +4,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import AddBlogPage from '@/pages/addBlogPage';
 import DraftPage from '@/pages/draftPage';
 import MyBlogPage from '@/pages/myBlogPage';
-import useLogout from '@/hooks/auth/useLogout';
 import { useAuthContext } from '@/context/authContext';
 import { useUnsavedChangesContext } from '@/context/unsavedChangesContext';
 import ConfirmNavigationModal from '@/components/global/confirmNavigationmodal';
@@ -12,8 +11,7 @@ import ConfirmNavigationModal from '@/components/global/confirmNavigationmodal';
 const DashboardPage = lazy(() => import('@/pages/dashboardPage'));
 
 const DashboardLayout: React.FC = () => {
-    const { loading, logout, errMessage } = useLogout();
-    const { isSaved } = useUnsavedChangesContext();
+    const { isSaved, setIsSaved } = useUnsavedChangesContext();
 
     const { setAuthUser } = useAuthContext();
     
@@ -30,7 +28,7 @@ const DashboardLayout: React.FC = () => {
             : 'text-lg btn btn-ghost justify-start w-full';
 
     const handleLogout = () => {
-        logout();
+        localStorage.clear()
         navigate('/')
         setAuthUser(null);
     };
@@ -49,6 +47,7 @@ const DashboardLayout: React.FC = () => {
             navigate(pendingNavigationPath);
         }
         setIsModalOpen(false);
+        setIsSaved(false)
         setPendingNavigationPath(null);
     };
 
@@ -57,13 +56,6 @@ const DashboardLayout: React.FC = () => {
         setPendingNavigationPath(null);
     };
 
-    if (loading) {
-        return <div>{loading}</div>;
-    }
-
-    if (errMessage) {
-        return <div>{errMessage}</div>;
-    }
 
     return (
         <main className="drawer lg:drawer-open">
@@ -94,7 +86,7 @@ const DashboardLayout: React.FC = () => {
                 ></label>
                 <ul className="menu p-4 w-64 md:w-80 min-h-full bg-base-100 text-base-content space-y-2 [&>a]:btn-primary">
                     <div>
-                        <h2 className="text-xl font-bold btn btn-ghost justify-start w-full">
+                        <h2 className="text-xl font-bold btn btn-ghost justify-start w-full text-purpleCustom">
                             SIMPLE CMS
                         </h2>
                     </div>

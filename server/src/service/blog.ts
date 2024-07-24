@@ -1,5 +1,7 @@
 import { Blog } from '@/entity/blog'
 import { User } from '@/entity/users'
+import { Liked } from '@/entity/liked'
+import { View } from '@/entity/view'
 import connectDb from '@/db/mysql'
 import { BlogDto } from '@/dto/blog'
 import { NotFoundError } from '@/helpers/customErr'
@@ -10,9 +12,35 @@ dotenv.config()
 
 const BaseUrl = process.env.BASE_URL_IMG
 
+type LikesPerMonth = {
+    label: string 
+}
+
+type ViewPerMonth = {
+    month: string;
+};
+
+type MostLikedTag = {
+    tag: string
+    totalLikes: number
+}
+
+interface BlogStatsResponse {
+    totalLike: number
+    totalView: number
+    totalBlog: number
+    totalDraft: number
+    totalLikesPerMonth: LikesPerMonth[]
+    totalViewPerMonth: ViewPerMonth[]
+    mostLikedTag: MostLikedTag[]
+    mostViewBlog: Blog[]
+}
+
 export class BlogService {
     private blogRepository = connectDb.getRepository(Blog)
     private userRepository = connectDb.getRepository(User)
+    private likedRepository = connectDb.getRepository(Liked);
+    private viewRepository = connectDb.getRepository(View);
 
     async createBlog(blogData: BlogDto): Promise<string> {
         const user = await this.userRepository.findOne({
@@ -88,6 +116,81 @@ export class BlogService {
             .getRawMany()
 
         return result
+    }
+
+    async getStatsBlog(userId: string): Promise<BlogStatsResponse> {
+        const blogs = await this.blogRepository.find({
+            where: { user: { id: userId }, isDraft: false },
+            relations: ['liked', 'view'],
+        })
+
+        const blogsDraft = await this.blogRepository.find({
+            where: {
+                user: { id: userId },
+                isDraft: true,
+            },
+            relations: ['liked', 'view'],
+        })
+
+        const totalLikes = blogs.reduce((acc, blog) => acc + blog.liked.length, 0)
+        const totalView = blogs.reduce((acc, blog) => acc + blog.view.length, 0)
+        const totalBLog = blogs.length
+        const totalBlogDraft = blogsDraft.length
+
+        const likePerMonth: LikesPerMonth[] = await this.likedRepository
+            .createQueryBuilder('liked')
+            .select('DATE_FORMAT(liked.createdAt, "%Y-%m") as month')
+            .addSelect('COUNT(liked.id)', 'totalLikes')
+            .leftJoin('liked.blog', 'blog')
+            .leftJoin('blog.user', 'user')
+            .where('user.id = :userId', { userId })
+            .groupBy('month')
+            .orderBy('month', 'ASC')
+            .getRawMany();
+
+        const viewPerMonth: ViewPerMonth[] = await this.viewRepository
+            .createQueryBuilder('view')
+            .select('DATE_FORMAT(view.createdAt, "%Y-%m") as month')
+            .addSelect('COUNT(view.id)', 'totalView')
+            .leftJoin('view.blog', 'blog')
+            .leftJoin('blog.user', 'user')
+            .where('user.id = :userId', { userId })
+            .groupBy('month')
+            .orderBy('month', 'ASC')
+            .getRawMany();
+
+        const mostLikedTag: MostLikedTag[] = await this.likedRepository
+            .createQueryBuilder('liked')
+            .select('blog.tag', 'tag')
+            .addSelect('COUNT(liked.id)', 'totalLikes')
+            .leftJoin('liked.blog', 'blog')
+            .groupBy('blog.tag')
+            .orderBy('totalLikes', 'DESC')
+            .getRawMany();
+
+        const mostViewBlogs = await this.blogRepository
+            .createQueryBuilder('blog')
+            .leftJoin('blog.view', 'view')
+            .select('blog.title')
+            .addSelect('COUNT(view.id)', 'viewCount')
+            .where('blog.user.id = :userId', { userId })
+            .groupBy('blog.id')
+            .having('COUNT(view.id) > 0')
+            .orderBy('viewCount', 'DESC')
+            .limit(5)
+            .getRawMany()
+
+        return {
+            totalLike: totalLikes,
+            totalView: totalView,
+            totalBlog: totalBLog,
+            totalDraft: totalBlogDraft,
+            totalLikesPerMonth: likePerMonth,
+            totalViewPerMonth: viewPerMonth,
+            mostLikedTag: mostLikedTag,
+            mostViewBlog: mostViewBlogs
+        }
+
     }
 
     async updateBlog(id: string, blogData: BlogDto): Promise<string> {

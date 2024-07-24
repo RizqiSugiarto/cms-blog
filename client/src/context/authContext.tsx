@@ -5,7 +5,6 @@ import React, {
     ReactNode,
     useEffect
 } from 'react';
-import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 
 export type AuthUser = {
@@ -39,11 +38,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
     useEffect(() => {
-        const token = Cookies.get('jwt');
+        if(!authUser?.userId) {
+            const token = localStorage.getItem('access-token');
         if (token) {
-            console.log(token, "DI AUTHCONTEXT")
             const decodedToken: AuthUser = jwtDecode(token);
             setAuthUser(decodedToken);
+        }
         }
     }, []);
 

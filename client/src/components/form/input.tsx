@@ -19,7 +19,6 @@ const Input: React.FC<InputType> = ({
     setData,
     placeholder,
     className,
-    auth,
     classInput,
     required,
     value
@@ -37,7 +36,7 @@ const Input: React.FC<InputType> = ({
                 type={type || 'text'}
                 placeholder={placeholder || label}
                 onChange={(e) => setData(e.target.value)}
-                className={`input ${!auth && 'input-sm md:input-md'} input-bordered w-full ${classInput}`}
+                className={`input focus:outline-purpleCustom focus:border-none border-purpleCustom ${classInput}`}
             />
         </div>
     );

@@ -38,7 +38,6 @@ export class AuthController {
         try {
             const loginData: LoginDto = req.body
             const appType = req.headers['x-web-app']
-
             if (!appType) {
                 res.status(400).json({ message: 'Bad Request' })
                 return
@@ -46,38 +45,15 @@ export class AuthController {
 
             loginData.appType = appType as string
 
-
-            const response = await this.authService.loginUser(loginData)
-
-            res.cookie('jwt', response, {
-                maxAge: 15 * 24 * 60 * 60 * 1000, 
-                httpOnly: true, 
-                secure: process.env.NODE_ENV === 'production',
-                path: '/',
-                sameSite: 'none',
-                domain: 'blog-be-production-c4b4.up.railway.app'
-            });
+            const data = await this.authService.loginUser(loginData)
 
             res.status(200).json({
                 message: 'login succesfuly',
-                token: response,
+                data,
             })
         } catch (error: any) {
             next(error)
         }
     }
 
-    async logout(req: Request, res: Response): Promise<void> {
-        try {
-            res.clearCookie('jwt', {
-                httpOnly: false,
-                secure: process.env.NODE_ENV !== 'development',
-                path: '/',
-            })
-            res.status(200).json({ message: 'Logged out successfully' })
-            res.end()
-        } catch (error) {
-            res.status(500).json({ error: 'logout failed' })
-        }
-    }
 }

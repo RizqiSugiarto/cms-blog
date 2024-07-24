@@ -63,9 +63,7 @@ const RightLink: React.FC = () => {
     useEffect(() => {
         if (authUser?.userId) {
             getProfile(authUser.userId);
-        } else {
-            console.warn('auth user undifined');
-        }
+        } 
     }, [authUser]);
 
     useEffect(() => {

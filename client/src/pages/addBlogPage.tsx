@@ -130,6 +130,7 @@ const AddBlogPage: React.FC = () => {
                         <Input
                             required
                             auth
+                            value={title}
                             setData={setTitle}
                             type="text"
                             className="w-full"

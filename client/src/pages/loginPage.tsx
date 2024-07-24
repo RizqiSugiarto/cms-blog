@@ -5,9 +5,7 @@ import { LoginRequest } from '@/types';
 import ShowPasswordIcon from '@/assets/icon/display.png';
 import HidePasswordIcon from '@/assets/icon/hide.png';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useAuthContext } from '@/context/authContext';
-import { jwtDecode } from 'jwt-decode';
 import { AuthUser } from '@/context/authContext';
 
 const LoginPage: React.FC = () => {
@@ -15,7 +13,7 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const { errMessage, loading, isSuccess, login } = useLogin();
+    const { errMessage, loading, loginUser, login } = useLogin();
     const navigate = useNavigate();
     const { setAuthUser } = useAuthContext();
 
@@ -35,16 +33,14 @@ const LoginPage: React.FC = () => {
     };
 
     useEffect(() => {
-        if (isSuccess) {
-            const token = Cookies.get('jwt');
-            if (token) {
-                console.log(token, "DI LOGIN PAGES")
-                const decodedToken: AuthUser = jwtDecode(token);
-                setAuthUser(decodedToken);
+        if (loginUser) {
+            const dataContext: AuthUser = {
+                userId: loginUser.data.user.id
             }
+            setAuthUser(dataContext)
             navigate('/dashboard');
         }
-    }, [isSuccess, navigate, setAuthUser]);
+    }, [loginUser]);
 
     return (
         <div className="flex justify-center items-center w-screen h-screen">

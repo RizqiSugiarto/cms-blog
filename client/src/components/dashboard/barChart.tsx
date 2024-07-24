@@ -24,11 +24,10 @@ ChartJS.register(
 
 type BarChartProps = {
     title: string;
-    labels: string[];
-    dataChart: number[];
+    dataChart: any[];
 };
 
-const BarChart: React.FC<BarChartProps> = ({ title, labels, dataChart }) => {
+const BarChart: React.FC<BarChartProps> = ({ title, dataChart }) => {
     const options = {
         responsive: true,
         plugins: {
@@ -38,24 +37,15 @@ const BarChart: React.FC<BarChartProps> = ({ title, labels, dataChart }) => {
         }
     } as ChartOptions<'bar'>;
 
-    // const labels = [
-    //     'January',
-    //     'February',
-    //     'March',
-    //     'April',
-    //     'May',
-    //     'June',
-    //     'July'
-    // ];
+    const labels = dataChart.map(item => item.tag || item.blog_title)
+    const dataPoint = dataChart.map(item => item.totalLikes || item.viewCount)
 
     const data = {
         labels,
         datasets: [
             {
                 label: title,
-                data: labels.map((_c, i) => {
-                    return dataChart[i];
-                }),
+                data: dataPoint,
                 backgroundColor: 'rgba(146, 151, 196, 1)'
             }
         ]

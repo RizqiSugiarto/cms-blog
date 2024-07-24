@@ -27,13 +27,11 @@ ChartJS.register(
 
 type OnlineChartProps = {
     title: string;
-    labels: string[];
-    dataChart: number[];
+    dataChart: any[]
 };
 
 const OneLineChart: React.FC<OnlineChartProps> = ({
     title,
-    labels,
     dataChart
 }) => {
     const options = {
@@ -45,15 +43,8 @@ const OneLineChart: React.FC<OnlineChartProps> = ({
         }
     } as ChartOptions<'line'>;
 
-    // const labels = [
-    //     'January',
-    //     'February',
-    //     'March',
-    //     'April',
-    //     'May',
-    //     'June',
-    //     'July'
-    // ];
+    const labels = dataChart.map(item => item.month)
+    const dataPoints = dataChart.map(item => item.totalLikes || item.totalView || '0')
 
     const data = {
         labels,
@@ -61,9 +52,7 @@ const OneLineChart: React.FC<OnlineChartProps> = ({
             {
                 fill: true,
                 label: title,
-                data: labels.map((_c, i) => {
-                    return dataChart[i];
-                }),
+                data: dataPoints,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(132, 199, 208, 1)'
             }

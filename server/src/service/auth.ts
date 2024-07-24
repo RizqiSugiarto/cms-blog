@@ -4,6 +4,10 @@ import { RegisterDto, LoginDto } from '@/dto/auth'
 import { generateToken, hashPassword, comparePassword } from '@/helpers/auth'
 import { NotFoundError, UnAuthorizedError } from '@/helpers/customErr'
 
+interface LoginResponse {
+    user: User; 
+    token: string;
+}
 
 export class AuthService {
     private userRepository = connectDb.getRepository(User)
@@ -14,7 +18,7 @@ export class AuthService {
             name: registerData.name,
             email: registerData.email,
             password: hashedPassword,
-            ImageUrl: 'http://localhost:5000/uploads/profile.png',
+            ImageUrl: 'https://planetsains.com/wp-content/uploads/2022/09/anonymous-avatar-icon-25.png',
             role: registerData.role,
             createdAt: new Date(),
         })
@@ -29,8 +33,8 @@ export class AuthService {
 
         return this.userRepository.save(user)
     }
-
-    async loginUser(loginData: LoginDto): Promise<String> {
+    
+    async loginUser(loginData: LoginDto): Promise<LoginResponse> {
         const user = await this.userRepository.findOne({ where: { email: loginData.email } })
         if (!user) {
             throw new NotFoundError('Email not found')
@@ -50,6 +54,9 @@ export class AuthService {
 
         const token = generateToken(user.id)
 
-        return token
+        return {
+            user: user,
+            token: token
+        }
     }
 }

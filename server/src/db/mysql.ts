@@ -15,7 +15,7 @@ const connectDb = new DataSource({
         connectTimeout: 60000
     },
     synchronize: !isProduction,
-    logging: !isProduction,
+    logging: false,
     entities: isProduction ? ['./dist/entity/**/*.js'] : ['./src/entity/**/*.ts'],
     migrations: isProduction ? ['./dist/migration/**/*.js'] : ['./src/migration/**/*.ts'],
     

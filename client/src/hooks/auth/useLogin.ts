@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
 import { LoginRequest } from '@/types';
 
 const BaseUrl = import.meta.env.VITE_BASE_URL;
@@ -9,14 +7,14 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseLoginProps {
     loading: boolean;
     errMessage: string;
-    isSuccess: boolean;
+    loginUser: any
     login: (loginData: LoginRequest) => Promise<void>;
 }
 
 const useLogin = (): UseLoginProps => {
     const [loading, setLoading] = useState(false);
     const [errMessage, setErrMessage] = useState<string>('');
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [loginUser, setloginUser] = useState<any>(undefined);
 
     const login = async (loginData: LoginRequest): Promise<void> => {
         setLoading(true);
@@ -24,7 +22,6 @@ const useLogin = (): UseLoginProps => {
 
         try {
             const response = await fetch(`${BaseUrl}/auth/login`, {
-                credentials: 'include',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,25 +35,10 @@ const useLogin = (): UseLoginProps => {
             if (!response.ok) {
                 throw new Error(responseBody.error || 'Failed to login');
             }
+            
+            localStorage.setItem('access-token', responseBody.data.token)
 
-            // Retrieve the JWT token from cookies
-            const tokenVal = Cookies.get('jwt');
-
-            if (!tokenVal) {
-                throw new Error('No token found. Login might have failed.');
-            }
-
-            try {
-                // Decode the JWT token
-                const userData = jwtDecode(tokenVal);
-                // Save user data in local storage
-                localStorage.setItem('user-data', JSON.stringify(userData));
-            } catch (decodeError) {
-                console.error('Error decoding JWT:', decodeError);
-                throw new Error('Invalid token format. Please log in again.');
-            }
-
-            setIsSuccess(true);
+            setloginUser(responseBody);
         } catch (error: any) {
             console.error('Error during login:', error);
             setErrMessage(
@@ -68,7 +50,7 @@ const useLogin = (): UseLoginProps => {
         }
     };
 
-    return { loading, errMessage, isSuccess, login };
+    return { loading, errMessage, loginUser, login };
 };
 
 export default useLogin;
