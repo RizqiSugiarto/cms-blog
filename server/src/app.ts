@@ -4,7 +4,7 @@ import blogRoutes from '@/routes/blog'
 import userRoutes from '@/routes/user'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
-import cors from 'cors'
+import cors, {CorsOptions} from 'cors'
 import errorHandler from './middleware/errorHandler'
 import path from 'path'
 
@@ -15,8 +15,20 @@ const mode = process.env.NODE_ENV
 const app = express()
 const publicPath = path.join(__dirname, '../public/uploads')
 
-const corsOptions = {
-    origin: mode === 'production' ? ['https://simpleblogcms.netlify.app', 'https://simpleblogwithcms.netlify.app'] : 'http://localhost:3000',
+const allowedOrigins = [
+    'https://simpleblogcms.netlify.app',
+    'https://simpleblogwithcms.netlify.app'
+];
+
+const corsOptions: CorsOptions = {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // Check if origin is in the allowed origins array
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Web-App'],
