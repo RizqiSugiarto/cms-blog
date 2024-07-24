@@ -17,7 +17,7 @@ const useCreateView = (): UseCreateViewProps => {
         setErrMessage('');
 
         try {
-            const response = await fetch(`${BaseUrl}/view/${blogId}`, {
+            const response = await fetch(`${BaseUrl}/blogs/view/${blogId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

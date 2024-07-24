@@ -7,6 +7,8 @@ import { BlogDto } from '@/dto/blog'
 import { NotFoundError } from '@/helpers/customErr'
 import { trimTag } from '@/helpers/common'
 import dotenv from 'dotenv'
+import { LikedDto } from '@/dto/liked'
+import { QueryRunner } from 'typeorm'
 
 dotenv.config()
 
@@ -66,6 +68,76 @@ export class BlogService {
         return 'Blog created successfully'
     }
 
+    async createBlogLike(likedData: LikedDto): Promise<string | Error> {
+        const queryRunner: QueryRunner = connectDb.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+    
+        try {
+            const existingLike = await queryRunner.manager.findOne(Liked, {
+                where: { user: { id: likedData.userId }, blog: { id: likedData.blogId } },
+                relations: ['user', 'blog']
+            });
+    
+            if (existingLike) {
+                await queryRunner.manager.remove(Liked, existingLike);
+                await queryRunner.commitTransaction();
+                return 'Unlike successfully';
+            }
+    
+            const user = await queryRunner.manager.findOne(User, { where: { id: likedData.userId } });
+            const blog = await queryRunner.manager.findOne(Blog, { where: { id: likedData.blogId } });
+    
+            if (!user || !blog) {
+                throw new NotFoundError('User or Blog not found');
+            }
+    
+            const newLike = this.likedRepository.create({
+                user: user,
+                blog: blog
+            });
+    
+            await queryRunner.manager.save(Liked, newLike);
+            await queryRunner.commitTransaction();
+            return 'Liked successfully created';
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+            console.error('Error in createLiked service:', error);
+            throw new Error('Failed to create like');
+        } finally {
+            await queryRunner.release();
+        }
+    }
+
+    async createBlogView(blogId: string): Promise<string> {
+        const blog = await this.blogRepository.findOne({
+            where: { id: blogId },
+        });
+
+        if (!blog) {
+            throw new NotFoundError('Blog not found');
+        }
+
+        const viewed = this.viewRepository.create({
+            blog: blog,
+            createdAt: new Date(),
+        });
+
+        await this.viewRepository.save(viewed);
+        return 'View successfully created';
+    }
+
+    async getBlogLikeStatus(likeData: LikedDto): Promise<boolean> {
+        const like = await this.likedRepository.findOne({
+            where: {
+                user: { id: likeData.userId },
+                blog: { id: likeData.blogId }
+            },
+            relations: ['user', 'blog']
+        });
+        return !!like;
+    }
+
     async getAllBLogWithUserProfile(): Promise<Blog[]> {
         const blogs = await this.blogRepository.find({
             relations: ['user', 'liked'],
@@ -76,15 +148,16 @@ export class BlogService {
 
     async getBlogsByTags(tags: string): Promise<Blog[]> {
         let blogs
-
         if (tags.trim() == "All") {
             blogs = await this.blogRepository.find({
+                where: {isDraft: false},
                 relations: ['user', 'liked'],
             })
         } else {
             blogs = await this.blogRepository.find({
                 where: {
                     tag: tags,
+                    isDraft: false
                 },
                 relations: ['user', 'liked'],
             })
@@ -193,6 +266,26 @@ export class BlogService {
 
     }
 
+    async getBlogById(id: string): Promise<Blog> {
+        const blog = await this.blogRepository.findOne({ where: { id }, relations: ['user'] });
+        if (!blog) {
+            throw new NotFoundError('Blog not found');
+        }
+        return blog
+    }
+
+    async getAllDraft(userId: string): Promise<Blog[]> {
+        const blogs = await this.blogRepository.find({
+            where: {
+                user: { id: userId },
+                isDraft: true,
+            },
+            relations: ['liked', 'view'],
+        })
+
+        return blogs
+    }
+
     async updateBlog(id: string, blogData: BlogDto): Promise<string> {
         const blog = await this.blogRepository.findOne({where: {id: id}});
         if (!blog) {
@@ -216,23 +309,4 @@ export class BlogService {
         return 'Blog deleted successfully';
     }
 
-    async getBlogById(id: string): Promise<Blog> {
-        const blog = await this.blogRepository.findOne({ where: { id }, relations: ['user'] });
-        if (!blog) {
-            throw new NotFoundError('Blog not found');
-        }
-        return blog
-    }
-
-    async getAllDraft(userId: string): Promise<Blog[]> {
-        const blogs = await this.blogRepository.find({
-            where: {
-                user: { id: userId },
-                isDraft: true,
-            },
-            relations: ['liked', 'view'],
-        })
-
-        return blogs
-    }
 }

@@ -22,7 +22,7 @@ const useCreateLiked = (): UseCreateLikedProps => {
         setErrMessage('');
 
         try {
-            const response = await fetch(`${BaseUrl}/like`, {
+            const response = await fetch(`${BaseUrl}/blogs/like`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

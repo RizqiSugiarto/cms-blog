@@ -1,8 +1,6 @@
 import express from 'express'
 import authRoutes from '@/routes/auth'
 import blogRoutes from '@/routes/blog'
-import likeRoutes from '@/routes/like'
-import viewRoutes from '@/routes/view'
 import userRoutes from '@/routes/user'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
@@ -33,8 +31,6 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }))
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/blogs', blogRoutes)
-app.use('/api/v1/like', likeRoutes)
-app.use('/api/v1/view', viewRoutes)
 app.use('/api/v1/users', userRoutes)
 
 app.use(errorHandler)

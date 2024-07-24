@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { BlogDto } from '@/dto/blog';
 import { BlogService } from '@/service/blog';
+import { LikedDto } from '@/dto/liked';
 import logger from '@/logger';
 
 export class BlogController {
@@ -31,6 +32,48 @@ export class BlogController {
         } catch (error: any) {
             logger.error('Error creating blog:', error);
             res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create blog' });
+            next(error);
+        }
+    }
+
+    async createBlogLiked(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const likedData: LikedDto = req.body;
+            const response = await this.blogService.createBlogLike(likedData);
+            res.status(201).json({message: response});
+        } catch (error: any) {
+            logger.error('Error in createLiked controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create like' });
+            next(error);
+        }
+    }
+
+    async createBlogView(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { BlogId } = req.params
+            if (!BlogId) {
+                res.status(400).json({
+                    message: 'Bad Request - not valid request',
+                })
+                return
+            }
+            const newView = await this.blogService.createBlogView(BlogId)
+            res.status(201).json({ message: newView })
+        } catch (error: any) {
+            logger.error('Error creating view:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to create view' });
+            next(error);
+        }
+    }
+
+    async getBlogLikeStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const likedData: LikedDto = req.body;
+            const response = await this.blogService.getBlogLikeStatus(likedData);
+            res.status(200).json(response);
+        } catch (error: any) {
+            logger.error('Error in getLikeStatus controller:', error);
+            res.status(error.statusCode || 500).json({ error: error.message || 'Failed to get like status' });
             next(error);
         }
     }
