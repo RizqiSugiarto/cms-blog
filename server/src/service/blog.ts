@@ -9,7 +9,8 @@ import { trimTag } from '@/helpers/common'
 import dotenv from 'dotenv'
 import { LikedDto } from '@/dto/liked'
 import { QueryRunner } from 'typeorm'
-
+import * as fs from 'fs-extra';
+import * as path from 'path';
 dotenv.config()
 
 const BaseUrl = process.env.BASE_URL_IMG
@@ -287,24 +288,57 @@ export class BlogService {
     }
 
     async updateBlog(id: string, blogData: BlogDto): Promise<string> {
-        const blog = await this.blogRepository.findOne({where: {id: id}});
+        const BaseUrlImage = process.env.BASE_URL_IMG
+        const blog = await this.blogRepository.findOne({ where: { id: id } });
         if (!blog) {
             throw new NotFoundError('Blog not found');
         }
+    
 
+        blogData.tag = trimTag(blogData.tag)
+    
+        const oldImagePath = blog.imageUrl.replace(BaseUrlImage!, "");
+    
+        if (blogData.image && blogData.image !== blog.imageUrl) {
+            const oldImagePathFull = path.join(__dirname, '../../public/uploads', oldImagePath);
+    
+            try {
+                await fs.remove(oldImagePathFull);
+            } catch (error) {
+                console.error(`Error deleting old image file: ${error}`);
+            }
+            blog.imageUrl = `${BaseUrlImage}/${blogData.image.filename}`
+
+        }
+        
+        if (typeof blogData.isDraft === 'string') {
+            blogData.isDraft = blogData.isDraft === 'true';
+        }
+        
         Object.assign(blog, blogData);
         await this.blogRepository.save(blog);
-
+    
         return 'Blog updated successfully';
     }
 
     async deleteBlog(id: string): Promise<string> {
-        const blog = await this.blogRepository.findOne({where: {id: id}});
+        const blog = await this.blogRepository.findOne({ where: { id: id } });
         if (!blog) {
             throw new NotFoundError('Blog not found');
         }
+        await this.likedRepository.delete({blog: {id}})
+        await this.viewRepository.delete({blog: {id}})
 
         await this.blogRepository.remove(blog);
+
+        const fileName = blog.imageUrl.replace(process.env.BASE_URL_IMG!, "");
+        const imagePath = path.join(__dirname, '../../public/uploads', fileName);
+
+        try {
+            await fs.remove(imagePath);
+        } catch (error) {
+            console.error(`Error deleting image file: ${error}`);
+        }
 
         return 'Blog deleted successfully';
     }

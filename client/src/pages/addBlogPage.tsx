@@ -50,12 +50,14 @@ const AddBlogPage: React.FC = () => {
             setTag('sport');
             setFile(undefined);
             setImagePreview(null);
-            showToast(
-                isDraft
-                    ? 'Draft saved successfully!'
-                    : 'Blog published successfully!',
-                'success'
-            );
+            if(!errMessage) {
+                showToast(
+                    isDraft
+                        ? 'Draft saved successfully!'
+                        : 'Blog published successfully!',
+                    'success'
+                );
+            }
         } else {
             showToast('Please fill in all required fields.', 'error');
         }

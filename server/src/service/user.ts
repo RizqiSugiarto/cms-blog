@@ -2,6 +2,9 @@ import connectDb from '@/db/mysql'
 import { User } from '@/entity/users'
 import { NotFoundError, UnAuthorizedError } from '@/helpers/customErr'
 import { UpdateProfileDto } from '@/dto/user'
+import path from 'path'
+import * as fs from 'fs-extra';
+
 
 export class UserService {
     private userRepository = connectDb.getRepository(User)
@@ -19,6 +22,7 @@ export class UserService {
     }
 
     async updateProfileByUserId(updateData: UpdateProfileDto): Promise<void> {
+        const BaseUrlImage = process.env.BASE_URL_IMG
         const user = await this.userRepository.findOne({
             where: { id: updateData.userId },
         })
@@ -35,9 +39,16 @@ export class UserService {
             user.email = updateData.email
         }
 
+        const oldImagePath = user.ImageUrl.replace(BaseUrlImage!, "");
 
-        if (updateData.imageProfile !== undefined) {
-            const imgUrl = `http://localhost:5000/uploads/${updateData.imageProfile.filename}`
+        if (updateData.imageProfile && updateData.imageProfile.filename !== user.ImageUrl) {
+            const oldImagePathFull = path.join(__dirname, '../../public/uploads', oldImagePath);
+            try {
+                await fs.remove(oldImagePathFull);
+            } catch (error) {
+                console.error(`Error deleting old image file: ${error}`);
+            }
+            const imgUrl = `${BaseUrlImage}/${updateData.imageProfile.filename}`
             user.ImageUrl = imgUrl
         }
 

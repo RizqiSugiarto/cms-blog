@@ -24,7 +24,7 @@ router.get('/view/:userId', (req, res, next) =>
 );
 router.post('/view/:blogId', (req, res, next) => blogController.createBlogView(req, res, next))
 
-router.put('/:id', (req, res, next) => 
+router.put('/:id', upload.single('imageUpload'),(req, res, next) => 
     blogController.updateBlog(req, res, next)
 );
 router.delete('/:id', (req, res, next) => 

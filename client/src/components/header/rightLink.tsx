@@ -146,13 +146,14 @@ const RightLink: React.FC = () => {
                     </form>
                     <div
                         onClick={handleFileInputClick}
-                        className={`cursor-pointer card mx-auto w-64 overflow-hidden rounded-full border-2 ${typeof imagePreview !== 'string' ? 'h-64' : 'max-h-64'}`}
+                        className={`cursor-pointer card mx-auto bg-black w-48 h-48 overflow-hidden rounded-full border-2`}
                     >
                         {typeof imagePreview === 'string' ? (
                             <img
                                 src={imagePreview as string}
                                 alt="Preview"
-                                className="w-full h-full"
+                                className="w-full h-full object-cover"
+                                style={{ maxWidth: '192px', maxHeight: '192px' }}
                             />
                         ) : (
                             <div className="flex items-center justify-center h-full w-full rounded-full">
@@ -166,7 +167,7 @@ const RightLink: React.FC = () => {
                         )}
                     </div>
                     <div className='mt-6'>
-                        <div className='w-[300px] mx-auto'>
+                        <div className='max-w-72 mx-auto'>
                             <form onSubmit={handleForm} className='flex flex-col gap-6'>
                                 <Input
                                     required

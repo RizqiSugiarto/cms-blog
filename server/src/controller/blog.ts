@@ -92,8 +92,18 @@ export class BlogController {
     async updateBlog(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params;
-            const blogData: BlogDto = req.body;
-            const message = await this.blogService.updateBlog(id, blogData);
+            const { title, content, isDraft, tag, userId } = req.body;;
+            const image = req.file;
+
+            const updateBlogData: BlogDto = {
+                title,
+                content,
+                isDraft,
+                tag,
+                userId,
+                image
+            }
+            const message = await this.blogService.updateBlog(id, updateBlogData);
             res.status(200).json({ message });
         } catch (error: any) {
             logger.error('Error updating blog:', error);

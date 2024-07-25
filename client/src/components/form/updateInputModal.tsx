@@ -5,6 +5,7 @@ import MarkdownEditor from '@uiw/react-markdown-editor';
 import { UpdateBlogRequest } from '@/types';
 import useUpdateBlog from '@/hooks/blog/useUpdateBlog';
 import { useBlogContext } from '@/context/blogContext';
+import showToast from '@/utils/toastify';
 
 interface UpdateModalProps {
     isVisible: boolean;
@@ -40,11 +41,15 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
             tag: tag,
             blogId: blog.id,
             isDraft: false,
-            image: file
         };
 
-        if (req.title || req.tag || req.content || req.image) {
-            updateBlog(req);
+        if (req.title || req.tag || req.content) {
+            updateBlog(req, file);
+
+            if(!UpdateBlogErrMessage) {
+                dialogRef.current?.close()
+                showToast('Updated Blog successfuly', 'success')
+            }
         }
     };
 
@@ -74,6 +79,12 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
         }
     }, [UpdateBlogLoading, UpdateBlogErrMessage]);
 
+    useEffect(() => {
+        if(UpdateBlogErrMessage) {
+            showToast('Update blog failed', 'error')
+        }
+    }, [UpdateBlogErrMessage])
+
     return (
         <dialog id="my_modal_3" className="modal" ref={dialogRef}>
             <div className="modal-box w-11/12 max-w-5xl">
@@ -87,11 +98,6 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                 </form>
                 <div className="min-h-screen max-w-5xl mx-auto space-y-5">
                     <div className="md:relative md:top-8 relative top-20">
-                        {UpdateBlogErrMessage && (
-                            <div className="text-red-500">
-                                {UpdateBlogErrMessage}
-                            </div>
-                        )}
                     </div>
                     <div className="flex flex-col md:flex-row gap-5">
                         <div
@@ -155,7 +161,7 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                                     setFile={setFile}
                                     setImagePreview={setImagePreview}
                                     className="hidden"
-                                    name="imageProfile"
+                                    name="imageUpload"
                                 />
                                 <button
                                     type="submit"

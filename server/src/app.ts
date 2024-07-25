@@ -17,7 +17,8 @@ const publicPath = path.join(__dirname, '../public/uploads')
 
 const allowedOrigins = [
     'https://simpleblogcms.netlify.app',
-    'https://simpleblogwithcms.netlify.app'
+    'https://simpleblogwithcms.netlify.app',
+    'http://localhost:3000'
 ];
 
 const corsOptions: CorsOptions = {

@@ -6,7 +6,7 @@ const BaseUrl = import.meta.env.VITE_BASE_URL;
 interface UseUpdateBlogProps {
     UpdateBlogLoading: boolean;
     UpdateBlogErrMessage: string;
-    updateBlog: (blogRequest: UpdateBlogRequest) => Promise<void>;
+    updateBlog: (blogRequest: UpdateBlogRequest, file?: File) => Promise<any>;
 }
 
 const useUpdateBlog = (): UseUpdateBlogProps => {
@@ -15,19 +15,28 @@ const useUpdateBlog = (): UseUpdateBlogProps => {
         useState<string>('');
 
     const updateBlog = async (
-        blogRequest: UpdateBlogRequest
-    ): Promise<void> => {
+        blogRequest: UpdateBlogRequest,
+        file?: File
+    ): Promise<any> => {
         setUpdateBlogLoading(true);
         setUpdateBlogErrMessage('');
         try {
+            console.log(blogRequest.title, "DAPET KOK")
+            const formData = new FormData();
+            formData.append('title', blogRequest.title);
+            formData.append('content', blogRequest.content);
+            formData.append('isDraft', blogRequest.isDraft.toString());
+            formData.append('tag', JSON.stringify(blogRequest.tag));
+
+            if (file) {
+                formData.append('imageUpload', file);
+            }
+            console.log(formData, "DARI DEPAN")
             const response = await fetch(
                 `${BaseUrl}/blogs/${blogRequest.blogId}`,
                 {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(blogRequest)
+                    body: formData,
                 }
             );
 
