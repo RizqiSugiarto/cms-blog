@@ -1,11 +1,12 @@
-# Chat Web App
+# CMS Web App
 
 ![cmsDashboard](https://github.com/user-attachments/assets/3d0955ec-38fe-4332-bc1b-67621419f0ea)
 
 
 
 ## Description
-A modern chat web app using React, Node.js, Express, TypeScript, Prisma, and Material UI.
+A Content Management System (CMS) blog application built with React, Tailwind CSS, Express, TypeScript, TypeORM, and MySQL.
+
 
 ## Features
 - Admin interface for managing blog posts(post, draft)
